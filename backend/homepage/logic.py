@@ -4,9 +4,9 @@ import numpy as np
 def login(username, password):
     # TODO
     # if ok: return uid and career, else return status
-    # status: ok, username_not_exist, password_error
+    # status: 0, 1, 2: ok, username_not_exist, password_error
     if status == 'ok':
-        return (uid, career)
+        return (status, uid, career)
     else:
         return status
 

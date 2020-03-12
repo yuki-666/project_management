@@ -1,0 +1,10 @@
+career:
+0: project_superior
+1: project_manager
+2: project_leader
+3: worker
+
+login_status:
+0: ok
+1: username_not_exist
+2: password_error
