@@ -24,11 +24,14 @@ def login(username, password):
     if status == 'ok':
         career = para_dict['select_value']
     # if ok: return uid and career, else return status
-    # status: ok, username_not_exist, password_error
+    # status: 0，1，2 ok, username_not_exist, password_error
+    s['ok'] = 0
+    s['username_not_exist'] = 1
+    s['password_error'] = 2
     if status == 'ok':
-        return (uid, career)
+        return (s[status],uid, career)
     else:
-        return status
+        return s[status]
 
 def search(project_id, project_name):
     id, name, status = 0, 1, 2 # index in db result, need to be modify
