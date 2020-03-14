@@ -1,7 +1,9 @@
-import sys
-sys.path.append('..')
-import config
 import numpy as np
+import os
+import sys
+
+sys.path.append(os.path.join(os.path.dirname(__file__) , '..')) # backend/
+import config
 import util.db as db
 
 def login(username, password):
@@ -33,7 +35,12 @@ def login(username, password):
     else:
         return s[status]
 
-def search(project_id, project_name):
+# maybe move to another place called 'project'
+def search_project(project_id, project_name, detail=False):
+    # TODO
+    # if detail=False, return (id, name, status)
+    # if detail=True, return (id, name, describe, scheduled_time, delivery_day, project_superior_name, major_milestones, adopting_technology, business_area, main_function)
+
     id, name, status = 0, 1, 2 # index in db result, need to be modify
     
     para_dict = {}
@@ -52,7 +59,7 @@ def search(project_id, project_name):
         para_dict['key'].append('name')
         para_dict['value'].append(project_name)
                 
-    if len(para_dict['key']) == 0 or not db.select(para_dict)=='ok':
+    if len(para_dict['key']) == 0 or not db.select(para_dict) == 'ok':
         return 'error'
 
     # used for test
@@ -62,12 +69,13 @@ def search(project_id, project_name):
     db_result = np.array(db_result, dtype=np.str)
     return (list(db_result[:, id]), list(db_result[:, name]), list(db_result[:, status]))
 
-def get_project(page, size, uid=None):
+# maybe move to another place called 'project'
+def get_project(page, size, uid=None, include_reject=False):
     # TODO
-    # 1. get project from db
+    # 1. get project from db (if include_reject is True, should also include project that status is reject)
     # 2. sort by update_time
     # 3. return page * size ~ page * (size + 1)
-
+    
     id, name, status, update_time = 0, 1, 2, 3 # index in db result, need to be modify
     para_dict = {}
     para_dict['select_value'] = []

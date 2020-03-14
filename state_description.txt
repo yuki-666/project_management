@@ -8,3 +8,17 @@ login_status:
 0: ok
 1: username_not_exist
 2: password_error
+
+project_status:
+0: rejection
+1: pending
+2: established
+3: processing
+4: paid
+5: finished
+6: archived
+
+approval_status(work_time):
+0: rejection
+1: pending
+2: approved
