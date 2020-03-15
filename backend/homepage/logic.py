@@ -8,7 +8,7 @@ import util.db as db
 
 def login(username, password):
     para_dict = {}
-    para_dict['select_key'] = 'id'
+    para_dict['select_key'] = ['id']
     para_dict['select_value'] = []
     para_dict['table_name'] = 'login'
     para_dict['key'] = ['username','password']
@@ -17,11 +17,11 @@ def login(username, password):
     if status == 'ok':
         uid = para_dict['select_value']
 
-    para_dict['select_key'] = 'career'
+    para_dict['select_key'] = ['career']
     para_dict['select_value'] = []
     para_dict['table_name'] = 'employee'
-    para_dict['key'] = 'id'
-    para_dict['value'] = uid
+    para_dict['key'] = ['id']
+    para_dict['value'] = [uid]
     status = db.select(para_dict)
     if status == 'ok':
         career = para_dict['select_value']
@@ -59,7 +59,10 @@ def search_project(project_id=None, keyword=None, detail=False):
     id, name, status = 0, 1, 2 # index in db result, need to be modify
     
     para_dict = {}
-    para_dict['select_key'] = ['id','name','status']
+    if detail == False:
+        para_dict['select_key'] = ['id','name','status']
+    else:
+        para_dict['select_key'] = ['*']
     para_dict['select_value'] = []
     para_dict['tablename'] = 'project'
     para_dict['key'] = []
@@ -82,11 +85,13 @@ def search_project(project_id=None, keyword=None, detail=False):
     #              [4, 5, 3]]
     db_result = para_dict['select_value']
     db_result = np.array(db_result, dtype=np.str)
-    return (list(db_result[:, id]), list(db_result[:, name]), list(db_result[:, status]))
+    if detail == False:
+        return (list(db_result[:, id]), list(db_result[:, name]), list(db_result[:, status]))
+    return (list(db_result[:, 0]), list(db_result[:, 1]), list(db_result[:, 2]),list(db_result[:, 3]), list(db_result[:, 4]), list(db_result[:, 5]),
+    list(db_result[:, 6]), list(db_result[:, 7]), list(db_result[:, 8]),list(db_result[:, 9]))
 
 # maybe move to another place called 'project'
 def get_project(page, size, uid=None, include_reject=False):
-    # TODO
     # 1. get project from db (if include_reject is True, should also include project that status is reject)
     # 2. sort by update_time
     # 3. return page * size ~ page * (size + 1)
@@ -112,7 +117,7 @@ def get_project(page, size, uid=None, include_reject=False):
     l = np.argsort(tmp[:,update_time])
     for i in range(l.shape[0]):
         db_result[l.shape[0] - 1 - l[i]] = tmp[i] 
-    return (list(db_result[:, id]), list(db_result[:, name]), list(db_result[:, status]), list(db_result[:, update_time]))
+    return (list(db_result[page * size -1 :page * (size + 1), id]), list(db_result[page * size -1:page * (size + 1), name]), list(db_result[page * size -1 :page * (size + 1), status]), list(db_result[page * size -1:page * (size + 1), update_time]))
 
 if __name__ == "__main__":
     tmp = np.array([[1, 2, 3, '2020-03-10'],
