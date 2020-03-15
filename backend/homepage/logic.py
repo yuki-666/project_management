@@ -37,12 +37,8 @@ def login(username, password):
 
 # maybe move to another place called 'project'
 def search_project(project_id, project_name, detail=False):
-    
     # if detail=False, return (id, name, status)
     # if detail=True, return (id, name, describe, scheduled_time, delivery_day, project_superior_name, major_milestones, adopting_technology, business_area, main_function)
-
-    id, name, status = 0, 1, 2 # index in db result, need to be modify
-    
     para_dict = {}
     if detail == False:
         para_dict['select_key'] = ['id','name','status']
@@ -50,21 +46,35 @@ def search_project(project_id, project_name, detail=False):
         para_dict['select_key'] = ['*']
     para_dict['select_value'] = []
     para_dict['tablename'] = 'project'
-    para_dict['key'] = []
-    para_dict['value'] = []
 
-    if project_id != config.none_value:
-        para_dict['key'].append('id')
-        para_dict['value'].append(project_id)
-    
-    if project_name != config.none_value:
-            
-        para_dict['key'].append('name')
-        para_dict['value'].append(project_name)
-                
-    if len(para_dict['key']) == 0 or not db.select(para_dict) == 'ok':
+    # both not None
+    if project_id is not None and keyword is not None:
         return 'error'
 
+    if project_id is not None:
+        para_dict['key'] = ['id']
+        para_dict['value'] = [project_id]
+        db.select(para_dict)
+        pass
+    elif keyword is not None:
+        # search by keyword, 在id和name模糊匹配
+        like = '%'
+        for i in range(len(keyward)):
+            like = like + keyward[i]
+            like = like + '%'
+        para_dict['like_key'] = ['id']
+        para_dict['like_value'] = [like]
+        db.select(para_dict)
+
+        para_dict['like_key'] = ['name']
+        db.select(para_dict)
+        pass
+    else:
+        # both None
+        return 'error'
+
+
+    id, name, status = 0, 1, 2 # index in db result, need to be modify
     # used for test
     # db_result = [[1, 2, 3],
     #              [4, 5, 3]]
@@ -74,7 +84,8 @@ def search_project(project_id, project_name, detail=False):
         return (list(db_result[:, id]), list(db_result[:, name]), list(db_result[:, status]))
     return (list(db_result[:, 0]), list(db_result[:, 1]), list(db_result[:, 2]),list(db_result[:, 3]), list(db_result[:, 4]), list(db_result[:, 5]),
     list(db_result[:, 6]), list(db_result[:, 7]), list(db_result[:, 8]),list(db_result[:, 9]))
-
+    
+ 
 # maybe move to another place called 'project'
 def get_project(page, size, uid=None, include_reject=False):
     # 1. get project from db (if include_reject is True, should also include project that status is reject)
@@ -83,15 +94,16 @@ def get_project(page, size, uid=None, include_reject=False):
     
     id, name, status, update_time = 0, 1, 2, 3 # index in db result, need to be modify
     para_dict = {}
+    para_dict['select_key'] = ['*']
     para_dict['select_value'] = []
     para_dict['table_name'] = 'project'
-
-    if uid is None:
-        para_dict['select_key'] = '*'
+    
+    if not uid is None:
+        para_dict['join_tablename'] = ['project_participant']
+        para_dict['key'] = ['project_participant.person_id','project_participant.project_id']
+        para_dict['value'] = [uid,'project.id']
         pass
-    else:
-        para_dict['select_key'] = 'id'
-        pass
+    
     db.select(para_dict)
     # used for test
     # db_result = [[1, 2, 3, '2020-03-10'],
@@ -116,3 +128,13 @@ if __name__ == "__main__":
         
         db_result[length-1-l[i]] = tmp[i]
     print(db_result)
+    p = {}
+    p['name'] = ['zs']
+    p['id'] = [0]
+    print(p)
+    like = '*'
+    keyward = 'abc'
+    for i in range(len(keyward)):
+        like = like + keyward[i]
+        like = like + '*'
+    print(like)

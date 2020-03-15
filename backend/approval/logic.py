@@ -9,7 +9,7 @@ import util.db as db
 # maybe move to another place called 'project'
 def modify_project(project_id, project_name, describe, scheduled_time, delivery_day, project_superior_name, \
     major_milestones, adopting_technology, business_area, main_function):
-    
+    para_dict = {}
     # modify project info, search by id
     para_dict['tablename'] = 'project'
     #id,name,status,customer_id,main_function,domain_id,tech,project_leader_id,submit_date,reserve_date
@@ -26,6 +26,7 @@ def modify_project(project_id, project_name, describe, scheduled_time, delivery_
 
 # maybe move to another place called 'project'
 def confirm_project(project_id, status):
+    para_dict = {}
     para_dict['tablename'] = 'project'
     para_dict['set_key'] = ['status']
     para_dict['set_value'] = [status]
@@ -38,6 +39,7 @@ def confirm_project(project_id, status):
 
 # maybe move to another place called 'work_time'
 def get_work_time_by_uid(uid, is_superior=False, include_finished=False):
+    para_dict = {}
     para_dict['select_key'] = ['work_time_id', 'employer.name', 'function_name', 'work_time.event_name', 'work_time.start_time', 'work_time.end_time']
     para_dict['select_value'] = []
     para_dict['tablename'] = 'work_time'
@@ -67,6 +69,7 @@ def get_work_time_by_uid(uid, is_superior=False, include_finished=False):
     
 # maybe move to another place called 'work_time'
 def get_work_time_by_work_time_id(work_time_id):
+    para_dict = {}
     para_dict['select_key'] = ['work_time_id', 'worker_name', 'function_name', 'event_name', 'start_time', 'end_time','delete_label']
     para_dict['select_value'] = []
     para_dict['tablename'] = 'work_time'
@@ -81,6 +84,7 @@ def get_work_time_by_work_time_id(work_time_id):
     return tuple(para_dict['select_value'])
 # maybe move to another place called 'work_time'
 def confirm_work_time(work_time_id, status):
+    para_dict = {}
     para_dict['tablename'] = 'work_time'
     para_dict['set_key'] = ['status']
     para_dict['set_value'] = [status]
@@ -95,6 +99,7 @@ def confirm_work_time(work_time_id, status):
 
 # maybe move to another place called 'work_time'
 def modify_word_time(work_time_id, worker_name, function_name, event_name, start_time, end_time):
+    para_dict = {}
     para_dict['tablename'] = 'work_time'
     para_dict['set_key'] = ['worker_name', 'function_name', 'event_name', 'start_time', 'end_time']
     para_dict['set_value'] = [worker_name, function_name, event_name, start_time, end_time]
@@ -106,6 +111,7 @@ def modify_word_time(work_time_id, worker_name, function_name, event_name, start
     return db.update(para_dict)
 
 def delete_work_time(work_time_id):
+    para_dict = {}
     para_dict['tablename'] = 'work_time'
     para_dict['set_key'] = ['delete_label']
     para_dict['set_value'] = [1]

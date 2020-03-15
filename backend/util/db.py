@@ -11,7 +11,7 @@ def select(para):#parameter
     #para[key] = [where 子句等号左边]
     #para[value] = [where 子句等号右边]
     
-    #to do
+    #to do,para[select_value]不必清空，append即可
     # return 'error' if key not found
     return status #'ok' or other
 
