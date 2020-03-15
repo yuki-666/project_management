@@ -54,10 +54,10 @@ def homepage_login():
 @app.route('/homepage/search', methods=['POST'])
 def homepage_search():
     request_data = get_value_dict()
-    if not check_dict(request_data, ['id', 'name']):
+    if not check_dict(request_data, ['keyword']):
         return json.dumps('PARAM ERROR')
 
-    data = homepage.search_project(request_data['id'], request_data['name'])
+    data = homepage.search_project(keyword=request_data['keyword'])
 
     if has_error(data):
         return json.dumps('ERROR route:/homepage/search')
@@ -120,7 +120,7 @@ def approval_project_show():
     if not check_dict(request_data, ['id']):
         return json.dumps('PARAM ERROR')
 
-    data = homepage.search_project(request_data['id'], config.none_value, detail=True)
+    data = homepage.search_project(project_id=request_data['id'], detail=True)
 
     if has_error(data):
         return json.dumps('ERROR route:/approval/project/show')
