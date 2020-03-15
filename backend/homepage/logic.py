@@ -36,10 +36,25 @@ def login(username, password):
         return s[status]
 
 # maybe move to another place called 'project'
-def search_project(project_id, project_name, detail=False):
+def search_project(project_id=None, keyword=None, detail=False):
     # TODO
     # if detail=False, return (id, name, status)
     # if detail=True, return (id, name, describe, scheduled_time, delivery_day, project_superior_name, major_milestones, adopting_technology, business_area, main_function)
+    
+    # both not None
+    if project_id is not None and key_word is not None:
+        return 'error'
+
+    if project_id is not None:
+        # search by project id
+        pass
+    elif key_word is not None:
+        # search by key_word, 在id和name模糊匹配
+        pass
+    else:
+        # both None
+        return 'error'
+
 
     id, name, status = 0, 1, 2 # index in db result, need to be modify
     
