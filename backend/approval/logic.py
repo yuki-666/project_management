@@ -42,19 +42,19 @@ def get_work_time_by_uid(uid, is_superior=False, include_finished=False):
     para_dict['select_value'] = []
     para_dict['tablename'] = 'work_time'
     para_dict['join_tablename'] = ['employer']
-    para_dict['where_key'] = ['delete_label','work_time.worker_id']
-    para_dict['where_value'] = [0,'employer.id']
+    para_dict['key'] = ['delete_label','work_time.worker_id']
+    para_dict['value'] = [0,'employer.id']
     if include_finished:
         para_dict['select_key'].append('status')
     if is_superior :
         para_dict['join_tablename'].append['project_participant']
-        para_dict['where_key'].append('project_participant.leader_id')
-        para_dict['where_value'].append(uid)
-        para_dict['where_key'].append('project_participant.person_id')
-        para_dict['where_value'].append('work_time.worker_id')
+        para_dict['key'].append('project_participant.leader_id')
+        para_dict['value'].append(uid)
+        para_dict['key'].append('project_participant.person_id')
+        para_dict['value'].append('work_time.worker_id')
     else :
-        para_dict['where_key'].append('work_time.worker_id')
-        para_dict['where_value'].append(uid)
+        para_dict['key'].append('work_time.worker_id')
+        para_dict['value'].append(uid)
     db.select(para_dict)
     # is_superior=True: uid是上级的uid，要获取他所有项目下级的工时
     # is_superior=False: uid是自己的uid，获取自己所有工时
