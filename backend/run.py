@@ -6,6 +6,7 @@ from flask_cors import *
 import homepage.logic as homepage
 import approval.logic as approval
 
+base_route = '/api'
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
@@ -34,7 +35,7 @@ def has_error(data):
 
 # homepage
 
-@app.route('/homepage/login', methods=['POST'])
+@app.route(base_route + '/homepage/login', methods=['POST'])
 def homepage_login():
     request_data = get_value_dict()
     if not check_dict(request_data, ['username', 'password']):
@@ -51,7 +52,7 @@ def homepage_login():
         ret['status'], ret['uid'], ret['career'] = data
         return json.dumps(ret)
 
-@app.route('/homepage/search', methods=['POST'])
+@app.route(base_route + '/homepage/search', methods=['POST'])
 def homepage_search():
     request_data = get_value_dict()
     if not check_dict(request_data, ['keyword']):
@@ -66,7 +67,7 @@ def homepage_search():
         ret['id'], ret['name'], ret['status'] = data
         return json.dumps(ret)
 
-@app.route('/homepage/project_all', methods=['GET'])
+@app.route(base_route + '/homepage/project_all', methods=['GET'])
 def homepage_project_all():
     request_data = get_value_dict()
     if not check_dict(request_data, ['page', 'size']):
@@ -81,7 +82,7 @@ def homepage_project_all():
         ret['id'], ret['name'], ret['status'], ret['update_time'] = data
         return json.dumps(ret)
 
-@app.route('/homepage/project_mine', methods=['GET'])
+@app.route(base_route + '/homepage/project_mine', methods=['GET'])
 def homepage_project_mine():
     request_data = get_value_dict()
     if not check_dict(request_data, ['page', 'size', 'uid']):
@@ -99,7 +100,7 @@ def homepage_project_mine():
 
 # approval
 
-@app.route('/approval/project', methods=['GET'])
+@app.route(base_route + '/approval/project', methods=['GET'])
 def approval_project():
     request_data = get_value_dict()
     if not check_dict(request_data, ['page', 'size', 'uid']):
@@ -114,7 +115,7 @@ def approval_project():
         ret['id'], ret['name'], ret['status'], ret['update_time'] = data
         return json.dumps(ret)
 
-@app.route('/approval/project/show', methods=['GET'])
+@app.route(base_route + '/approval/project/show', methods=['GET'])
 def approval_project_show():
     request_data = get_value_dict()
     if not check_dict(request_data, ['id']):
@@ -131,7 +132,7 @@ def approval_project_show():
             ret['business_area'], ret['main_function'] = data
         return json.dumps(ret)
 
-@app.route('/approval/project/modify', methods=['POST'])
+@app.route(base_route + '/approval/project/modify', methods=['POST'])
 def approval_project_modify():
     request_data = get_value_dict()
     if not check_dict(request_data, ['id', 'name', 'describe', 'scheduled_time', 'delivery_day', \
@@ -149,7 +150,7 @@ def approval_project_modify():
         ret['status'] = data
         return json.dumps(ret)
 
-@app.route('/approval/project/confirm', methods=['POST'])
+@app.route(base_route + '/approval/project/confirm', methods=['POST'])
 def approval_project_confirm():
     request_data = get_value_dict()
     if not check_dict(request_data, ['id', 'status']):
@@ -164,7 +165,7 @@ def approval_project_confirm():
         ret['status'] = data
         return json.dumps(ret)
 
-@app.route('/approval/work_time/initiative', methods=['GET'])
+@app.route(base_route + '/approval/work_time/initiative', methods=['GET'])
 def approval_work_time_initiative():
     request_data = get_value_dict()
 
@@ -181,7 +182,7 @@ def approval_work_time_initiative():
             ret['start_time'], ret['end_time'] = data
         return json.dumps(ret)
 
-@app.route('/approval/work_time/confirm', methods=['POST'])
+@app.route(base_route + '/approval/work_time/confirm', methods=['POST'])
 def approval_work_time_confirm():
     request_data = get_value_dict()
 
@@ -197,7 +198,7 @@ def approval_work_time_confirm():
         ret['status'] = data
         return json.dumps(ret)
 
-@app.route('/approval/work_time/initiative/show', methods=['GET'])
+@app.route(base_route + '/approval/work_time/initiative/show', methods=['GET'])
 def approval_work_time_initiative_show():
     request_data = get_value_dict()
     if not check_dict(request_data, ['id']):
@@ -213,7 +214,7 @@ def approval_work_time_initiative_show():
             ret['start_time'], ret['end_time'] = data
         return json.dumps(ret)
 
-@app.route('/approval/work_time/passive', methods=['GET'])
+@app.route(base_route + '/approval/work_time/passive', methods=['GET'])
 def approval_work_time_passive():
     request_data = get_value_dict()
 
@@ -230,7 +231,7 @@ def approval_work_time_passive():
             ret['start_time'], ret['end_time'], ret['status'] = data
         return json.dumps(ret)
 
-@app.route('/approval/work_time/passive/show', methods=['GET'])
+@app.route(base_route + '/approval/work_time/passive/show', methods=['GET'])
 def approval_work_time_passive_show():
     request_data = get_value_dict()
     if not check_dict(request_data, ['id']):
@@ -246,7 +247,7 @@ def approval_work_time_passive_show():
             ret['start_time'], ret['end_time'] = data
         return json.dumps(ret)
 
-@app.route('/approval/work_time/passive/modify', methods=['POST'])
+@app.route(base_route + '/approval/work_time/passive/modify', methods=['POST'])
 def approval_work_time_passive_modify():
     request_data = get_value_dict()
 
@@ -264,7 +265,7 @@ def approval_work_time_passive_modify():
         ret['status'] = data
         return json.dumps(ret)
 
-@app.route('/approval/work_time/passive/delete', methods=['POST'])
+@app.route(base_route + '/approval/work_time/passive/delete', methods=['POST'])
 def approval_work_time_passive_delete():
     request_data = get_value_dict()
 
