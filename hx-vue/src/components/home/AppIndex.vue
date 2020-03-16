@@ -5,7 +5,7 @@
     <div class="project_table">
       <el-table
         :data="
-          tableDataTest.slice(
+          projects.slice(
             (this.currentPage - 1) * pagesize,
             this.currentPage * pagesize
           )
@@ -20,26 +20,11 @@
           prop="name"
           sortable
         ></el-table-column>
-         <!-- <el-table-column
-          label="项目状态"
-          prop="status"
-          column-key="status"
-          :filters="filter_status"
-          :filter-method="filterTag"
-          filter-placement="bottom-end"
-        >
-          <template slot-scope="props">
-            <xm-tag :type="FlowStatusRules[props.row.status]">
-              {{ FLOWS_STATUS[props.row.status] }}
-            </xm-tag>
-          </template>
-        </el-table-column> -->
         <el-table-column
           label="项目状态"
           prop="status"
           column-key="status"
           :filters="filter_status"
-          :filter-method="filterTag"
           filter-placement="bottom-end"
         >
           <template slot-scope="props">
@@ -60,7 +45,7 @@
           @current-change="handleCurrentChange"
           :current-page="currentPage"
           :page-size="pagesize"
-          :total="tableDataTest.length"
+          :total="projects.length"
         >
         </el-pagination>
       </el-row>
@@ -82,52 +67,52 @@ export default {
   name: 'AppIndex',
   data () {
     return {
+      uid: 0,
+      tableDataTmp: [],
       currentPage: 1,
-      pagesize: 2,
+      pagesize: 5,
+      total: 10,
       FlowStatusRules,
       filter_status: [
-        { text: '进行中', value: 1 },
-        { text: '已启用', value: 0 },
-        { text: '已删除', value: 3 }
+        { text: 'rejection', value: 0 },
+        { text: 'pending', value: 1 },
+        { text: 'established', value: 2 },
+        { text: 'processing', value: 3 },
+        { text: 'paid', value: 4 },
+        { text: 'finished', value: 5 },
+        { text: 'archived', value: 6 }
       ],
-      FLOWS_STATUS: ['已启用', '进行中', '已失效', '已删除'],
+      FLOWS_STATUS: [
+        'rejection',
+        'pending',
+        'established',
+        'processing',
+        'paid',
+        'finished',
+        'archived'
+      ],
       projects: [
         {
           id: '',
           name: '',
           status: '',
-          update_time: ''
-        }
-      ],
-      tableDataTest: [
-        {
-          id: '1',
-          name: 'biu',
-          status: 0,
-          update_time: '2016-05-04'
-        },
-        {
-          id: '2',
-          name: 'bau',
-          status: 1,
-          update_time: '2016-05-02'
-        },
-        {
-          id: '3',
-          name: 'biu2',
-          status: 3,
-          update_time: '2017-05-02'
+          update_time: 'hh'
         }
       ]
     }
   },
   methods: {
     filterTagTable (filters) {
-      console.log(filters.status)
-      if (filters.status) {
-        this.tableDataTest.status = filters.status
+      this.projects = this.tableDataTmp
+      // eslint-disable-next-line eqeqeq
+      if (filters.status.length == 0) {
+        this.projects = this.tableDataTmp
+      } else {
+        this.projects = this.tableDataTest.filter(item =>
+          // eslint-disable-next-line eqeqeq
+          filters.status.some(ele => ele == item.status)
+        )
       }
-
       // // this.handleCurrentChange(currentPage)
       // return row.status === value
     },
@@ -146,22 +131,66 @@ export default {
       var a = Date.parse(obj1.update_time)
       var b = Date.parse(obj2.update_time)
       if (a > b) {
-        console.log(-1)
         return -1
       } else {
         return 1
       }
     },
-    searchResult () {
+    // 获取全部项目
+    getAllProjects () {
       var _this = this
       this.$axios
-        .get('/search?keywords=' + this.$refs.searchBar.keywords, {})
-        .then(resp => {
-          if (resp && resp.status === 200) {
-            _this.projects = resp.data
+        .get('/homepage/project_all', {
+          params: {
+            uid: _this.uid
           }
         })
+        .then(successResponse => {
+          _this.projects = successResponse.data
+          _this.tableDataTmp = successResponse.data
+        })
+        .catch(failResponse => {
+          console.log('OMmmmG')
+        })
+    },
+    searchResult () {
+      let _this = this
+      let projectsTmp = _this.projects
+      if (
+        _this.$refs.SearchBar.keywords === null ||
+        _this.$refs.SearchBar.keywords === '' ||
+        _this.$refs.SearchBar.keywords === undefined
+      ) {
+        this.getAllProjects()
+        return
+      }
+
+      console.log(_this.projects)
+      console.log('after')
+      this.$axios
+        .post('/homepage/search', {
+          keyword: _this.$refs.SearchBar.keywords
+        })
+        .then(successResponse => {
+          console.log(successResponse.data)
+          // id为空
+          if (successResponse.data.length === 0) {
+            _this.projects.filter(item => {
+              return false
+            })
+            this.$message.error('没有该项目')
+          }
+          // filter
+          _this.projects = projectsTmp.filter(item =>
+            // eslint-disable-next-line eqeqeq
+            successResponse.data.some(ele => ele.id == item.id)
+          )
+        })
     }
+  },
+  created () {
+    this.uid = this.$route.query.uid
+    this.getAllProjects()
   }
 }
 </script>
