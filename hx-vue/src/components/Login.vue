@@ -48,6 +48,7 @@ export default {
   data () {
     return {
       career: 0,
+      uid: 0,
       loginForm: {
         username: '',
         password: ''
@@ -74,22 +75,24 @@ export default {
           password: this.loginForm.password
         })
         .then(successResponse => {
-          if (successResponse.data.status === 0) {
+          // eslint-disable-next-line eqeqeq
+          if (successResponse.data.status == 0) {
             // var data = this.loginForm
             _this.$store.commit('login', _this.loginForm)
             var path = this.$route.query.redirect
             _this.career = successResponse.data.career
-            console.log(_this.career + 'hhhhhh')
+            _this.uid = successResponse.data.uid
             this.$router.push({
               path: path === '/' || path === undefined ? '/index' : path,
               query: {
-                career: _this.career
+                career: _this.career,
+                uid: _this.uid
               }
             })
           }
           if (successResponse.data.status === 1) {
             this.$message.error('用户不存在')
-            console.log(this.career)
+            // console.log(this.career)
             console.log('username_not_exist')
           }
           if (successResponse.data.status === 2) {
