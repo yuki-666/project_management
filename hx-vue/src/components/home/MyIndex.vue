@@ -70,7 +70,6 @@ export default {
       uid: 0,
       FlowStatusRules,
       filter_status: [
-        { text: 'rejection', value: 0 },
         { text: 'pending', value: 1 },
         { text: 'established', value: 2 },
         { text: 'processing', value: 3 },
@@ -79,7 +78,6 @@ export default {
         { text: 'archived', value: 6 }
       ],
       FLOWS_STATUS: [
-        'rejection',
         'pending',
         'established',
         'processing',
