@@ -1,0 +1,30 @@
+/back/login (post)
+username, password (must not empty)
+status(0, 1) 0: ok 1: fail
+
+/back/create_super_account (post)
+username, password
+status: "ok"
+
+/back/create_normal_account (post)
+username, password, name, career, department
+status: "ok"
+
+/back/delete_normal_account (post)
+username
+status: "ok"
+
+/back/modify_normal_account (post)
+username, password, name, career, department
+status(0, 1) 0: ok 1: 用户名不存在
+
+/back/export_normal_account_sample (get)
+username: 'username'
+status: file
+
+/back/import_normal_account (post)
+file
+status: "ok"
+
+/back/show_normal_account (get)
+username, name, career, department
