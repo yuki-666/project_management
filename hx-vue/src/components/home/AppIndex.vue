@@ -108,7 +108,8 @@ export default {
       if (filters.status.length == 0) {
         this.projects = this.tableDataTmp
       } else {
-        this.projects = this.tableDataTest.filter(item =>
+        this.currentPage = 1
+        this.projects = this.tableDataTmp.filter(item =>
           // eslint-disable-next-line eqeqeq
           filters.status.some(ele => ele == item.status)
         )
