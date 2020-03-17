@@ -3,13 +3,13 @@ leader/一般人 -> 被审批工时
 
 项目审批
 /approval/project (get)
-page, size, uid (0 base)
+uid
 id, name, status(include reject), update_time
 
 修改按钮(项目上级叫查看, 项目经理叫修改)
 /approval/project/show (get)
 id
-id, name, describe, 预定时间(scheduled_time), 交付日(delivery_day), 项目上级(project_superior_id, project_superior_name),\
+id, name, describe, 预定时间(scheduled_time), 交付日(delivery_day), 项目上级project_superior(project_superior_id, project_superior_name),\
     主要里程碑(major_milestones), 采用技术(adopting_technology), 业务领域(business_area), 主要功能(main_function)
 
 修改按钮里的保存按钮
@@ -40,21 +40,19 @@ id(工时), worker_name, function_name, event_name, start_time, end_time
 被审批工时
 /approval/work_time/passive (get)
 uid
-id(工时), worker_name, function_name, event_name, start_time, end_time, status
+id(工时), function_name, event_name, start_time, end_time, status
 
 修改按钮
 /approval/work_time/passive/show (get)
 id(工时)
-id(工时), worker_name, function_name, event_name, start_time, end_time
+id(工时), function_name, event_name, start_time, end_time
 
 修改按钮里的保存按钮
 /approval/work_time/passive/modify (post)
-id(工时), worker_name, function_name, event_name, start_time, end_time
+id(工时), function_name, event_name, start_time, end_time
 status: "ok"
 
 删除按钮
 /approval/work_time/passive/delete (post)
 id(工时)
 status: "ok"
-
-

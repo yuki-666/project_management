@@ -7,7 +7,7 @@ not_project_manager: id, name, status, update_time, remain_work_time (default up
 修改项目
 /project/modify/show (get)
 id(项目id)
-id, name, describe, 预定时间(scheduled_time), 交付日(delivery_day), 项目上级(project_superior_id, project_superior_name),\
+id, name, describe, 预定时间(scheduled_time), 交付日(delivery_day), 项目上级project_superior(project_superior_id, project_superior_name),\
     主要里程碑(major_milestones), 采用技术(adopting_technology), 业务领域(business_area), 主要功能(main_function)
 
 修改按钮里的保存按钮
@@ -18,7 +18,7 @@ status: "ok"
 新建项目
 /project/create/show (get)
 uid
-项目上级(project_superior_id, project_superior_name)
+项目上级project_superior(project_superior_id, project_superior_name)
 
 /project/create/save (post)
 id, name, describe, scheduled_time, delivery_day, project_superior_id, major_milestones, adopting_technology, business_area, main_function
