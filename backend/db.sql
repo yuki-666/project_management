@@ -41,7 +41,7 @@ CREATE TABLE `employee` (
 
 LOCK TABLES `employee` WRITE;
 /*!40000 ALTER TABLE `employee` DISABLE KEYS */;
-INSERT INTO `employee` VALUES ('0000','老板','女','项目上级',NULL,'000111',NULL,NULL),('0011','卡桑','男','项目经理','0000','12344321','软件1组','12344321'),('0012','小黄','女','架构师','0011','11112222','软件1组','11112222'),('0013','费费','男','开发leader','0011','22223333','软件1组','22223333'),('0014','坤','女','开发','0013','33334444','软件1组','33334444'),('0015','大虾','男','开发','0013','44445555','软件1组','44445555'),('0016','倩','女','测试leader','0011','55556666','软件1组','55556666'),('0017','工具人','男','测试','0016','66667777','软件1组','66667777');
+INSERT INTO `employee` VALUES ('0000','老板','女','0',NULL,'000111',NULL,NULL),('0011','卡桑','男','0','0000','12344321','软件1组','12344321'),('0012','小黄','女','0','0011','11112222','软件1组','11112222'),('0013','费费','女',null,'0011','22223333','软件1组','22223333'),('0014','坤','女',null,'0013','33334444','软件1组','33334444'),('0015','大虾','男',null,'0013','44445555','软件1组','44445555'),('0016','倩','女',null,'0011','55556666','软件1组','55556666'),('0017','工具人','男',null,'0016','66667777','软件1组','66667777');
 /*!40000 ALTER TABLE `employee` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -82,12 +82,15 @@ CREATE TABLE `project` (
   `name` varchar(45) DEFAULT NULL COMMENT '项目名称',
   `status` int(11) DEFAULT NULL COMMENT '项目状态',
   `customer_id` varchar(45) DEFAULT NULL COMMENT '客户ID',
+  `describe` varchar(45) DEFAULT NULL COMMENT '项目描述',
   `main_function` varchar(45) DEFAULT NULL COMMENT '主要功能',
+  `major_milestones` varchar(45) DEFAULT NULL COMMENT '主要里程碑',
   `domain_id` varchar(45) DEFAULT NULL COMMENT '业务领域',
-  `tech` varchar(45) DEFAULT NULL,
+  `tech` varchar(45) DEFAULT NULL COMMENT '采用技术',
   `project_leader_id` varchar(45) DEFAULT NULL COMMENT '项目上级',
   `submit_date` date DEFAULT NULL COMMENT '交付日',
-  `reserve_date` date DEFAULT NULL COMMENT '交付日',
+  `reserve_date` date DEFAULT NULL COMMENT '预定时间',
+  `update_time` timestamp DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -98,7 +101,7 @@ CREATE TABLE `project` (
 
 LOCK TABLES `project` WRITE;
 /*!40000 ALTER TABLE `project` DISABLE KEYS */;
-INSERT INTO `project` VALUES ('01','图书馆系统',0,NULL,'图书租借',NULL,'共享','0000','2020-03-20','2020-03-25'),('02','外卖系统',3,NULL,'外卖拼单',NULL,'拼单','0000','2020-03-28','2020-03-29');
+INSERT INTO `project` VALUES ('01','图书馆系统',0,0,'good','图书租借',NULL,'01',NULL,'0000','2020-03-20','2020-03-25','2020-01-12-02:23:45'),('02','外卖系统',0,0,'hi','点外卖',NULL,'01',NULL,'0000','2020-03-20','2020-03-25','2020-01-12-02:23:45');
 /*!40000 ALTER TABLE `project` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -106,10 +109,11 @@ UNLOCK TABLES;
 -- Table structure for table `project_participatnt`
 --
 
+DROP TABLE IF EXISTS `project_participant`;
 DROP TABLE IF EXISTS `project_participatnt`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
-CREATE TABLE `project_participatnt` (
+CREATE TABLE `project_participant` (
   `project_id` varchar(45) NOT NULL,
   `person_id` varchar(45) NOT NULL,
   `leader_id` varchar(45) NOT NULL,
@@ -118,13 +122,13 @@ CREATE TABLE `project_participatnt` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `project_participatnt`
+-- Dumping data for table `project_participant`
 --
 
-LOCK TABLES `project_participatnt` WRITE;
-/*!40000 ALTER TABLE `project_participatnt` DISABLE KEYS */;
-INSERT INTO `project_participatnt` VALUES ('01','0011','0000'),('01','0012','0011'),('02','0011','0000'),('02','0012','0011'),('02','0013','0011'),('02','0014','0013'),('02','0015','0013'),('02','0016','0011'),('02','0017','0016');
-/*!40000 ALTER TABLE `project_participatnt` ENABLE KEYS */;
+LOCK TABLES `project_participant` WRITE;
+/*!40000 ALTER TABLE `project_participant` DISABLE KEYS */;
+INSERT INTO `project_participant` VALUES ('01','0011','0000'),('01','0012','0011'),('02','0011','0000'),('02','0012','0011'),('02','0013','0011'),('02','0014','0013'),('02','0015','0013'),('02','0016','0011'),('02','0017','0016');
+/*!40000 ALTER TABLE `project_participant` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -135,15 +139,19 @@ DROP TABLE IF EXISTS `work_time`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `work_time` (
-  `work_time_id` int(11) NOT NULL COMMENT '工时ID',
+  `id` int(11) NOT NULL COMMENT '工时ID',
   `worker_id` varchar(45) DEFAULT NULL COMMENT '员工id',
   `project_id` varchar(45) DEFAULT NULL COMMENT '项目ID',
-  `work_date` varchar(45) DEFAULT NULL COMMENT '日期',
-  `work_info` varchar(45) DEFAULT NULL COMMENT '工时信息',
-  `worktime_remian` varchar(45) DEFAULT NULL COMMENT '工时剩余',
-  `status` varchar(45) DEFAULT NULL COMMENT '状态',
+  `date` date DEFAULT NULL COMMENT '日期',
+  `function_name` varchar(45) DEFAULT NULL COMMENT '功能名称',
+  `event_name` varchar(45) DEFAULT NULL COMMENT '活动名称',
+  `start_time` timestamp DEFAULT NULL COMMENT '开始时间',
+  `end_time` timestamp DEFAULT NULL COMMENT '结束时间',
+  `remain` varchar(45) DEFAULT NULL COMMENT '剩余工时',
+  `status` varchar(45) DEFAULT NULL COMMENT '审批状态',
   `remarks` varchar(45) DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`work_time_id`)
+  `delete_label` varchar(45) DEFAULT NULL COMMENT '删除标记',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -153,7 +161,7 @@ CREATE TABLE `work_time` (
 
 LOCK TABLES `work_time` WRITE;
 /*!40000 ALTER TABLE `work_time` DISABLE KEYS */;
-INSERT INTO `work_time` VALUES (1,'0012','01','2020-03-14','图书馆','5','0',NULL),(2,'0012','01','2020-03-15','图书馆代码','8','1',NULL),(3,'0013','01','2020-03-16','图书馆代码实现','9','1',NULL),(4,'0013','01','2020-03-14','图书馆代码实现','10','0',NULL),(5,'0014','02','2020-03-15','拼单','3','1',NULL),(6,'0015','02','2020-03-13','外卖系统','4','1',NULL),(7,'0014','01','2020-03-15','图书馆页面','6','0',NULL),(8,'0016','02','2020-03-16','测试','9','0',NULL),(9,'0017','01','2020-03-15','测试','7','1',NULL),(10,'0011','02','2020-03-16','代码设计','0','0',NULL);
+INSERT INTO `work_time` VALUES (1,'0012','01','2020-03-14','func1','图书馆','10:00','15:00','5','0',NULL,'1'),(2,'0012','01','2020-03-15','func2','图书馆代码','9:00','17:00','8','1',NULL,'0'),(3,'0013','01','2020-03-16','fun3','图书馆代码实现','9:00','17:00','9','1',NULL,'0'),(4,'0013','01','2020-03-14','fun3','图书馆代码实现','9:00','17:00','10','0',NULL,'1'),(5,'0014','02','2020-03-15','func3','拼单','9:00','17:00','3','1',NULL,'0'),(6,'0015','02','2020-03-13','func3','外卖系统','9:00','17:00','4','1',NULL,'1'),(7,'0014','01','2020-03-15','func2','图书馆页面','9:00','17:00','6','0',NULL,'0'),(8,'0016','02','2020-03-16','func3','测试','9:00','17:00','9','0',NULL,'1'),(9,'0017','01','2020-03-15','func3','测试','9:00','17:00','7','1',NULL,'0'),(10,'0011','02','2020-03-16','func4','代码设计','9:00','17:00','0','0',NULL,'0');
 /*!40000 ALTER TABLE `work_time` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
