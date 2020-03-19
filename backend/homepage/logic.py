@@ -19,6 +19,9 @@ def login(username, password):
     db = d.ConnectToMysql(tomysql.host,tomysql.username,tomysql.password,tomysql.database,tomysql.port)
     res = db.selectDB(sql)
     
+    # TODO
+    print(res)
+    print(res[0]['career'])
     if not res == 'Empty':
         if res['career'] != 'NULL':
             return (0,res)
@@ -114,27 +117,30 @@ def get_project(page, size, uid=None, include_reject=False):
     return res
     
 if __name__ == "__main__":
-    tmp = np.array([[1, 2, 3, '2020-03-10'],
-            [4, 5, 3, '2020-03-11']])
+    # TODO: fix bug.
+    ret = login('卡桑', '000111')
+    print(ret)
+    # tmp = np.array([[1, 2, 3, '2020-03-10'],
+    #         [4, 5, 3, '2020-03-11']])
 
-    db_result = np.array(tmp)
-    l = np.argsort(tmp[:,3])
+    # db_result = np.array(tmp)
+    # l = np.argsort(tmp[:,3])
     
-    length =  l.shape[0]
-    for i in range(length):
+    # length =  l.shape[0]
+    # for i in range(length):
         
-        db_result[length-1-l[i]] = tmp[i]
-    print(db_result)
-    p = {}
-    p['name'] = ['zs']
-    p['id'] = [0]
-    print(p)
-    like = '*'
-    keyward = 'abc'
-    for i in range(len(keyward)):
-        like = like + keyward[i]
-        like = like + '*'
-    print(like)
+    #     db_result[length-1-l[i]] = tmp[i]
+    # print(db_result)
+    # p = {}
+    # p['name'] = ['zs']
+    # p['id'] = [0]
+    # print(p)
+    # like = '*'
+    # keyward = 'abc'
+    # for i in range(len(keyward)):
+    #     like = like + keyward[i]
+    #     like = like + '*'
+    # print(like)
     
 
 
