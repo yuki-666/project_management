@@ -4,7 +4,6 @@ import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__) , '..')) # backend/
 import config
-import tomysql
 import util.db as d
 
 def login(username, password):
@@ -16,19 +15,19 @@ def login(username, password):
              on login.id = employee.id
              where login.username = '%s' and login.password = '%s';''' %(username,password)
     
-    db = d.ConnectToMysql(tomysql.host,tomysql.username,tomysql.password,tomysql.database,tomysql.port)
+    db = d.ConnectToMysql(config.host,config.username,config.password,config.database,config.port)
     res = db.selectDB(sql)
     
     # TODO
-    print(res)
-    print(res[0]['career'])
+    # print(res)
+    # print(res[0]['career'])
     if not res == 'Empty':
         if res['career'] != 'NULL':
             return (0,res)
         #leader or worker
         sql = '''select 2 from project_participant join employee
                  where employee.username = '%s' and employee.id = project_participant.leader_id;''' % username
-        db = d.ConnectToMysql(tomysql.host,tomysql.username,tomysql.password,tomysql.database,tomysql.port)
+        db = d.ConnectToMysql(config.host,config.username,config.password,config.database,config.port)
         if db.selectDB(sql) == 'Empty':
             res['career'] = 3
             return (0,res)
@@ -40,7 +39,7 @@ def login(username, password):
              from login join employee
              on login.id = employee.id
              where login.username = '%s';''' % username
-        db = d.ConnectToMysql(tomysql.host,tomysql.username,tomysql.password,tomysql.database,tomysql.port)
+        db = d.ConnectToMysql(config.host,config.username,config.password,config.database,config.port)
         res = db.selectDB(sql)
         if res == 'Empty':
             return 1
@@ -67,7 +66,7 @@ def search_project(project_id=None, keyword=None, detail=False):
 
     if project_id is not None:
         sql = sql + '''where id = '%s';''' % project_id
-        db = d.ConnectToMysql(tomysql.host,tomysql.username,tomysql.password,tomysql.database,tomysql.port)
+        db = d.ConnectToMysql(config.host,config.username,config.password,config.database,config.port)
         res = db.selectDB(sql)
         return res
     elif keyword is not None:
@@ -77,13 +76,13 @@ def search_project(project_id=None, keyword=None, detail=False):
             like = like + keyword[i]
             like = like + '%'
         sql_ = sql + '''where id like '%s';''' % like
-        db = d.ConnectToMysql(tomysql.host,tomysql.username,tomysql.password,tomysql.database,tomysql.port)
+        db = d.ConnectToMysql(config.host,config.username,config.password,config.database,config.port)
         res = db.selectDB(sql_)
 
         if not res == 'Empty':
             return res
         sql = sql + '''where name like '%s';''' % like
-        db = d.ConnectToMysql(tomysql.host,tomysql.username,tomysql.password,tomysql.database,tomysql.port)
+        db = d.ConnectToMysql(config.host,config.username,config.password,config.database,config.port)
         res = db.selectDB(sql)
         return res
     else:
@@ -105,14 +104,14 @@ def get_project(page, size, uid=None, include_reject=False):
                        where project_participant.person_id = '%s' ''' % uid
         if include_reject==False:
             sql_ = sql_ +  '''and status > 0;'''
-        db = d.ConnectToMysql(tomysql.host,tomysql.username,tomysql.password,tomysql.database,tomysql.port)
+        db = d.ConnectToMysql(config.host,config.username,config.password,config.database,config.port)
         res = db.selectDB(sql_)
         return res
 
     if include_reject==False:
         sql = sql + 'where status >0;'
     print(sql)
-    db = d.ConnectToMysql(tomysql.host,tomysql.username,tomysql.password,tomysql.database,tomysql.port)
+    db = d.ConnectToMysql(config.host,config.username,config.password,config.database,config.port)
     res = db.selectDB(sql)
     return res
     
