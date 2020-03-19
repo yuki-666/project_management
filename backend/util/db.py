@@ -1,30 +1,64 @@
-# database utility
+import pymysql
+import tomysql #数据库基本信息
 
-def select(para):#parameter
-    #select name from employee join table_a where attribute1 = value1 and employee.xx = table_a.yy
-    #result: 'zhangsan'
-    #para is a dictionary
-    #para[select_key] = ['name']
-    #para[select_value] = ['zhangsan']
-    #para[tablename] = 'employee'
-    #para[join_tablename] = ['table_a']
-    #para[key] = [where 子句等号左边]
-    #para[value] = [where 子句等号右边]
+class ConnectToMysql(object):
+    def __init__(self,host,username,password,database,port):
+        self.host = host
+        self.username = username
+        self.password = password
+        self.database = database
+        self.port = port
+        self.db = pymysql.connect(self.host,self.username,self.password,self.database,self.port,charset='utf8')
+        self.cursor = self.db.cursor()
     
-    #to do
-    # return 'error' if key not found
-    return status #'ok' or other
+    def otherDB(self,sql): #增删改
+        try:
+            if self.cursor.execute(sql) == 0:
+                return 'none'#无数据符合where条件
+            else :
+                return 'ok'
+            self.db.commit()
+        except:
+            #print('You have an error in your SQL syntax;') #sql语句有问题或其他问题
+            self.db.rollback()
+        finally:
+            self.cursor.close()
 
-def update(para):
-    #update project
-    #set project_name = hh,main_function = nn
-    #where project_id = 30
-    #para[tablename] = 'project'
-    #para[set_key] = 
-    #para[set_value] = 
-    #para[where_key] = 
-    #para[where_value] =
+            
+    def selectDB(self,sql):   #查询
+        try:
+            if self.cursor.execute(sql) == 0:
+                return 'Empty'  #查询无数据
+            data = self.cursor.fetchall()
+            desc = self.cursor.description  #转化为字典序
+            output_data = [dict(zip([col[0] for col in desc], row)) for row in data]
+            return output_data #输出字典型数据
+        except:
+            print('You have an error in your SQL syntax;')  #sql语句有问题或其他问题
+        finally:
+            self.cursor.close()
 
-    #todo
-    # return 'error' if project_id not found else return 'ok'
-    return status
+             
+    def __del__(self):   #关闭连接
+          self.cursor.close()
+          self.db.close()
+
+
+#使用实例
+if __name__ == '__main__':
+    #创建连接
+    db = ConnectToMysql(tomysql.host,tomysql.username,tomysql.password,tomysql.database,tomysql.port)
+    #sql语句
+    sql="select username from login where id='0018'"
+    #调用函数
+    db.selectDB(sql)
+
+
+
+
+
+
+
+            
+
+    
