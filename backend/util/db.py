@@ -1,5 +1,9 @@
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__) , '..'))
+
+import config
 import pymysql
-import tomysql #数据库基本信息
 
 class ConnectToMysql(object):
     def __init__(self,host,username,password,database,port):
@@ -47,18 +51,8 @@ class ConnectToMysql(object):
 #使用实例
 if __name__ == '__main__':
     #创建连接
-    db = ConnectToMysql(tomysql.host,tomysql.username,tomysql.password,tomysql.database,tomysql.port)
+    db = ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     #sql语句
-    sql="select username from login where id='0018'"
+    sql = "select username from login where id='0012'"
     #调用函数
-    db.selectDB(sql)
-
-
-
-
-
-
-
-            
-
-    
+    print(db.selectDB(sql))
