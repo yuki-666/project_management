@@ -22,17 +22,17 @@ def login(username, password):
     # print(res)
     # print(res[0]['career'])
     if not res == 'Empty':
-        if res['career'] != 'NULL':
+        if res[0]['career'] != None:
             return (0,res)
         #leader or worker
-        sql = '''select 2 from project_participant join employee
-                 where employee.username = '%s' and employee.id = project_participant.leader_id;''' % username
+        sql = '''select 2 from project_participant join login
+                 where login.username = '%s' and login.id = project_participant.leader_id;''' % username
         db = d.ConnectToMysql(config.host,config.username,config.password,config.database,config.port)
         if db.selectDB(sql) == 'Empty':
-            res['career'] = 3
+            res[0]['career'] = '3'
             return (0,res)
         else:
-            res['career'] = 2
+            res[0]['career'] = '2'
             return (0,res)
     else :
         sql = '''select login.id,employee.career
