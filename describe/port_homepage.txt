@@ -1,0 +1,19 @@
+登录
+/homepage/login (post)
+username, password
+status -> (if status == 0)
+
+搜索框
+/homepage/search (post)
+keyword
+id
+
+全部项目
+/homepage/project_all (get)
+uid
+id, name, status, update_time (default update_time)
+
+我参与的项目
+/homepage/project_mine (get)
+uid
+id, name, status, update_time (default update_time)

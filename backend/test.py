@@ -5,14 +5,14 @@ import numpy as np
 import pandas as pd
 import os
 
-base_url = 'http://127.0.0.1:7777'
-route = '/homepage/search'
+base_url = 'http://127.0.0.1:7777/api'
+route = '/homepage/login'
 
 if __name__ == "__main__":
     url = base_url + route
 
     # post
-    d = {'id': '-1', 'name': '1'}
+    d = {'username': '卡桑', 'password': '000111'}
     r = requests.post(url, data=d)
 
     # get

@@ -4,7 +4,6 @@ import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__) , '..')) # backend/
 import config
-import tomysql
 import util.db as d
 
 def login(username, password):
@@ -16,16 +15,19 @@ def login(username, password):
              on login.id = employee.id
              where login.username = '%s' and login.password = '%s';''' %(username,password)
     
-    db = d.ConnectToMysql(tomysql.host,tomysql.username,tomysql.password,tomysql.database,tomysql.port)
+    db = d.ConnectToMysql(config.host,config.username,config.password,config.database,config.port)
     res = db.selectDB(sql)
     
+    # TODO
+    # print(res)
+    # print(res[0]['career'])
     if not res == 'Empty':
         if res[0]['career'] != None:
             return (0,res)
         #leader or worker
         sql = '''select 2 from project_participant join login
                  where login.username = '%s' and login.id = project_participant.leader_id;''' % username
-        db = d.ConnectToMysql(tomysql.host,tomysql.username,tomysql.password,tomysql.database,tomysql.port)
+        db = d.ConnectToMysql(config.host,config.username,config.password,config.database,config.port)
         if db.selectDB(sql) == 'Empty':
             res[0]['career'] = '3'
             return (0,res)
@@ -37,7 +39,7 @@ def login(username, password):
              from login join employee
              on login.id = employee.id
              where login.username = '%s';''' % username
-        db = d.ConnectToMysql(tomysql.host,tomysql.username,tomysql.password,tomysql.database,tomysql.port)
+        db = d.ConnectToMysql(config.host,config.username,config.password,config.database,config.port)
         res = db.selectDB(sql)
         if res == 'Empty':
             return 1
@@ -64,7 +66,7 @@ def search_project(project_id=None, keyword=None, detail=False):
 
     if project_id is not None:
         sql = sql + '''where id = '%s';''' % project_id
-        db = d.ConnectToMysql(tomysql.host,tomysql.username,tomysql.password,tomysql.database,tomysql.port)
+        db = d.ConnectToMysql(config.host,config.username,config.password,config.database,config.port)
         res = db.selectDB(sql)
         return res
     elif keyword is not None:
@@ -74,13 +76,13 @@ def search_project(project_id=None, keyword=None, detail=False):
             like = like + keyword[i]
             like = like + '%'
         sql_ = sql + '''where id like '%s';''' % like
-        db = d.ConnectToMysql(tomysql.host,tomysql.username,tomysql.password,tomysql.database,tomysql.port)
+        db = d.ConnectToMysql(config.host,config.username,config.password,config.database,config.port)
         res = db.selectDB(sql_)
 
         if not res == 'Empty':
             return res
         sql = sql + '''where name like '%s';''' % like
-        db = d.ConnectToMysql(tomysql.host,tomysql.username,tomysql.password,tomysql.database,tomysql.port)
+        db = d.ConnectToMysql(config.host,config.username,config.password,config.database,config.port)
         res = db.selectDB(sql)
         return res
     else:
@@ -102,39 +104,42 @@ def get_project(page, size, uid=None, include_reject=False):
                        where project_participant.person_id = '%s' ''' % uid
         if include_reject==False:
             sql_ = sql_ +  '''and status > 0;'''
-        db = d.ConnectToMysql(tomysql.host,tomysql.username,tomysql.password,tomysql.database,tomysql.port)
+        db = d.ConnectToMysql(config.host,config.username,config.password,config.database,config.port)
         res = db.selectDB(sql_)
         return res
 
     if include_reject==False:
         sql = sql + 'where status >0;'
     print(sql)
-    db = d.ConnectToMysql(tomysql.host,tomysql.username,tomysql.password,tomysql.database,tomysql.port)
+    db = d.ConnectToMysql(config.host,config.username,config.password,config.database,config.port)
     res = db.selectDB(sql)
     return res
     
 if __name__ == "__main__":
-    tmp = np.array([[1, 2, 3, '2020-03-10'],
-            [4, 5, 3, '2020-03-11']])
+    # TODO: fix bug.
+    ret = login('卡桑', '000111')
+    print(ret)
+    # tmp = np.array([[1, 2, 3, '2020-03-10'],
+    #         [4, 5, 3, '2020-03-11']])
 
-    db_result = np.array(tmp)
-    l = np.argsort(tmp[:,3])
+    # db_result = np.array(tmp)
+    # l = np.argsort(tmp[:,3])
     
-    length =  l.shape[0]
-    for i in range(length):
+    # length =  l.shape[0]
+    # for i in range(length):
         
-        db_result[length-1-l[i]] = tmp[i]
-    print(db_result)
-    p = {}
-    p['name'] = ['zs']
-    p['id'] = [0]
-    print(p)
-    like = '*'
-    keyward = 'abc'
-    for i in range(len(keyward)):
-        like = like + keyward[i]
-        like = like + '*'
-    print(like)
+    #     db_result[length-1-l[i]] = tmp[i]
+    # print(db_result)
+    # p = {}
+    # p['name'] = ['zs']
+    # p['id'] = [0]
+    # print(p)
+    # like = '*'
+    # keyward = 'abc'
+    # for i in range(len(keyward)):
+    #     like = like + keyward[i]
+    #     like = like + '*'
+    # print(like)
     
 
 

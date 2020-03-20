@@ -5,6 +5,8 @@ import AppIndex from '@/components/home/AppIndex'
 import Login from '@/components/Login'
 import Home from '../components/Home'
 import LibraryIndex from '../components/library/LibraryIndex'
+import MyIndex from '../components/home/MyIndex'
+import MyAuidt from '../components/Audit/Audit_Index'
 
 Vue.use(Router)
 
@@ -30,6 +32,22 @@ export default new Router({
           path: '/library',
           name: 'Library',
           component: LibraryIndex,
+          meta: {
+            requireAuth: true
+          }
+        },
+        {
+          path: '/my_audit',
+          name: 'MyAuidt',
+          component: MyAuidt,
+          meta: {
+            requireAuth: true
+          }
+        },
+        {
+          path: '/MyIndex',
+          name: 'MyIndex',
+          component: MyIndex,
           meta: {
             requireAuth: true
           }
