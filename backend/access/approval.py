@@ -9,7 +9,7 @@ import approval.logic as logic
 approval_access = Blueprint('approval_access', __name__)
 
 @approval_access.route('/project', methods=['GET'])
-def approval_project():
+def project():
     request_data = get_value_dict()
     if not check_dict(request_data, ['page', 'size', 'uid']):
         return json.dumps('PARAM ERROR')
@@ -24,7 +24,7 @@ def approval_project():
         return json.dumps(ret)
 
 @approval_access.route('/project/show', methods=['GET'])
-def approval_project_show():
+def project_show():
     request_data = get_value_dict()
     if not check_dict(request_data, ['id']):
         return json.dumps('PARAM ERROR')
@@ -41,7 +41,7 @@ def approval_project_show():
         return json.dumps(ret)
 
 @approval_access.route('/project/modify', methods=['POST'])
-def approval_project_modify():
+def project_modify():
     request_data = get_value_dict()
     if not check_dict(request_data, ['id', 'name', 'describe', 'scheduled_time', 'delivery_day', \
         'project_superior_name', 'major_milestones', 'adopting_technology', 'business_area', 'main_function']):
@@ -59,7 +59,7 @@ def approval_project_modify():
         return json.dumps(ret)
 
 @approval_access.route('/project/confirm', methods=['POST'])
-def approval_project_confirm():
+def project_confirm():
     request_data = get_value_dict()
     if not check_dict(request_data, ['id', 'status']):
         return json.dumps('PARAM ERROR')
@@ -74,7 +74,7 @@ def approval_project_confirm():
         return json.dumps(ret)
 
 @approval_access.route('/work_time/initiative', methods=['GET'])
-def approval_work_time_initiative():
+def work_time_initiative():
     request_data = get_value_dict()
 
     if not check_dict(request_data, ['uid']):
@@ -91,7 +91,7 @@ def approval_work_time_initiative():
         return json.dumps(ret)
 
 @approval_access.route('/work_time/confirm', methods=['POST'])
-def approval_work_time_confirm():
+def work_time_confirm():
     request_data = get_value_dict()
 
     if not check_dict(request_data, ['id', 'status']):
@@ -107,7 +107,7 @@ def approval_work_time_confirm():
         return json.dumps(ret)
 
 @approval_access.route('/work_time/initiative/show', methods=['GET'])
-def approval_work_time_initiative_show():
+def work_time_initiative_show():
     request_data = get_value_dict()
     if not check_dict(request_data, ['id']):
         return json.dumps('PARAM ERROR')
@@ -123,7 +123,7 @@ def approval_work_time_initiative_show():
         return json.dumps(ret)
 
 @approval_access.route('/work_time/passive', methods=['GET'])
-def approval_work_time_passive():
+def work_time_passive():
     request_data = get_value_dict()
 
     if not check_dict(request_data, ['uid']):
@@ -140,7 +140,7 @@ def approval_work_time_passive():
         return json.dumps(ret)
 
 @approval_access.route('/work_time/passive/show', methods=['GET'])
-def approval_work_time_passive_show():
+def work_time_passive_show():
     request_data = get_value_dict()
     if not check_dict(request_data, ['id']):
         return json.dumps('PARAM ERROR')
@@ -156,7 +156,7 @@ def approval_work_time_passive_show():
         return json.dumps(ret)
 
 @approval_access.route('/work_time/passive/modify', methods=['POST'])
-def approval_work_time_passive_modify():
+def work_time_passive_modify():
     request_data = get_value_dict()
 
     if not check_dict(request_data, ['id', 'worker_name', 'function_name', \
@@ -174,7 +174,7 @@ def approval_work_time_passive_modify():
         return json.dumps(ret)
 
 @approval_access.route('/work_time/passive/delete', methods=['POST'])
-def approval_work_time_passive_delete():
+def work_time_passive_delete():
     request_data = get_value_dict()
 
     if not check_dict(request_data, ['id']):
