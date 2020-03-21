@@ -145,6 +145,7 @@ export default {
           }
         })
         .then(successResponse => {
+          console.log(successResponse)
           _this.projects = successResponse.data
           _this.tableDataTmp = successResponse.data
         })
@@ -188,6 +189,7 @@ export default {
     }
   },
   created () {
+    console.log('hhhhhhh')
     this.uid = this.$route.query.uid
     this.getAllProjects()
   }

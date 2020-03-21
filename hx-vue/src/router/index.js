@@ -7,6 +7,8 @@ import Home from '../components/Home'
 import LibraryIndex from '../components/library/LibraryIndex'
 import MyIndex from '../components/home/MyIndex'
 import MyAuidt from '../components/Audit/Audit_Index'
+import ManagerRAuidt from '../components/Audit/Manager_Audit/Manager_r_audit.vue'
+import ManagerRWorkTime from '../components/Audit/Manager_Audit/Manager_r_workTime.vue'
 
 Vue.use(Router)
 
@@ -20,6 +22,22 @@ export default new Router({
       // home页面并不需要被访问
       redirect: '/index',
       children: [
+        {
+          path: '/ManagerRAuidt',
+          name: 'ManagerRAuidt',
+          component: ManagerRAuidt,
+          meta: {
+            requireAuth: true
+          }
+        },
+        {
+          path: '/ManagerRWorkTime',
+          name: 'ManagerRWorkTime',
+          component: ManagerRWorkTime,
+          meta: {
+            requireAuth: true
+          }
+        },
         {
           path: '/index',
           name: 'AppIndex',
