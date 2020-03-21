@@ -1,4 +1,9 @@
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__) , '..'))
+
 from flask import json, request
+import config
 
 def get_value_dict():
     ret = request.get_json()
@@ -17,7 +22,7 @@ def check_dict(data, keys):
     return True
 
 def has_error(data):
-    if type(data) == str and data == 'error':
+    if data == config.error_value:
         return True
     else:
         return False
