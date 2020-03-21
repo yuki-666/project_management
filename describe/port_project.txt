@@ -4,7 +4,7 @@ uid, career
 project_manager: id, name, status, update_time (default update_time)
 not_project_manager: id, name, status, update_time, remain_work_time (default update_time)
 
-修改项目
+修改项目(reject的不能修改)
 /project/modify/show (get)
 id(项目id)
 id, name, describe, 预定时间(scheduled_time), 交付日(delivery_day), 项目上级project_superior(project_superior_id, project_superior_name),\
@@ -18,10 +18,10 @@ status: "ok"
 新建项目
 /project/create/show (get)
 uid
-项目上级project_superior(project_superior_id, project_superior_name)
+项目上级project_superior(project_superior_id, project_superior_name), 客户cumtom(custom_id, company_name)
 
 /project/create/save (post)
-id, name, describe, scheduled_time, delivery_day, project_superior_id, major_milestones, adopting_technology, business_area, main_function
+name, describe, development_type, scheduled_time, delivery_day, project_superior_id, custom_id, major_milestones, adopting_technology, business_area, main_function
 status: "ok"
 
 工时页面

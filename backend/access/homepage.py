@@ -9,7 +9,7 @@ from util.access import *
 homepage_access = Blueprint('homepage_access', __name__)
 
 @homepage_access.route('/login', methods=['POST'])
-def homepage_login():
+def login():
     request_data = get_value_dict()
     if not check_dict(request_data, ['username', 'password']):
         return json.dumps('PARAM ERROR')
@@ -27,7 +27,7 @@ def homepage_login():
             return json.dumps(ret)
 
 @homepage_access.route('/search', methods=['POST'])
-def homepage_search():
+def search():
     request_data = get_value_dict()
     if not check_dict(request_data, ['keyword']):
         return json.dumps('PARAM ERROR')
@@ -41,7 +41,7 @@ def homepage_search():
         return json.dumps(data)
 
 @homepage_access.route('/project_all', methods=['GET'])
-def homepage_project_all():
+def project_all():
     request_data = get_value_dict()
     if not check_dict(request_data, ['uid']):
         return json.dumps('PARAM ERROR')
@@ -54,7 +54,7 @@ def homepage_project_all():
         return json.dumps(data)
 
 @homepage_access.route('/project_mine', methods=['GET'])
-def homepage_project_mine():
+def project_mine():
     request_data = get_value_dict()
     if not check_dict(request_data, ['uid']):
         return json.dumps('PARAM ERROR')
