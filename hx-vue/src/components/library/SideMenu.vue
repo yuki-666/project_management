@@ -1,7 +1,7 @@
 <template>
   <el-menu
     class="categories"
-    default-active="0"
+    :default-active="0"
     @select="handleSelect"
     active-text-color="red"
   >
@@ -49,6 +49,9 @@ export default {
       this.cid = key
       this.$emit('indexSelect')
     }
+  },
+  created () {
+    this.cid = 0
   }
 }
 </script>

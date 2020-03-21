@@ -3,25 +3,23 @@ import sys
 sys.path.append(os.path.join(os.path.dirname(__file__) , '..'))
 
 from flask import json, Blueprint
+from logic import project, user, work_time
 from util.access import *
-import approval.logic as logic
 
 approval_access = Blueprint('approval_access', __name__)
 
 @approval_access.route('/project', methods=['GET'])
 def approval_project():
     request_data = get_value_dict()
-    if not check_dict(request_data, ['page', 'size', 'uid']):
+    if not check_dict(request_data, ['uid']):
         return json.dumps('PARAM ERROR')
     
-    data = homepage.get_project(request_data['page'], request_data['size'], uid=request_data['uid'], include_reject=True)
+    data = project.get_info(uid=request_data['uid'], include_reject=True)
 
     if has_error(data):
-        return json.dumps('ERROR route:/approval/project')
+        return json.dumps('BACKEND ERROR')
     else:
-        ret = {}
-        ret['id'], ret['name'], ret['status'], ret['update_time'] = data
-        return json.dumps(ret)
+        return json.dumps(data)
 
 @approval_access.route('/project/show', methods=['GET'])
 def approval_project_show():
@@ -29,34 +27,31 @@ def approval_project_show():
     if not check_dict(request_data, ['id']):
         return json.dumps('PARAM ERROR')
 
-    data = homepage.search_project(project_id=request_data['id'], detail=True)
+    data_project = project.get_info(project_id=request_data['id'], detail=True)
+    data_project_superior = user.get_project_superior()
 
-    if has_error(data):
-        return json.dumps('ERROR route:/approval/project/show')
+    if has_error(data_project) or has_error(data_project_superior):
+        return json.dumps('BACKEND ERROR')
     else:
-        ret = {}
-        ret['id'], ret['name'], ret['describe'], ret['scheduled_time'], ret['delivery_day'], \
-            ret['project_superior_name'], ret['major_milestones'], ret['adopting_technology'], \
-            ret['business_area'], ret['main_function'] = data
-        return json.dumps(ret)
+        data = data_project
+        data['project_superior'] = data_project_superior
+        return json.dumps(data)
 
 @approval_access.route('/project/modify', methods=['POST'])
 def approval_project_modify():
     request_data = get_value_dict()
     if not check_dict(request_data, ['id', 'name', 'describe', 'scheduled_time', 'delivery_day', \
-        'project_superior_name', 'major_milestones', 'adopting_technology', 'business_area', 'main_function']):
+        'project_superior_id', 'major_milestones', 'adopting_technology', 'business_area', 'main_function']):
         return json.dumps('PARAM ERROR')
 
-    data = approval.modify_project(request_data['id'], request_data['name'], request_data['describe'], \
-        request_data['scheduled_time'], request_data['delivery_day'], request_data['project_superior_name'], \
+    data = project.modify(request_data['id'], request_data['name'], request_data['describe'], \
+        request_data['scheduled_time'], request_data['delivery_day'], request_data['project_superior_id'], \
         request_data['major_milestones'], request_data['adopting_technology'], request_data['business_area'], request_data['main_function'])
 
     if has_error(data):
-        return json.dumps('ERROR route:/approval/project/modify')
+        return json.dumps('BACKEND ERROR')
     else:
-        ret = {}
-        ret['status'] = data
-        return json.dumps(ret)
+        return json.dumps({'status': data})
 
 @approval_access.route('/project/confirm', methods=['POST'])
 def approval_project_confirm():
@@ -64,47 +59,38 @@ def approval_project_confirm():
     if not check_dict(request_data, ['id', 'status']):
         return json.dumps('PARAM ERROR')
 
-    data = approval.confirm_project(request_data['id'], request_data['status'])
+    data = project.confirm(request_data['id'], request_data['status'])
 
     if has_error(data):
-        return json.dumps('ERROR route:/approval/project/confirm')
+        return json.dumps('BACKEND ERROR')
     else:
-        ret = {}
-        ret['status'] = data
-        return json.dumps(ret)
+        return json.dumps({'status': data})
 
 @approval_access.route('/work_time/initiative', methods=['GET'])
 def approval_work_time_initiative():
     request_data = get_value_dict()
-
     if not check_dict(request_data, ['uid']):
         return json.dumps('PARAM ERROR')
 
-    data = approval.get_work_time_by_uid(request_data['uid'], is_superior=True)
+    data = work_time.get_info_by_uid(request_data['uid'], is_superior=True)
 
     if has_error(data):
-        return json.dumps('ERROR route:/approval/work_time/initiative')
+        return json.dumps('BACKEND ERROR')
     else:
-        ret = {}
-        ret['id'], ret['worker_name'], ret['function_name'], ret['event_name'], \
-            ret['start_time'], ret['end_time'] = data
-        return json.dumps(ret)
+        return json.dumps(data)
 
 @approval_access.route('/work_time/confirm', methods=['POST'])
 def approval_work_time_confirm():
     request_data = get_value_dict()
-
     if not check_dict(request_data, ['id', 'status']):
         return json.dumps('PARAM ERROR')
 
-    data = approval.confirm_work_time(request_data['id'], request_data['status'])
+    data = work_time.confirm(request_data['id'], request_data['status'])
 
     if has_error(data):
-        return json.dumps('ERROR route:/approval/work_time/confirm')
+        return json.dumps('BACKEND ERROR')
     else:
-        ret = {}
-        ret['status'] = data
-        return json.dumps(ret)
+        return json.dumps({'status': data})
 
 @approval_access.route('/work_time/initiative/show', methods=['GET'])
 def approval_work_time_initiative_show():
@@ -112,32 +98,25 @@ def approval_work_time_initiative_show():
     if not check_dict(request_data, ['id']):
         return json.dumps('PARAM ERROR')
     
-    data = approval.get_work_time_by_work_time_id(request_data['id'])
+    data = work_time.get_info_by_work_time_id(request_data['id'])
 
     if has_error(data):
-        return json.dumps('ERROR route:/approval/work_time/initiative/show')
+        return json.dumps('BACKEND ERROR')
     else:
-        ret = {}
-        ret['id'], ret['worker_name'], ret['function_name'], ret['event_name'], \
-            ret['start_time'], ret['end_time'] = data
-        return json.dumps(ret)
+        return json.dumps(data)
 
 @approval_access.route('/work_time/passive', methods=['GET'])
 def approval_work_time_passive():
     request_data = get_value_dict()
-
     if not check_dict(request_data, ['uid']):
         return json.dumps('PARAM ERROR')
 
-    data = approval.get_work_time_by_uid(request_data['uid'], include_finished=True)
+    data = work_time.get_info_by_uid(request_data['uid'], include_finished=True)
 
     if has_error(data):
-        return json.dumps('ERROR route:/approval/work_time/passive')
+        return json.dumps('BACKEND ERROR')
     else:
-        ret = {}
-        ret['id'], ret['worker_name'], ret['function_name'], ret['event_name'], \
-            ret['start_time'], ret['end_time'], ret['status'] = data
-        return json.dumps(ret)
+        return json.dumps(data)
 
 @approval_access.route('/work_time/passive/show', methods=['GET'])
 def approval_work_time_passive_show():
@@ -145,46 +124,37 @@ def approval_work_time_passive_show():
     if not check_dict(request_data, ['id']):
         return json.dumps('PARAM ERROR')
     
-    data = approval.get_work_time_by_work_time_id(request_data['id'])
+    data = work_time.get_info_by_work_time_id(request_data['id'])
 
     if has_error(data):
-        return json.dumps('ERROR route:/approval/work_time/passive/show')
+        return json.dumps('BACKEND ERROR')
     else:
-        ret = {}
-        ret['id'], ret['worker_name'], ret['function_name'], ret['event_name'], \
-            ret['start_time'], ret['end_time'] = data
-        return json.dumps(ret)
+        return json.dumps(data)
 
 @approval_access.route('/work_time/passive/modify', methods=['POST'])
 def approval_work_time_passive_modify():
     request_data = get_value_dict()
-
     if not check_dict(request_data, ['id', 'worker_name', 'function_name', \
         'event_name', 'start_time', 'end_time']):
         return json.dumps('PARAM ERROR')
 
-    data = approval.modify_work_time(request_data['id'], request_data['worker_name'], \
-        request_data['function_name'], request_data['event_name'], request_data['start_time'], request_data['end_time'])
+    data = work_time.modify(request_data['id'], request_data['worker_name'], request_data['function_name'], \
+            request_data['event_name'], request_data['start_time'], request_data['end_time'])
 
     if has_error(data):
-        return json.dumps('ERROR route:/approval/work_time/passive/modify')
+        return json.dumps('BACKEND ERROR')
     else:
-        ret = {}
-        ret['status'] = data
-        return json.dumps(ret)
+        return json.dumps({'status': data})
 
 @approval_access.route('/work_time/passive/delete', methods=['POST'])
 def approval_work_time_passive_delete():
     request_data = get_value_dict()
-
     if not check_dict(request_data, ['id']):
         return json.dumps('PARAM ERROR')
 
-    data = approval.delete_work_time(request_data['id'])
-
+    data = work_time.delete(request_data['id'])
+    
     if has_error(data):
-        return json.dumps('ERROR route:/approval/work_time/passive/delete')
+        return json.dumps('BACKEND ERROR')
     else:
-        ret = {}
-        ret['status'] = data
-        return json.dumps(ret)
+        return json.dumps({'status': data})

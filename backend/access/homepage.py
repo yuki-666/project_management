@@ -32,7 +32,7 @@ def homepage_search():
     if not check_dict(request_data, ['keyword']):
         return json.dumps('PARAM ERROR')
 
-    data = project.get_project(keyword=request_data['keyword'])
+    data = project.get_info(keyword=request_data['keyword'])
     data = [i['id'] for i in data]
 
     if has_error(data):
@@ -46,7 +46,7 @@ def homepage_project_all():
     if not check_dict(request_data, ['uid']):
         return json.dumps('PARAM ERROR')
 
-    data = project.get_project()
+    data = project.get_info()
 
     if has_error(data):
         return json.dumps('BACKEND ERROR')
@@ -59,7 +59,7 @@ def homepage_project_mine():
     if not check_dict(request_data, ['uid']):
         return json.dumps('PARAM ERROR')
 
-    data = project.get_project(uid=request_data['uid'])
+    data = project.get_info(uid=request_data['uid'])
 
     if has_error(data):
         return json.dumps('BACKEND ERROR')
