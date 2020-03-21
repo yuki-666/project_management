@@ -4,7 +4,6 @@ import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__) , '..')) # backend/
 import config
-import tomysql
 import util.db as d
 
 def selectSql(p):
@@ -53,13 +52,13 @@ def modify_project(project_id, project_name,  describe,scheduled_time, delivery_
      #id | name  | status | customer_id | main_function 
      #| domain_id | tech   | project_leader_id | submit_date | reserve_date | update_time     
 
-    db = d.ConnectToMysql(tomysql.host,tomysql.username,tomysql.password,tomysql.database,tomysql.port)
+    db = d.ConnectToMysql(config.host,config.username,config.password,config.database,config.port)
     return db.otherDB(sql)
 
 # maybe move to another place called 'project'
 def confirm_project(project_id, status):
     sql = '''update project set status = '%s' where id = '%s' and status =1;'''%(project_id,status)
-    db = d.ConnectToMysql(tomysql.host,tomysql.username,tomysql.password,tomysql.database,tomysql.port)
+    db = d.ConnectToMysql(config.host,config.username,config.password,config.database,config.port)
     res = db.otherDB(sql)
     if res == 'ok':
         return 'ok'
@@ -97,7 +96,7 @@ def get_work_time_by_uid(uid, is_superior=False, include_finished=False):
         para_dict['key'].append('work_time.worker_id')
         uid = '=' + uid
         para_dict['value'].append(uid)
-    db = d.ConnectToMysql(tomysql.host,tomysql.username,tomysql.password,tomysql.database,tomysql.port)
+    db = d.ConnectToMysql(config.host,config.username,config.password,config.database,config.port)
     return db.selectDB(selectSql(para_dict))
     # is_superior=True: uid是上级的uid，要获取他所有项目下级的工时
     # is_superior=False: uid是自己的uid，获取自己所有工时
@@ -116,7 +115,7 @@ def get_work_time_by_work_time_id(work_time_id):
     para_dict['on_key'] = ['employee.id']
     para_dict['on_value'] = ['work_time.worker_id']
 
-    db = d.ConnectToMysql(tomysql.host,tomysql.username,tomysql.password,tomysql.database,tomysql.port)
+    db = d.ConnectToMysql(config.host,config.username,config.password,config.database,config.port)
     sql = selectSql(para_dict)
     res = db.selectDB(sql)
     if res == 'Empty' :
@@ -134,7 +133,7 @@ def confirm_work_time(work_time_id, status):
     work_time_id = '=' + work_time_id
     para_dict['where_value'] = [work_time_id,'=0','=1']
     
-    db = d.ConnectToMysql(tomysql.host,tomysql.username,tomysql.password,tomysql.database,tomysql.port)
+    db = d.ConnectToMysql(config.host,config.username,config.password,config.database,config.port)
     sql = updateSql(para_dict)
     res = db.otherDB(sql)
     if res == 'none' :
@@ -155,7 +154,7 @@ def modify_word_time(work_time_id, function_name, event_name, start_time, end_ti
     work_time_id = '=' + work_time_id
     para_dict['where_value'] = [work_time_id,'=0']
 
-    db = d.ConnectToMysql(tomysql.host,tomysql.username,tomysql.password,tomysql.database,tomysql.port)
+    db = d.ConnectToMysql(config.host,config.username,config.password,config.database,config.port)
     sql = updateSql(para_dict)
     res = db.otherDB(sql)
     if res == 'none' :
@@ -175,7 +174,7 @@ def delete_work_time(work_time_id):
     p['key'] = ['id']
     work_time_id = '=' + work_time_id
     p['value'] = [work_time_id]
-    db = d.ConnectToMysql(tomysql.host,tomysql.username,tomysql.password,tomysql.database,tomysql.port)
+    db = d.ConnectToMysql(config.host,config.username,config.password,config.database,config.port)
     sql = selectSql(p)
     res = db.selectDB(sql)
     if res == 'Empty':#id不存在
@@ -192,7 +191,7 @@ def delete_work_time(work_time_id):
     work_time_id = '=' + work_time_id
     para_dict['where_value'] = [work_time_id]
 
-    db = d.ConnectToMysql(tomysql.host,tomysql.username,tomysql.password,tomysql.database,tomysql.port)
+    db = d.ConnectToMysql(config.host,config.username,config.password,config.database,config.port)
     sql = updateSql(para_dict)
     return db.otherDB(sql)
     # return 'error' if work_time_id not found

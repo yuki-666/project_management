@@ -1,7 +1,7 @@
 登录
 /homepage/login (post)
 username, password
-status -> (if status == 0)
+status, id, career  (if status == 0, only return status)
 
 搜索框
 /homepage/search (post)
