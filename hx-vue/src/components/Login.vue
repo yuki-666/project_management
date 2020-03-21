@@ -47,6 +47,8 @@ export default {
   name: 'Login',
   data () {
     return {
+      career: 0,
+      uid: 0,
       loginForm: {
         username: '',
         password: ''
@@ -68,24 +70,38 @@ export default {
         return
       }
       this.$axios
-        .post('/login', {
+        .post('/homepage/login', {
           username: this.loginForm.username,
           password: this.loginForm.password
         })
         .then(successResponse => {
-          if (successResponse.data.code === 200) {
+          // eslint-disable-next-line eqeqeq
+          if (successResponse.data.status == 0) {
             // var data = this.loginForm
             _this.$store.commit('login', _this.loginForm)
             var path = this.$route.query.redirect
-            this.$router.replace({
-              path: path === '/' || path === undefined ? '/index' : path
+            _this.career = successResponse.data.career
+            _this.uid = successResponse.data.uid
+            this.$router.push({
+              path: path === '/' || path === undefined ? '/index' : path,
+              query: {
+                career: _this.career,
+                uid: _this.uid
+              }
             })
-          } else {
-            console.log('查无此人')
+          }
+          if (successResponse.data.status === 1) {
+            this.$message.error('用户不存在')
+            // console.log(this.career)
+            console.log('username_not_exist')
+          }
+          if (successResponse.data.status === 2) {
+            this.$message.error('密码错误')
+            console.log('password_error')
           }
         })
         .catch(failResponse => {
-          console.log('OMG')
+          console.log('Oh～no～')
         })
     }
     // zhx to xxh

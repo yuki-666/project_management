@@ -25,9 +25,7 @@ export default {
         {name: '/index', navItem: '首页'},
         {name: '/my_audit', navItem: '我的审批'},
         {name: '/project_management', navItem: '项目管理'},
-        {name: '/jotter', navItem: '笔记本'},
-        {name: '/library', navItem: '图书馆'},
-        {name: '/admin', navItem: '个人中心'}
+        {name: '/library', navItem: '图书馆'}
       ]
     }
   }
