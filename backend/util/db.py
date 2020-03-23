@@ -47,6 +47,36 @@ class ConnectToMysql(object):
           self.cursor.close()
           self.db.close()
 
+def selectSql(p):
+    sql = '''select ''' + p['select_key'][0]
+    for i in range(1,len(p['select_key'])):
+        sql = sql + ''', ''' + p['select_key'][i] 
+    sql = sql + ''' from ''' + p['tablename'] 
+    if len(p['join_tablename'])>0:
+        sql = sql + ''' join ''' + p['join_tablename'][0]
+        for i in range(1,len(p['join_tablename'])):
+            sql = sql + ''',''' + p['join_tablename'][i] 
+        if len(p['on_key'])>0:
+            sql = sql + ''' on ''' + p['on_key'][0] + ''' = '''+p['on_value'][0]
+            for i in range(1,len(p['on_key'])):
+                sql = sql + ''' and ''' + p['on_key'][i] + ''' = '''+p['on_value'][i]
+    if len(p['key'])>0:
+        sql = sql + ''' where ''' + p['key'][0] + p['value'][0]
+        for i in range(1,len(p['key'])):
+            sql = sql + ''' and ''' + p['key'][i] + p['value'][i]
+    sql = sql + ''';'''
+    return sql
+
+def updateSql(p):
+    sql = '''update ''' + p['tablename'] + ''' set ''' + p['set_key'][0] + ''' = '%s' ''' % p['set_value'][0]
+    for i in range(1,len(p['set_key'])):
+        sql = sql + ''' , ''' + p['set_key'][i] + ''' = '%s' ''' % p['set_value'][i]
+    if len(p['where_key'])>0:
+        sql = sql + ''' where ''' + p['where_key'][0] + p['where_value'][0]
+        for i in range(1,len(p['where_key'])):
+            sql = sql + ''' and ''' + p['where_key'][i] + p['where_value'][i]
+    sql = sql + ''';'''
+    return sql
 
 #使用实例
 if __name__ == '__main__':

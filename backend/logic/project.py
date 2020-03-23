@@ -5,7 +5,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__) , '..'))
 import config
 import util.db as d
 
-def get_project(project_id=None, uid=None, keyword=None, detail=False, include_reject=False):
+def get_info(project_id=None, uid=None, keyword=None, detail=False, include_reject=False):
     # id | name      | status | customer_id | main_function
     #    | domain_id | tech   | project_leader_id | submit_date | reserve_date
 
@@ -68,11 +68,35 @@ def get_project(project_id=None, uid=None, keyword=None, detail=False, include_r
     res = db.selectDB(sql)
     return [] if res == 'Empty' else res
 
-def get_project_include_work_time(uid):
+def get_info_include_work_time(uid):
     # TODO
     # not include reject project
     # return (id, name, status, update_time, remain_work_time)
     pass
+
+def confirm(project_id, status):
+    # check if project status is 1 (pending), return 'error' if not
+    # modify project status, from 1 to 0/2 (rejection/established)
+    sql = '''update project set status = '%s' where id = '%s' and status =1;'''%(project_id,status)
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    res = db.otherDB(sql)
+    if res == 'ok':
+        return 'ok'
+    else :
+        return 'error'
+
+def modify(project_id, project_name,  describe,scheduled_time, delivery_day, project_superior_id, major_milestones, adopting_technology, business_area, main_function):
+    # modify project info, search by id
+    sql = '''update project
+    set name = '%s', describe = '%s' ,reserve_date = '%s',submit_date = '%s', project_leader_id = '%s',major_milestones = '%s',tech = '%s',domain_id = '%s',main_function ='%s'
+    where id = '%s';''' %(project_name,  describe,scheduled_time, delivery_day, project_superior_id, \
+    major_milestones, adopting_technology, business_area, main_function,project_id)
+    
+    # id | name  | status | customer_id | main_function 
+    #    | domain_id | tech   | project_leader_id | submit_date | reserve_date | update_time     
+
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    return db.otherDB(sql)
 
 def create(name, describe, development_type, scheduled_time, delivery_day, project_superior_id, custom_id, major_milestones, adopting_technology, business_area, main_function):
     # TODO
@@ -86,8 +110,7 @@ def create(name, describe, development_type, scheduled_time, delivery_day, proje
     # 若是1位数前面添0, 若一个都没搜出来从1开始计数
     
     # id 由“四位年份-四位客户代码-研发类型 1 位（开发：D，维护：M，服务：S，其他：O）-顺序号 2 位”构成，且从外部系统导入，是一个选择项，不可更改。
-
     return 'ok'
 
 if __name__ == '__main__':
-    print(get_project(keyword='系统', include_reject=True))
+    print(get_info(keyword='系统', include_reject=True))

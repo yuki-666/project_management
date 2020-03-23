@@ -9,7 +9,7 @@ from util.access import *
 homepage_access = Blueprint('homepage_access', __name__)
 
 @homepage_access.route('/login', methods=['POST'])
-def login():
+def homepage_login():
     request_data = get_value_dict()
     if not check_dict(request_data, ['username', 'password']):
         return json.dumps('PARAM ERROR')
@@ -27,12 +27,12 @@ def login():
             return json.dumps(ret)
 
 @homepage_access.route('/search', methods=['POST'])
-def search():
+def homepage_search():
     request_data = get_value_dict()
     if not check_dict(request_data, ['keyword']):
         return json.dumps('PARAM ERROR')
 
-    data = project.get_project(keyword=request_data['keyword'])
+    data = project.get_info(keyword=request_data['keyword'])
     data = [i['id'] for i in data]
 
     if has_error(data):
@@ -41,12 +41,12 @@ def search():
         return json.dumps(data)
 
 @homepage_access.route('/project_all', methods=['GET'])
-def project_all():
+def homepage_project_all():
     request_data = get_value_dict()
     if not check_dict(request_data, ['uid']):
         return json.dumps('PARAM ERROR')
 
-    data = project.get_project()
+    data = project.get_info()
 
     if has_error(data):
         return json.dumps('BACKEND ERROR')
@@ -54,12 +54,12 @@ def project_all():
         return json.dumps(data)
 
 @homepage_access.route('/project_mine', methods=['GET'])
-def project_mine():
+def homepage_project_mine():
     request_data = get_value_dict()
     if not check_dict(request_data, ['uid']):
         return json.dumps('PARAM ERROR')
 
-    data = project.get_project(uid=request_data['uid'])
+    data = project.get_info(uid=request_data['uid'])
 
     if has_error(data):
         return json.dumps('BACKEND ERROR')
