@@ -1,31 +1,37 @@
 <template>
   <div>
     xxh
-    <manager-index ref="managerIndex"></manager-index>
+    <boss-index v-show="this.flag == 0" ref="bossIndex"></boss-index>
+    <manager-index v-show="this.flag == 1" ref="managerIndex"></manager-index>
   </div>
 </template>
 
 <script>
 import store from '../../store'
 import ManagerIndex from './Manager_Audit/Manager_index'
+import BossIndex from './Boss_Audit/Boss_index'
 export default {
   name: 'MyAuidt',
   components: {
-    'manager-index': ManagerIndex
+    'manager-index': ManagerIndex,
+    'boss-index': BossIndex
   },
   data () {
     return {
-      flag: 0
+      flag: -1
     }
   },
   methods: {},
   created () {
-    this.flag = 0
     console.log(store.getters.uid)
     console.log(this.$store.getters.uid)
-    console.log(this.$store.getters.career)
-    // console.log(store.getters.username)
-    // console.log(this.$store.getters.username)
+    console.log('hhhhh' + this.$store.getters.career)
+    if (this.$store.getters.career === 0) {
+      console.log('onde')
+      this.flag = 0
+    } else if (this.$store.getters.career === 1) {
+      this.flag = 1
+    }
     console.log('try')
   }
 }

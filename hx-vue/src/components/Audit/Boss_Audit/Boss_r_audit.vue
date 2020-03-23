@@ -1,7 +1,5 @@
 <template>
   <div>
-    <div style="color: #222;margin-top: 10px;">所有的项目</div>
-    <search-bar @onSearch="searchResult" ref="SearchBar"></search-bar>
     <div class="project_table">
       <el-table
         :data="
@@ -39,6 +37,13 @@
           :sortable="true"
           :sort-method="sortByDate"
         ></el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
+              >查看</el-button
+            >
+          </template>
+        </el-table-column>
       </el-table>
       <el-row class="pag">
         <el-pagination
@@ -50,24 +55,34 @@
         </el-pagination>
       </el-row>
     </div>
-    <my-index></my-index>
+    <edit-form
+      :show.sync="dialogFormVisible"
+      :zid="tmpId"
+      @updateAgain="this.getAllInfo"
+      ref="edit"
+    ></edit-form>
   </div>
 </template>
+
 <script>
-import MyIndex from './MyIndex'
-import { FlowStatusRules } from './rule/data-config'
-import SearchBar from './home_component/SearchBar'
-import ZxTag from '../tag'
+import EditForm from './Boss_editForm'
+import SideMenu from './Boss_SideMenu'
+import { FlowStatusRules } from '../../home/rule/data-config'
+import ZxTag from '../../tag'
 export default {
+  name: 'ManagerRAudit',
   components: {
-    'search-bar': SearchBar,
+    'side-menu': SideMenu,
     'zx-tag': ZxTag,
-    'my-index': MyIndex
+    'edit-form': EditForm
   },
-  name: 'AppIndex',
   data () {
     return {
+      // arr: [],
+      select: '',
+      dialogFormVisible: false,
       uid: 0,
+      tmpId: -1,
       tableDataTmp: [],
       currentPage: 1,
       pagesize: 5,
@@ -79,7 +94,8 @@ export default {
         { text: 'processing', value: 2 },
         { text: 'paid', value: 3 },
         { text: 'finished', value: 4 },
-        { text: 'archived', value: 5 }
+        { text: 'archived', value: 5 },
+        { text: 'rejection', value: 6 }
       ],
       FLOWS_STATUS: [
         'pending',
@@ -87,19 +103,54 @@ export default {
         'processing',
         'paid',
         'finished',
-        'archived'
+        'archived',
+        'rejection'
       ],
       projects: [
         {
           id: '',
           name: '',
           status: '',
-          update_time: 'hh'
+          update_time: ''
         }
       ]
     }
   },
   methods: {
+    zhxFun () {
+      console.log('fuccckkkkkkkk')
+    },
+    getAllInfo () {
+      // console.log('xxx')
+      let _this = this
+      this.$axios
+        .get('/approval/project/show', {
+          params: {
+            id: _this.tmpId
+          }
+        })
+        .then(successResponse => {
+          console.log('hhzzzzzzhh')
+          _this.$refs.edit.form = successResponse.data
+          console.log(_this.$refs.edit.form.name)
+        })
+    },
+    handleEdit (index, row) {
+      console.log(row.id + 'zzzzz')
+      console.log(this.$refs.edit.form.name)
+      // let _this = this
+      // console.log(_this.tableDataTmp[row].id + 'zhx')
+      this.$refs.edit.form = {
+        id: row.id
+      }
+      this.tmpId = row.id
+      this.$refs.edit.form.id = row.id
+      console.log(this.$refs.edit.form.id)
+      this.getAllInfo()
+      this.dialogFormVisible = true
+      // console.log(index, row)
+      // console.log(this.dialogFormVisible)
+    },
     filterTagTable (filters) {
       this.projects = this.tableDataTmp
       // eslint-disable-next-line eqeqeq
@@ -112,18 +163,13 @@ export default {
           filters.status.some(ele => ele == item.status)
         )
       }
-      // // this.handleCurrentChange(currentPage)
-      // return row.status === value
     },
     filterTag (value, row) {
-      console.log(value)
-      // this.filterTagTable()
-      // return row.status === value
+      // console.log(value)
       return row.status === value
     },
     handleCurrentChange (currentPage) {
       this.currentPage = currentPage
-      console.log(this.currentPage)
       // console.log(`当前页: ${val}`);
     },
     sortByDate (obj1, obj2, column) {
@@ -139,7 +185,7 @@ export default {
     getAllProjects () {
       var _this = this
       this.$axios
-        .get('/homepage/project_all', {
+        .get('/approval/project', {
           params: {
             uid: _this.uid
           }
@@ -150,57 +196,32 @@ export default {
           _this.tableDataTmp = successResponse.data
         })
         .catch(failResponse => {
-          // console.log('OMmmmG')
-        })
-    },
-    searchResult () {
-      let _this = this
-      let projectsTmp = _this.projects
-      if (
-        _this.$refs.SearchBar.keywords === null ||
-        _this.$refs.SearchBar.keywords === '' ||
-        _this.$refs.SearchBar.keywords === undefined
-      ) {
-        this.getAllProjects()
-        return
-      }
-
-      // console.log(_this.projects)
-      // console.log('after')
-      this.$axios
-        .post('/homepage/search', {
-          keyword: _this.$refs.SearchBar.keywords
-        })
-        .then(successResponse => {
-          console.log(successResponse.data)
-          // id为空
-          if (successResponse.data.length === 0) {
-            _this.projects.filter(item => {
-              return false
-            })
-            this.$message.error('没有该项目')
-          }
-          // filter
-          _this.projects = projectsTmp.filter(item =>
-            // eslint-disable-next-line eqeqeq
-            successResponse.data.some(ele => ele.id == item.id)
-          )
+          console.log('OMmmmG,my_audit')
         })
     }
   },
   created () {
+    // this.arr = this.biu.biu2
+    // console.log('hhhhhhh')
     this.uid = this.$route.query.uid
-    // console.log(this.uid)
-    console.log('career' + this.$store.getters.career)
     this.getAllProjects()
+    console.log('try3')
+    // console.log(store.getters.uid)
+    console.log(this.$store.getters.uid)
+    // console.log(store.getters.username)
+    console.log(this.$store.getters.username)
+    console.log('try2')
   }
 }
 </script>
+
 <style lang="scss" scoped>
 .project_table {
   padding-top: 0;
-  margin: 10px 15%;
+  margin: 10px 20px;
   position: relative;
+  // margin-left: auto;
+  // margin-right: auto;
 }
 .demo-table-expand {
   font-size: 0;

@@ -57,6 +57,8 @@
     </div>
     <edit-form
       :show.sync="dialogFormVisible"
+      :zid="tmpId"
+      @updateAgain="getAllInfo"
       ref="edit"
     ></edit-form>
   </div>
@@ -78,26 +80,20 @@ export default {
     return {
       // arr: [],
       select: '',
-      arr: [
-        {
-          id: '1',
-          name: 'zhx'
-        },
-        { id: '2', name: 'nn' }
-      ],
-      biu: {
-        biu2: [
-          {
-            id: '5',
-            name: '2'
-          },
-          {
-            id: '6',
-            name: '4'
-          }
-        ],
-        zz: '2'
-      },
+      tmpId: -1,
+      // biu: {
+      //   biu2: [
+      //     {
+      //       id: '5',
+      //       name: '2'
+      //     },
+      //     {
+      //       id: '6',
+      //       name: '4'
+      //     }
+      //   ],
+      //   zz: '2'
+      // },
       dialogFormVisible: false,
       uid: 0,
       tableDataTmp: [],
@@ -137,13 +133,13 @@ export default {
     zhxFun () {
       console.log('fuccckkkkkkkk')
     },
-    getAllInfo (value) {
+    getAllInfo () {
       // console.log('xxx')
       let _this = this
       this.$axios
         .get('/approval/project/show', {
           params: {
-            id: value
+            id: _this.tmpId
           }
         })
         .then(successResponse => {
@@ -160,8 +156,9 @@ export default {
       this.$refs.edit.form = {
         id: row.id
       }
+      this.tmpId = row.id
       this.$refs.edit.form.id = row.id
-      this.getAllInfo(row.id)
+      this.getAllInfo()
       this.dialogFormVisible = true
       // console.log(index, row)
       // console.log(this.dialogFormVisible)
@@ -218,9 +215,10 @@ export default {
   created () {
     // this.arr = this.biu.biu2
     // console.log('hhhhhhh')
-    this.uid = this.$route.query.uid
+    this.uid = this.$store.getters.uid
+    // this.uid = this.$route.query.uid
     this.getAllProjects()
-    console.log('try3')
+    console.log(this.uid + 'try3')
     // console.log(store.getters.uid)
     console.log(this.$store.getters.uid)
     // console.log(store.getters.username)

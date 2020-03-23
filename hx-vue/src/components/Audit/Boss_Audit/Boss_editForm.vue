@@ -1,21 +1,21 @@
 <template>
   <div>
     <el-dialog
-      title="项目审批"
+      title="是否同意项目立项"
       :visible.sync="dialogFormVisible"
       @close="$emit('update:show', false)"
       center
     >
       <el-form :model="form">
         <el-form-item label="name" :label-width="formLabelWidth" prop="name">
-          <el-input v-model="form.name" autocomplete="off"></el-input>
+          <el-input v-model="form.name" autocomplete="off" disabled></el-input>
         </el-form-item>
         <el-form-item
           label="describe"
           :label-width="formLabelWidth"
           prop="describe"
         >
-          <el-input v-model="form.describe" autocomplete="off"></el-input>
+          <el-input v-model="form.describe" autocomplete="off" disabled></el-input>
         </el-form-item>
         <el-form-item
           label="预定时间"
@@ -27,6 +27,7 @@
             type="date"
             placeholder="开始日期"
             :picker-options="startDatePicker"
+            disabled
           >
           </el-date-picker>
         </el-form-item>
@@ -40,6 +41,7 @@
             type="date"
             placeholder="结束日期"
             :picker-options="endDatePicker"
+            disabled
           >
           </el-date-picker>
         </el-form-item>
@@ -48,7 +50,7 @@
           :label-width="formLabelWidth"
           prop="project_superior"
         >
-          <el-select v-model="select" placeholder="请选择项目上级">
+          <el-select v-model="select" placeholder="请选择项目上级" disabled>
             <el-option
               v-for="item in form.project_superior"
               :key="item.project_superior_id"
@@ -65,6 +67,7 @@
           <el-input
             v-model="form.major_milestones"
             autocomplete="off"
+            disabled
           ></el-input>
         </el-form-item>
         <el-form-item
@@ -75,6 +78,7 @@
           <el-input
             v-model="form.adopting_technology"
             autocomplete="off"
+            disabled
           ></el-input>
         </el-form-item>
         <el-form-item
@@ -82,19 +86,19 @@
           :label-width="formLabelWidth"
           prop="business_area"
         >
-          <el-input v-model="form.business_area" autocomplete="off"></el-input>
+          <el-input v-model="form.business_area" autocomplete="off" disabled></el-input>
         </el-form-item>
         <el-form-item
           label="主要功能"
           :label-width="formLabelWidth"
           prop="main_function"
         >
-          <el-input v-model="form.main_function" autocomplete="off"></el-input>
+          <el-input v-model="form.main_function" autocomplete="off" disabled></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="closeDialog">取 消</el-button>
-        <el-button type="primary" @click="onSubmit">确 定</el-button>
+        <el-button @click="closeDialog">不 同 意</el-button>
+        <el-button type="primary" @click="onSubmit">同 意</el-button>
       </div>
     </el-dialog>
   </div>
@@ -114,6 +118,7 @@ export default {
   },
   data () {
     return {
+      status: 0,
       select: '',
       dialogFormVisible: this.show,
       startDatePicker: this.beginDate(),
@@ -158,40 +163,32 @@ export default {
       var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
       return year + '-' + month + '-' + day
     },
-    onSubmit () {
+    auditConfirm () {
       let _this = this
-      // console.log('test3')
-      // console.log(_this.select)
+      console.log('testzhx')
+      console.log(_this.form.id)
       // console.log(_this.select.project_superior)
       // console.log(_this.form.project_superior.project_superior_name)
       // console.log('test2')
       // console.log(_this.form.name)
       this.$axios
-        .post('/approval/project/modify', {
+        .post('/approval/project/confirm', {
           id: _this.zid,
-          name: _this.form.name,
-          describe: _this.form.describe,
-          scheduled_time: _this.dateFormat(_this.form.scheduled_time),
-          delivery_day: _this.dateFormat(_this.form.delivery_day),
-          project_superior_id: _this.select,
-          major_milestones: _this.form.major_milestones,
-          adopting_technology: _this.form.adopting_technology,
-          business_area: _this.form.business_area,
-          main_function: _this.form.main_function
+          status: _this.status
         })
         .then(successResponse => {
-          // console.log(successResponse)
-          console.log(successResponse.data)
           let status = successResponse.data.status
           if (status === 'ok') {
+            this.dialogFormVisible = false
+            this.$emit('update:show', false)
+            this.$emit('updateAgain')
             _this.dialogFormVisible = false
-            _this.$emit('update:show', false)
-            _this.$emit('updateAgain')
             this.$message.success('已经更新')
           }
           // this.dialogFormVisible = false
         })
         .catch(failResponse => {
+          this.$message.error('404更新失败')
           console.log('OMmmmG,my_audit')
         })
     },
@@ -236,11 +233,18 @@ export default {
     //     })
     // },
     closeDialog () {
-      this.dialogFormVisible = false
-      this.$emit('update:show', false)
+      this.status = 0 // 不同意
+      this.auditConfirm()
+      //   this.dialogFormVisible = false
+      //   this.$emit('update:show', false)
+    },
+    onSubmit () {
+      this.status = 1
+      this.auditConfirm()
     }
   },
-  mounted () {
+  created () {
+    console.log('xxxxxx')
     // let _this = this
     // _this.getAllInfo()
   }

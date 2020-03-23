@@ -120,7 +120,7 @@ export default {
     },
     auditYes () {
       // this.dialogFormVisible = false;
-      this.status = 1 // 不同意
+      this.status = 1 // 同意
       this.auditConfirm()
     },
     auditConfirm () {
@@ -228,7 +228,7 @@ export default {
   created () {
     // this.arr = this.biu.biu2
     // console.log('hhhhhhh')
-    this.uid = this.$route.query.uid
+    this.uid = this.$store.getters.uid
     this.getAllProjects()
   }
 }
