@@ -12,44 +12,41 @@
         stripe
         @filter-change="filterTagTable"
       >
-        <el-table-column label="项目id" prop="id" sortable></el-table-column>
+        <el-table-column label="工时id" prop="id" sortable></el-table-column>
         <el-table-column
-          label="项目名称"
-          prop="name"
+          label="worker_name"
+          prop="worker_name"
           sortable
         ></el-table-column>
         <el-table-column
-          label="项目状态"
-          prop="status"
-          column-key="status"
-          :filters="filter_status"
-          filter-placement="bottom-end"
-        >
-          <template slot-scope="props">
-            <zx-tag :type="FlowStatusRules[props.row.status]">
-              {{ FLOWS_STATUS[props.row.status] }}
-            </zx-tag>
-          </template>
-        </el-table-column>
+          label="功能名称"
+          prop="function_name"
+          sortable
+        ></el-table-column>
         <el-table-column
-          label="更新时间"
-          prop="update_time"
+          label="活动名称"
+          prop="event_name"
+          sortable
+        ></el-table-column>
+        <el-table-column
+          label="start_time"
+          prop="start_time"
+          :sortable="true"
+          :sort-method="sortByDate"
+        ></el-table-column>
+        <el-table-column
+          label="end_time"
+          prop="end_time"
           :sortable="true"
           :sort-method="sortByDate"
         ></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
-              >编辑</el-button
-            >
             <el-button
               size="mini"
-              type="danger"
-              @click="handleDelete(scope.$index, scope.row)"
-              >删除</el-button
-            >
-            <el-button size="mini" type="success" @click="handleEdit(scope.$index, scope.row)"
-              >编辑</el-button
+              type="primary"
+              @click="zhandleEdit(scope.$index, scope.row)"
+              >确认</el-button
             >
           </template>
         </el-table-column>
@@ -64,10 +61,22 @@
         </el-pagination>
       </el-row>
     </div>
+    <!-- <edit-form :show.sync="dialogFormVisible" ref="edit"></edit-form> -->
+    <el-dialog
+      title="审批提醒"
+      :visible.sync="dialogFormVisible"
+      @close="dialogFormVisible = false"
+    >
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="auditNo">不 审 批</el-button>
+        <el-button type="primary" @click="auditYes">审 批</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import EditForm from './Manager_editForm'
 import SideMenu from './Manager_SideMenu'
 import { FlowStatusRules } from '../../home/rule/data-config'
 import ZxTag from '../../tag'
@@ -75,45 +84,98 @@ export default {
   name: 'ManagerRAudit',
   components: {
     'side-menu': SideMenu,
-    'zx-tag': ZxTag
+    'zx-tag': ZxTag,
+    'edit-form': EditForm
   },
   data () {
     return {
+      // arr: [],
+      select: '',
+      dialogFormVisible: false,
       uid: 0,
+      wid: '', // 工时id
       tableDataTmp: [],
       currentPage: 1,
       pagesize: 5,
       total: 10,
       FlowStatusRules,
-      filter_status: [
-        { text: 'pending', value: 0 },
-        { text: 'established', value: 1 },
-        { text: 'processing', value: 2 },
-        { text: 'paid', value: 3 },
-        { text: 'finished', value: 4 },
-        { text: 'archived', value: 5 },
-        { text: 'rejection', value: 6 }
-      ],
-      FLOWS_STATUS: [
-        'pending',
-        'established',
-        'processing',
-        'paid',
-        'finished',
-        'archived',
-        'rejection'
-      ],
+      status: 0,
       projects: [
         {
           id: '',
-          name: '',
-          status: '',
-          update_time: ''
+          worker_name: '',
+          function_name: '',
+          event_name: '',
+          start_time: '',
+          end_time: ''
         }
       ]
     }
   },
   methods: {
+    auditNo () {
+      // this.dialogFormVisible = false;
+      this.status = 0 // 不同意
+      this.auditConfirm()
+    },
+    auditYes () {
+      // this.dialogFormVisible = false;
+      this.status = 1 // 不同意
+      this.auditConfirm()
+    },
+    auditConfirm () {
+      let _this = this
+      this.$axios
+        .post('/approval/work_time/confirm', {
+          id: _this.wid,
+          status: _this.status
+        })
+        .then(successResponse => {
+          let status = successResponse.data.status
+          if (status === 'ok') {
+            _this.dialogFormVisible = false
+            this.$message.success('已经更新')
+          }
+        })
+        .catch(failResponse => {
+          this.$message.error('更新失败')
+          // console.log('OMmmmG,my_audit')
+        })
+    },
+    getAllInfo (value) {
+      // console.log('xxx')
+      let _this = this
+      this.$axios
+        .get('/approval/project/show', {
+          params: {
+            id: value
+          }
+        })
+        .then(successResponse => {
+          // console.log('hhzzzzzzhh')
+          _this.$refs.edit.form = successResponse.data
+          // console.log(_this.$refs.edit.form.name)
+        })
+    },
+    zhandleEdit (index, row) {
+      let _this = this
+      _this.dialogFormVisible = true
+      _this.wid = row.id
+    },
+    handleEdit (index, row) {
+      // console.log(row.id + 'zzzzz')
+      // console.log(this.$refs.edit.form.name)
+      // let _this = this
+      // console.log(_this.tableDataTmp[row].id + 'zhx')
+      this.$refs.edit.form = {
+        id: row.id
+      }
+      this.$refs.edit.form.id = row.id
+      this.getAllInfo(row.id)
+      this.dialogFormVisible = true
+      // console.log(index, row)
+      // console.log(this.dialogFormVisible)
+    },
     filterTagTable (filters) {
       this.projects = this.tableDataTmp
       // eslint-disable-next-line eqeqeq
@@ -128,7 +190,7 @@ export default {
       }
     },
     filterTag (value, row) {
-      console.log(value)
+      // console.log(value)
       return row.status === value
     },
     handleCurrentChange (currentPage) {
@@ -148,23 +210,24 @@ export default {
     getAllProjects () {
       var _this = this
       this.$axios
-        .get('/approval/project', {
+        .get('/approval/work_time/initiative', {
           params: {
             uid: _this.uid
           }
         })
         .then(successResponse => {
-          console.log(successResponse)
+          // console.log(successResponse)
           _this.projects = successResponse.data
           _this.tableDataTmp = successResponse.data
         })
         .catch(failResponse => {
-          console.log('OMmmmG,my_audit')
+          // console.log('OMmmmG,my_workTime')
         })
     }
   },
   created () {
-    console.log('hhhhhhh')
+    // this.arr = this.biu.biu2
+    // console.log('hhhhhhh')
     this.uid = this.$route.query.uid
     this.getAllProjects()
   }
@@ -176,8 +239,8 @@ export default {
   padding-top: 0;
   margin: 10px 20px;
   position: relative;
-    // margin-left: auto;
-    // margin-right: auto;
+  // margin-left: auto;
+  // margin-right: auto;
 }
 .demo-table-expand {
   font-size: 0;

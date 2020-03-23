@@ -190,6 +190,8 @@ export default {
   },
   created () {
     this.uid = this.$route.query.uid
+    // console.log(this.uid)
+    console.log(this.$store.getters.uid)
     this.getAllProjects()
   }
 }

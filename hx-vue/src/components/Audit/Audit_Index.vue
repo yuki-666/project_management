@@ -6,6 +6,7 @@
 </template>
 
 <script>
+import store from '../../store'
 import ManagerIndex from './Manager_Audit/Manager_index'
 export default {
   name: 'MyAuidt',
@@ -20,6 +21,12 @@ export default {
   methods: {},
   created () {
     this.flag = 0
+    console.log(store.getters.uid)
+    console.log(this.$store.getters.uid)
+    console.log(this.$store.getters.career)
+    // console.log(store.getters.username)
+    // console.log(this.$store.getters.username)
+    console.log('try')
   }
 }
 </script>

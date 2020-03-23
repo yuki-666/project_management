@@ -220,6 +220,12 @@ export default {
     // console.log('hhhhhhh')
     this.uid = this.$route.query.uid
     this.getAllProjects()
+    console.log('try3')
+    // console.log(store.getters.uid)
+    console.log(this.$store.getters.uid)
+    // console.log(store.getters.username)
+    console.log(this.$store.getters.username)
+    console.log('try2')
   }
 }
 </script>
