@@ -39,9 +39,6 @@ export default {
       } else {
         this.flag = '1'
       }
-      // if(this.$refs.sideMenu.cid==0){
-
-      // }
     }
   }
 }

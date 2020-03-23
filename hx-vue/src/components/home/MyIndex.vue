@@ -27,9 +27,9 @@
           filter-placement="bottom-end"
         >
           <template slot-scope="props">
-            <xm-tag :type="FlowStatusRules[props.row.status]">
+            <zx-tag :type="FlowStatusRules[props.row.status]">
               {{ FLOWS_STATUS[props.row.status] }}
-            </xm-tag>
+            </zx-tag>
           </template>
         </el-table-column>
         <el-table-column
@@ -54,11 +54,11 @@
 <script>
 import { FlowStatusRules } from './rule/data-config'
 import SearchBar from './home_component/SearchBar'
-import XmTag from '../tag'
+import ZxTag from '../tag'
 export default {
   components: {
     'search-bar': SearchBar,
-    'xm-tag': XmTag
+    'zx-tag': ZxTag
   },
   name: 'AppIndex',
   data () {

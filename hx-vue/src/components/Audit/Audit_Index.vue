@@ -1,6 +1,6 @@
 <template>
   <div>
-    nnnn
+    xxh
     <manager-index ref="managerIndex"></manager-index>
   </div>
 </template>
@@ -12,10 +12,14 @@ export default {
   components: {
     'manager-index': ManagerIndex
   },
-  methods: {
-    selectManagerIndex () {
-      this.$refs.managerIndex.flag = 0
+  data () {
+    return {
+      flag: 0
     }
+  },
+  methods: {},
+  created () {
+    this.flag = 0
   }
 }
 </script>
