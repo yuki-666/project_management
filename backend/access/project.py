@@ -32,6 +32,7 @@ def project_modify_show():
         return json.dumps('PARAM ERROR')
 
     data = project.get_info(project_id=request_data['id'], detail=True)
+    # TODO: drop status and update_time
 
     if has_error(data):
         return json.dumps('BACKEND ERROR')
@@ -46,7 +47,7 @@ def project_modify_save():
                                      'business_area', 'main_function']):
         return json.dumps('PARAM ERROR')
     
-    data = approval.modify_project(request_data['id'], request_data['name'], request_data['describe'], \
+    data = project.modify(request_data['id'], request_data['name'], request_data['describe'], \
         request_data['scheduled_time'], request_data['delivery_day'], request_data['project_superior_id'], \
         request_data['major_milestones'], request_data['adopting_technology'], request_data['business_area'], request_data['main_function'])
 
@@ -80,7 +81,7 @@ def project_create_save():
                                      'business_area', 'main_function']):
         return json.dumps('PARAM ERROR')
 
-    data = approval.modify_project(request_data['name'], request_data['describe'], request_data['development_type'], \
+    data = project.create(request_data['name'], request_data['describe'], request_data['development_type'], \
         request_data['scheduled_time'], request_data['delivery_day'], request_data['project_superior_id'], request_data['custom_id'], \
         request_data['major_milestones'], request_data['adopting_technology'], request_data['business_area'], request_data['main_function'])
 

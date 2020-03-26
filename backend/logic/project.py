@@ -85,7 +85,7 @@ def confirm(project_id, status):
     else :
         return 'error'
 
-def modify(project_id, project_name,  describe,scheduled_time, delivery_day, project_superior_id, major_milestones, adopting_technology, business_area, main_function):
+def modify(project_id, project_name, describe, scheduled_time, delivery_day, project_superior_id, major_milestones, adopting_technology, business_area, main_function):
     # modify project info, search by id
     sql = '''update project
     set name = '%s', describe = '%s' ,reserve_date = '%s',submit_date = '%s', project_leader_id = '%s',major_milestones = '%s',tech = '%s',domain_id = '%s',main_function ='%s'
@@ -110,6 +110,68 @@ def create(name, describe, development_type, scheduled_time, delivery_day, proje
     # 若是1位数前面添0, 若一个都没搜出来从1开始计数
     
     # id 由“四位年份-四位客户代码-研发类型 1 位（开发：D，维护：M，服务：S，其他：O）-顺序号 2 位”构成，且从外部系统导入，是一个选择项，不可更改。
+    return 'ok'
+
+def get_function(project_id):
+    # TODO
+    # get function list from project_id
+    # worker_id and worker_name: list->str, split by ','
+    # return function_id, function_name, worker_id, worker_name, parent_function_id
+    pass
+
+def get_children_function(project_id, parent_function_id):
+    # TODO
+    # get function list from project_id, whose parent function id == parent_function_id
+    # worker_id and worker_name: list->str, split by ','
+    # return function_id, function_name, worker_id, worker_name, parent_function_id
+    pass
+
+def get_project_member(project_id, function_id=None):
+    # TODO
+    if function_id is not None:
+        # status: if user is in function
+        # return uid, name, status
+    else:
+        # return uid, name
+    pass
+
+def add_function(project_id, parent_function_id, function_name)
+    # TODO
+    # new function id:
+    # 1. last_function_id = max function_id starts with parent_function_id
+    # 2. new_function_id = last_function_id + 1, 3 digits, each digit: 012……789abc……xyzABC……XYZ
+    return 'ok'
+
+def delete_function(project_id, function_id):
+    # TODO
+    # check if delete_label == 0, return 'error' if delete_label == 1
+    # 1. set delete_label to 1
+    # 2. set children functions' delete_label to 1 (children function: function id starts with function_id)
+    return 'ok'
+
+def modify_function(project_id, function_id, function_name, uid):
+    # TODO
+    # uid(split by ',') change to list
+    return 'ok'
+
+def modify_worker(project_id, uid):
+    # TODO
+    # uid(split by ',') change to list
+    # update user participate in project
+    return 'ok'
+
+def get_authority(project_id, uid=None):
+    # TODO
+    if uid is not None:
+        # return (git_authority, file_authority, mail_authority)
+    else:
+        # get total user in project
+        # return (uid, name, git_authority, file_authority, mail_authority)
+
+def modify_authority(project_id, uid, git_authority, file_authority, mail_authority):
+    # TODO
+    # if can't find project_id uid in table, return 'error'
+    # update authority
     return 'ok'
 
 if __name__ == '__main__':
