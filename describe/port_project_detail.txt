@@ -1,7 +1,7 @@
 项目信息
 /project_detail/info (get)
 id(项目id)
-id, name, status, describe, scheduled_time, delivery_day, project_superior_name, major_milestones, adopting_technology, business_area, main_function
+id, name, status, update_time, describe, scheduled_time, delivery_day, project_superior_name, major_milestones, adopting_technology, business_area, main_function
 
 修改项目
 /project_detail/modify/show (get)
@@ -19,24 +19,24 @@ status: "ok"
 id(项目id)
 function_id, function_name, worker_id(list->str, split by ','), worker_name(list->str, split by ','), parent_function_id
 
-/project_detail/function/get_children_function (前端暂时可以不用)
+/project_detail/function/get_children (前端暂时可以不用)
 id(项目id), parent_function_id
 function_id, function_name, worker_id(list->str, split by ','), worker_name(list->str, split by ','), parent_function_id
 
 任务分配/添加功能
-/project_detail/function/add_function (post)
+/project_detail/function/add (post)
 id(项目id), parent_function_id(-1 if not exist parent), function_name
 status: "ok"
 
 任务分配/删除功能
-/project_detail/function/add_function (post)
+/project_detail/function/delete (post)
 id(项目id), function_id(-1 if not exist parent)
 status: "ok"
 
 任务分配/修改
 /project_detail/function/show (get)
 id(项目id), function_id
-参加项目的所有人员(uid, name, status) status:是否已经在这个项目
+参加项目的所有人员(uid, name, status) status:是否已经在这个功能
 
 任务分配/修改/修改功能
 /project_detail/function/modify (post)
