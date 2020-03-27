@@ -4,6 +4,7 @@ import sys
 sys.path.append(os.path.join(os.path.dirname(__file__) , '..'))
 import config
 import util.db as d
+from datetime import datetime
 
 def get_info(project_id=None, uid=None, keyword=None, detail=False, include_reject=False):
     # id | name      | status | customer_id | main_function
@@ -17,10 +18,10 @@ def get_info(project_id=None, uid=None, keyword=None, detail=False, include_reje
 
     # measure detail
     if detail == False:
-        sql = '''select id, name, status, update_time '''
+        sql = '''select id, name, status, update_time from project'''
     else:
-        sql = '''select id, name, status, update_time, describe, scheduled_time, delivery_day, project_superior_name, major_milestones, adopting_technology, business_area, main_function '''
-    sql += 'from project '
+        sql = '''select `project.id`, `project.name`, `project.status`, `project.update_time`, `project.describe`, `project.scheduled_time`, `project.delivery_day`, `employee.name`, `project.major_milestones`, `project.adopting_technology`, `project.business_area`, `project.main_function` 
+         from project join employee on employee.id = project.project_superior_id'''
 
     if keyword is not None:
         like = '%'
@@ -69,10 +70,18 @@ def get_info(project_id=None, uid=None, keyword=None, detail=False, include_reje
     return [] if res == 'Empty' else res
 
 def get_info_include_work_time(uid):
-    # TODO
     # not include reject project
     # return (id, name, status, update_time, remain_work_time)
-    pass
+    p={}
+    p['select_key'] = ['project.id','project.name','project.status','project.update_time','work_time.remain']
+    p['tablename'] = 'project'
+    p['join_tablename'] = ['work_time']
+    p['on_key'] = ['work_time.project_id']
+    p['on_value'] = ['project.id']
+    p['key'] = ['work_time.worker_id']
+    p['value'] = [' = ' + uid]
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    return db.selectDB(d.selectSql(p))
 
 def confirm(project_id, status):
     # check if project status is 1 (pending), return 'error' if not
@@ -99,7 +108,6 @@ def modify(project_id, project_name,  describe,scheduled_time, delivery_day, pro
     return db.otherDB(sql)
 
 def create(name, describe, development_type, scheduled_time, delivery_day, project_superior_id, custom_id, major_milestones, adopting_technology, business_area, main_function):
-    # TODO
     # id:
     # '2020-1111-D-01'
     # 'date-customid-development_type-sequence_number'
@@ -110,7 +118,22 @@ def create(name, describe, development_type, scheduled_time, delivery_day, proje
     # 若是1位数前面添0, 若一个都没搜出来从1开始计数
     
     # id 由“四位年份-四位客户代码-研发类型 1 位（开发：D，维护：M，服务：S，其他：O）-顺序号 2 位”构成，且从外部系统导入，是一个选择项，不可更改。
-    return 'ok'
+    id = str(datetime.now().year) + '-' + str(custom_id) + '-' + development_type + '-' 
+    p = {}
+    p['select_key'] = ['max(id)']
+    p['tablename'] = 'project'
+    p['key'] = ['id']
+    p['value'] = [''' like '%s' '''%(id+'%')]
+    
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    id_pre = db.selectDB(d.selectSql(p))[0]['max(id)']
+    sequence_number = int(id_pre[-2]+id_pre[-1])+1 if not id_pre == None else int(0)
+    sequence_number = '0' + str(sequence_number) if  sequence_number<10 else  str(sequence_number)
+ 
+    p.clear()
+    p['tablename'] = 'project'
+    p['column'] = ['id','name','describe', 'scheduled_time', 'delivery_day', 'project_superior_id', 'customer_id','major_milestones', 'adopting_technology', 'business_area', 'main_function']
+    p['values'] = [id + sequence_number,name,describe, scheduled_time, delivery_day, project_superior_id, custom_id, major_milestones, adopting_technology, business_area, main_function]
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    return db.otherDB(d.insertSql(p))
 
-if __name__ == '__main__':
-    print(get_info(keyword='系统', include_reject=True))
