@@ -25,3 +25,15 @@ def get_custom():
     p['tablename'] = 'customer'
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     return db.selectDB(d.selectSql(p))
+    pass
+
+def get_total_user(project_id=None):
+    # TODO
+    # return total user in company
+    if project_id is not None:
+        # status: if user in project
+        # return uid, name, status
+        pass
+    else:
+        # return uid, name
+        pass
