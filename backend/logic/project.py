@@ -20,8 +20,8 @@ def get_info(project_id=None, uid=None, keyword=None, detail=False, include_reje
     if detail == False:
         sql = '''select id, name, status, update_time from project'''
     else:
-        sql = '''select `project.id`, `project.name`, `project.status`, `project.update_time`, `project.describe`, `project.scheduled_time`, `project.delivery_day`, `employee.name`, `project.major_milestones`, `project.adopting_technology`, `project.business_area`, `project.main_function` 
-         from project join employee on employee.id = project.project_superior_id'''
+        sql = '''select project.id, project.name, project.status, project.update_time, project.describe, project.scheduled_time, project.delivery_day, employee.name, project.major_milestones, project.adopting_technology, project.business_area, project.main_function
+                 from project join employee on employee.id = project.project_superior_id'''
 
     if keyword is not None:
         like = '%'

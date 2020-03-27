@@ -2,6 +2,7 @@ import os
 import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__) , '..'))
+import config
 import util.db as d
 
 def get_info_by_uid(uid, is_superior=False, include_finished=False):
