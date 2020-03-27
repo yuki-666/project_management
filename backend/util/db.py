@@ -18,10 +18,10 @@ class ConnectToMysql(object):
     def otherDB(self,sql): #增删改
         try:
             if self.cursor.execute(sql) == 0:
-                return 'none'#无数据符合where条件
+                return 'none'#无数据符合where条件或者改了和没改一样
             else :
+                self.db.commit()
                 return 'ok'
-            self.db.commit()
         except:
             #print('You have an error in your SQL syntax;') #sql语句有问题或其他问题
             self.db.rollback()
@@ -48,23 +48,24 @@ class ConnectToMysql(object):
           self.db.close()
 
 def selectSql(p):
-    sql = '''select ''' + p['select_key'][0]
+    sql = '''select `%s`  ''' % p['select_key'][0]
     for i in range(1,len(p['select_key'])):
-        sql = sql + ''', ''' + p['select_key'][i] 
+        sql = sql + ''' , `%s` ''' % p['select_key'][i] 
     sql = sql + ''' from ''' + p['tablename'] 
-    if len(p['join_tablename'])>0:
+    if 'join_tablename' in p:
         sql = sql + ''' join ''' + p['join_tablename'][0]
         for i in range(1,len(p['join_tablename'])):
             sql = sql + ''',''' + p['join_tablename'][i] 
-        if len(p['on_key'])>0:
+        if 'on_key' in p:
             sql = sql + ''' on ''' + p['on_key'][0] + ''' = '''+p['on_value'][0]
             for i in range(1,len(p['on_key'])):
                 sql = sql + ''' and ''' + p['on_key'][i] + ''' = '''+p['on_value'][i]
-    if len(p['key'])>0:
+    if 'key' in p:
         sql = sql + ''' where ''' + p['key'][0] + p['value'][0]
         for i in range(1,len(p['key'])):
             sql = sql + ''' and ''' + p['key'][i] + p['value'][i]
     sql = sql + ''';'''
+    print(sql)#结项再删
     return sql
 
 def updateSql(p):
@@ -76,13 +77,22 @@ def updateSql(p):
         for i in range(1,len(p['where_key'])):
             sql = sql + ''' and ''' + p['where_key'][i] + p['where_value'][i]
     sql = sql + ''';'''
+    print(sql)#结项再删
     return sql
 
-#使用实例
-if __name__ == '__main__':
-    #创建连接
-    db = ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-    #sql语句
-    sql = "select username from login where id='0012'"
-    #调用函数
-    print(db.selectDB(sql))
+def insertSql(p):
+    #INSERT INTO table_name (column1,column2,column3,...) VALUES (value1,value2,value3,...);
+    sql = '''insert into ''' +p['tablename']
+    if 'column' in p:
+        sql = sql + ' (`%s` ' % p['column'][0]
+        for i in range(1,len(p['column'])):
+            sql = sql + ' , `%s` ' % p['column'][i]
+        sql = sql + ' ) '
+    sql = sql + ''' VALUES ('%s'   ''' % p['values'][0]
+    for i in range(1,len(p['values'])):
+        sql = sql + ''' ,'%s'   ''' % p['values'][i]
+    sql = sql + ' ); '
+    print(sql)#结项再删
+    return sql
+
+

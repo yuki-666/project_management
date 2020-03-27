@@ -3,6 +3,7 @@ import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__) , '..'))
 import util.db as d
+import config
 
 def get_info_by_uid(uid, is_superior=False, include_finished=False):
     # id | worker_id | project_id | date  | event_name | remain | status | remarks |start_time|end_time
@@ -59,9 +60,20 @@ def get_info_by_work_time_id(work_time_id):
     # check if work_time_id exist, return 'error' if not
     
 def get_info_by_uid_project_id(uid, project_id):
-    # TODO
+    para_dict = {}
+    para_dict['select_key'] = ['work_time.id', 'project.name', 'project_function.function_name', 'work_time.event_name',\
+     'work_time.start_time', 'work_time.end_time','work_time.date','timestampdiff(minute,work_time.start_time,work_time.end_time)','work_time.remain','work_time.status','work_time.describe']
+    para_dict['tablename'] = 'work_time'
+    para_dict['join_tablename'] = ['project,project_function']
+    para_dict['on_key'] = ['project.id','project_function.id']
+    para_dict['on_value'] = ['work_time.project_id','work_time.function_id']
+    para_dict['key'] = ['work_time.worker_id','work_time.project_id']
+    para_dict['value'] = [' = '+uid,' = '+project_id]
+    
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    res = db.selectDB(d.selectSql(para_dict))
     # return (work_time_id, project_name, function_name, activity_name, start_time, end_time, date, work_time, remain, status, describe)
-    pass
+    
 
 def confirm(work_time_id, status):
     para_dict = {}
