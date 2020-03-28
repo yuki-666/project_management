@@ -29,8 +29,8 @@ def get_info(project_id=None, uid=None, keyword=None, detail=False, include_reje
             like = like + keyword[i]
             like = like + '%'
 
-        sql_id = sql + '''where id like '%s';''' % like
-        sql_name = sql + '''where name like '%s';''' % like
+        sql_id = sql + ''' where id like '%s';''' % like
+        sql_name = sql + ''' where name like '%s';''' % like
         if include_reject == False:
             sql_id = sql_id[:-1] + ' and status > 0;'
             sql_name = sql_name[:-1] + ' and status > 0;'
@@ -50,20 +50,20 @@ def get_info(project_id=None, uid=None, keyword=None, detail=False, include_reje
         return res
 
     if project_id is not None:
-        sql += '''where id = '%s' ''' % project_id
+        sql += ''' where id = '%s' ''' % project_id
     elif uid is not None:
-        sql += '''join project_participant 
-                  on project_participant.project_id = project.id 
-                  where project_participant.person_id = '%s' ''' % uid
+        sql += ''' join project_participant
+                   on project_participant.project_id = project.id 
+                   where project_participant.person_id = '%s' ''' % uid
 
     # measure include_reject
     if include_reject == False:
         if exist_param_count == 0:
             # get all
-            sql += 'where status > 0;'
+            sql += ' where status > 0;'
         else:
             # project_id or uid
-            sql += 'and status > 0;'
+            sql += ' and status > 0;'
     
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     res = db.selectDB(sql)
