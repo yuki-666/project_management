@@ -28,9 +28,9 @@
           filter-placement="bottom-end"
         >
           <template slot-scope="props">
-            <xm-tag :type="FlowStatusRules[props.row.status]">
+            <zx-tag :type="FlowStatusRules[props.row.status]">
               {{ FLOWS_STATUS[props.row.status] }}
-            </xm-tag>
+            </zx-tag>
           </template>
         </el-table-column>
         <el-table-column
@@ -57,11 +57,11 @@
 import MyIndex from './MyIndex'
 import { FlowStatusRules } from './rule/data-config'
 import SearchBar from './home_component/SearchBar'
-import XmTag from '../tag'
+import ZxTag from '../tag'
 export default {
   components: {
     'search-bar': SearchBar,
-    'xm-tag': XmTag,
+    'zx-tag': ZxTag,
     'my-index': MyIndex
   },
   name: 'AppIndex',
@@ -74,12 +74,12 @@ export default {
       total: 10,
       FlowStatusRules,
       filter_status: [
-        { text: 'pending', value: 1 },
-        { text: 'established', value: 2 },
-        { text: 'processing', value: 3 },
-        { text: 'paid', value: 4 },
-        { text: 'finished', value: 5 },
-        { text: 'archived', value: 6 }
+        { text: 'pending', value: 0 },
+        { text: 'established', value: 1 },
+        { text: 'processing', value: 2 },
+        { text: 'paid', value: 3 },
+        { text: 'finished', value: 4 },
+        { text: 'archived', value: 5 }
       ],
       FLOWS_STATUS: [
         'pending',
@@ -145,12 +145,12 @@ export default {
           }
         })
         .then(successResponse => {
-          console.log(successResponse)
+          // console.log(successResponse)
           _this.projects = successResponse.data
           _this.tableDataTmp = successResponse.data
         })
         .catch(failResponse => {
-          console.log('OMmmmG')
+          // console.log('OMmmmG')
         })
     },
     searchResult () {
@@ -165,8 +165,8 @@ export default {
         return
       }
 
-      console.log(_this.projects)
-      console.log('after')
+      // console.log(_this.projects)
+      // console.log('after')
       this.$axios
         .post('/homepage/search', {
           keyword: _this.$refs.SearchBar.keywords
@@ -189,8 +189,9 @@ export default {
     }
   },
   created () {
-    console.log('hhhhhhh')
     this.uid = this.$route.query.uid
+    // console.log(this.uid)
+    console.log('career' + this.$store.getters.career)
     this.getAllProjects()
   }
 }

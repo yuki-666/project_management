@@ -82,6 +82,14 @@ export default {
             var path = this.$route.query.redirect
             _this.career = successResponse.data.career
             _this.uid = successResponse.data.uid
+            // zhx_s
+            // console.log('hhhhh')
+            // console.log(successResponse.data.uid)
+            localStorage.setItem('zuid', successResponse.data.uid)
+            _this.$store.commit('handleUid', successResponse.data.uid)
+            localStorage.setItem('zcareer', successResponse.data.career)
+            _this.$store.commit('handleCareer', successResponse.data.career)
+            // zhx_e
             this.$router.push({
               path: path === '/' || path === undefined ? '/index' : path,
               query: {

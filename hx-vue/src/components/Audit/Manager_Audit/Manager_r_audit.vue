@@ -1,27 +1,255 @@
 <template>
-  <div>项目审批啊</div>
+  <div>
+    <div class="project_table">
+      <el-table
+        :data="
+          projects.slice(
+            (this.currentPage - 1) * pagesize,
+            this.currentPage * pagesize
+          )
+        "
+        style="width:100%"
+        stripe
+        @filter-change="filterTagTable"
+      >
+        <el-table-column label="项目id" prop="id" sortable></el-table-column>
+        <el-table-column
+          label="项目名称"
+          prop="name"
+          sortable
+        ></el-table-column>
+        <el-table-column
+          label="项目状态"
+          prop="status"
+          column-key="status"
+          :filters="filter_status"
+          filter-placement="bottom-end"
+        >
+          <template slot-scope="props">
+            <zx-tag :type="FlowStatusRules[props.row.status]">
+              {{ FLOWS_STATUS[props.row.status] }}
+            </zx-tag>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="更新时间"
+          prop="update_time"
+          :sortable="true"
+          :sort-method="sortByDate"
+        ></el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
+              >修改</el-button
+            >
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-row class="pag">
+        <el-pagination
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-size="pagesize"
+          :total="projects.length"
+        >
+        </el-pagination>
+      </el-row>
+    </div>
+    <edit-form
+      :show.sync="dialogFormVisible"
+      :zid="tmpId"
+      @updateAgain="getAllInfo"
+      ref="edit"
+    ></edit-form>
+  </div>
 </template>
 
 <script>
+import EditForm from './Manager_editForm'
 import SideMenu from './Manager_SideMenu'
+import { FlowStatusRules } from '../../home/rule/data-config'
+import ZxTag from '../../tag'
 export default {
   name: 'ManagerRAudit',
   components: {
-    'side-menu': SideMenu
+    'side-menu': SideMenu,
+    'zx-tag': ZxTag,
+    'edit-form': EditForm
+  },
+  data () {
+    return {
+      // arr: [],
+      select: '',
+      tmpId: -1,
+      // biu: {
+      //   biu2: [
+      //     {
+      //       id: '5',
+      //       name: '2'
+      //     },
+      //     {
+      //       id: '6',
+      //       name: '4'
+      //     }
+      //   ],
+      //   zz: '2'
+      // },
+      dialogFormVisible: false,
+      uid: 0,
+      tableDataTmp: [],
+      currentPage: 1,
+      pagesize: 5,
+      total: 10,
+      FlowStatusRules,
+      filter_status: [
+        { text: 'pending', value: 0 },
+        { text: 'established', value: 1 },
+        { text: 'processing', value: 2 },
+        { text: 'paid', value: 3 },
+        { text: 'finished', value: 4 },
+        { text: 'archived', value: 5 },
+        { text: 'rejection', value: 6 }
+      ],
+      FLOWS_STATUS: [
+        'pending',
+        'established',
+        'processing',
+        'paid',
+        'finished',
+        'archived',
+        'rejection'
+      ],
+      projects: [
+        {
+          id: '',
+          name: '',
+          status: '',
+          update_time: ''
+        }
+      ]
+    }
   },
   methods: {
-    listByCategory () {
-      // var _this = this
-      // var cid = this.$refs.sideMenu.cid
+    zhxFun () {
+      console.log('fuccckkkkkkkk')
+    },
+    getAllInfo () {
+      // console.log('xxx')
+      let _this = this
+      this.$axios
+        .get('/approval/project/show', {
+          params: {
+            id: _this.tmpId
+          }
+        })
+        .then(successResponse => {
+          console.log('hhzzzzzzhh')
+          _this.$refs.edit.form = successResponse.data
+          console.log(_this.$refs.edit.form.name)
+        })
+    },
+    handleEdit (index, row) {
+      console.log(row.id + 'zzzzz')
+      console.log(this.$refs.edit.form.name)
+      // let _this = this
+      // console.log(_this.tableDataTmp[row].id + 'zhx')
+      this.$refs.edit.form = {
+        id: row.id
+      }
+      this.tmpId = row.id
+      this.$refs.edit.form.id = row.id
+      this.getAllInfo()
+      this.dialogFormVisible = true
+      // console.log(index, row)
+      // console.log(this.dialogFormVisible)
+    },
+    filterTagTable (filters) {
+      this.projects = this.tableDataTmp
+      // eslint-disable-next-line eqeqeq
+      if (filters.status.length == 0) {
+        this.projects = this.tableDataTmp
+      } else {
+        this.currentPage = 1
+        this.projects = this.tableDataTmp.filter(item =>
+          // eslint-disable-next-line eqeqeq
+          filters.status.some(ele => ele == item.status)
+        )
+      }
+    },
+    filterTag (value, row) {
+      // console.log(value)
+      return row.status === value
+    },
+    handleCurrentChange (currentPage) {
+      this.currentPage = currentPage
+      // console.log(`当前页: ${val}`);
+    },
+    sortByDate (obj1, obj2, column) {
+      var a = Date.parse(obj1.update_time)
+      var b = Date.parse(obj2.update_time)
+      if (a > b) {
+        return -1
+      } else {
+        return 1
+      }
+    },
+    // 获取全部项目
+    getAllProjects () {
+      var _this = this
+      this.$axios
+        .get('/approval/project', {
+          params: {
+            uid: _this.uid
+          }
+        })
+        .then(successResponse => {
+          // console.log(successResponse)
+          _this.projects = successResponse.data
+          _this.tableDataTmp = successResponse.data
+        })
+        .catch(failResponse => {
+          console.log('OMmmmG,my_audit')
+        })
     }
+  },
+  created () {
+    // this.arr = this.biu.biu2
+    // console.log('hhhhhhh')
+    this.uid = this.$store.getters.uid
+    // this.uid = this.$route.query.uid
+    this.getAllProjects()
+    console.log(this.uid + 'try3')
+    // console.log(store.getters.uid)
+    console.log(this.$store.getters.uid)
+    // console.log(store.getters.username)
+    console.log(this.$store.getters.username)
+    console.log('try2')
   }
 }
 </script>
 
-<style scoped>
-  .books-area {
-    width: 990px;
-    margin-left: auto;
-    margin-right: auto;
-  }
+<style lang="scss" scoped>
+.project_table {
+  padding-top: 0;
+  margin: 10px 20px;
+  position: relative;
+  // margin-left: auto;
+  // margin-right: auto;
+}
+.demo-table-expand {
+  font-size: 0;
+}
+.demo-table-expand label {
+  width: 90px;
+  color: #99a9bf;
+}
+.demo-table-expand .el-form-item {
+  margin-right: 0;
+  margin-bottom: 0;
+  width: 50%;
+  color: red;
+}
+.pag {
+  margin: 5px 70%;
+}
 </style>

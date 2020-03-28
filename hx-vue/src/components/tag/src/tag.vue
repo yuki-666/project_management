@@ -1,12 +1,12 @@
 <template>
-  <span class="xm-tag" :class="`xm-tag--${type}`">
+  <span class="zx-tag" :class="`zx-tag--${type}`">
     <slot></slot>
   </span>
 </template>
 
 <script>
 export default {
-  name: 'XmTag',
+  name: 'ZxTag',
   props: {
     type: {
       type: String,
@@ -25,7 +25,7 @@ $--color-primary-light: #e9f0ff !default;
 $--color-success-light: #eef9f1 !default;
 $--color-warning-light: #fdf6ea !default;
 $--color-danger-light: #fff0f0 !default;
-.xm-tag {
+.zx-tag {
   font-size: 12px;
   line-height: 1;
   padding: 4px 5px;
@@ -36,22 +36,22 @@ $--color-danger-light: #fff0f0 !default;
   white-space: nowrap;
   border-radius: 2px;
 }
-.xm-tag--primary {
+.zx-tag--primary {
   background: $--color-primary-light;
   color: $--color-primary;
 }
 
-.xm-tag--success {
+.zx-tag--success {
   background: $--color-success-light;
   color: $--color-success;
 }
 
-.xm-tag--warning {
+.zx-tag--warning {
   background: $--color-warning-light;
   color: $--color-warning;
 }
 
-.xm-tag--danger {
+.zx-tag--danger {
   background: $--color-danger-light;
   color: $--color-danger;
 }

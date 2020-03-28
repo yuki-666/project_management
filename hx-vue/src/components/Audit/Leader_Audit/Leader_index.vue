@@ -6,22 +6,22 @@
     <el-main>
       <!-- <manager-r-audit v-show="this.$refs.sideMenu.cid == 0"></manager-r-audit>
       <manager-r-audit v-show="this.$refs.sideMenu.cid == 1"></manager-r-audit> -->
-      <manager-r-audit v-show="this.flag == '0'"></manager-r-audit>
-      <manager-r-work-time v-show="this.flag == '1'"></manager-r-work-time>
+      <leader-r-work-time v-show="this.flag == '0'"></leader-r-work-time>
+      <leader-r-work-p-time v-show="this.flag == '1'"></leader-r-work-p-time>
     </el-main>
   </el-container>
 </template>
 
 <script>
-import SideMenu from './Manager_SideMenu'
-import ManagerRAudit from './Manager_r_audit'
-import ManagerRWorkTime from './Manager_r_workTime'
+import SideMenu from './Leader_SideMenu'
+import LeaderRWorkTime from './Leader_r_workTime'
+import LeaderRWorkPTime from './Leader_r_workPTime'
 export default {
   name: 'ManagerIndex',
   components: {
     'side-menu': SideMenu,
-    'manager-r-audit': ManagerRAudit,
-    'manager-r-work-time': ManagerRWorkTime
+    'leader-r-work-time': LeaderRWorkTime,
+    'leader-r-work-p-time': LeaderRWorkPTime
   },
   data () {
     return {

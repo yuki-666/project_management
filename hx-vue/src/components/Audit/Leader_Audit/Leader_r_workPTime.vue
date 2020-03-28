@@ -14,17 +14,12 @@
       >
         <el-table-column label="工时id" prop="id" sortable></el-table-column>
         <el-table-column
-          label="worker_name"
-          prop="worker_name"
-          sortable
-        ></el-table-column>
-        <el-table-column
-          label="功能名称"
+          label="function_name"
           prop="function_name"
           sortable
         ></el-table-column>
         <el-table-column
-          label="活动名称"
+          label="event_name"
           prop="event_name"
           sortable
         ></el-table-column>
@@ -38,15 +33,19 @@
           label="end_time"
           prop="end_time"
           :sortable="true"
-          :sort-method="sortByDate"
+          :sort-method="sortByDate2"
         ></el-table-column>
+        <el-table-column label="status" prop="status"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
+            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
+              >修改</el-button
+            >
             <el-button
               size="mini"
-              type="primary"
-              @click="zhandleEdit(scope.$index, scope.row)"
-              >确认</el-button
+              type="danger"
+              @click="handleDelete(scope.$index, scope.row)"
+              >删除</el-button
             >
           </template>
         </el-table-column>
@@ -61,23 +60,18 @@
         </el-pagination>
       </el-row>
     </div>
-    <!-- <edit-form :show.sync="dialogFormVisible" ref="edit"></edit-form> -->
-    <el-dialog
-      title="审批提醒"
-      :visible.sync="dialogFormVisible"
-      @close="dialogFormVisible = false"
-    >
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="auditNo">不 审 批</el-button>
-        <el-button type="primary" @click="auditYes">审 批</el-button>
-      </div>
-    </el-dialog>
+    <edit-form
+      :show.sync="dialogFormVisible"
+      :zid="tmpId"
+      @updateAgain="this.getAllInfo"
+      ref="edit"
+    ></edit-form>
   </div>
 </template>
 
 <script>
-import EditForm from './Manager_editForm'
-import SideMenu from './Manager_SideMenu'
+import EditForm from './Leader_editForm'
+import SideMenu from './Leader_SideMenu'
 import { FlowStatusRules } from '../../home/rule/data-config'
 import ZxTag from '../../tag'
 export default {
@@ -93,85 +87,105 @@ export default {
       select: '',
       dialogFormVisible: false,
       uid: 0,
-      wid: '', // 工时id
+      tmpId: -1,
       tableDataTmp: [],
       currentPage: 1,
       pagesize: 5,
       total: 10,
       FlowStatusRules,
-      status: 0,
+      filter_status: [
+        { text: 'pending', value: 0 },
+        { text: 'established', value: 1 },
+        { text: 'processing', value: 2 },
+        { text: 'paid', value: 3 },
+        { text: 'finished', value: 4 },
+        { text: 'archived', value: 5 },
+        { text: 'rejection', value: 6 }
+      ],
+      FLOWS_STATUS: [
+        'pending',
+        'established',
+        'processing',
+        'paid',
+        'finished',
+        'archived',
+        'rejection'
+      ],
       projects: [
         {
           id: '',
-          worker_name: '',
           function_name: '',
           event_name: '',
           start_time: '',
-          end_time: ''
+          end_time: '',
+          status: ''
         }
       ]
     }
   },
   methods: {
-    auditNo () {
-      // this.dialogFormVisible = false;
-      this.status = 0 // 不同意
-      this.auditConfirm()
-    },
-    auditYes () {
-      // this.dialogFormVisible = false;
-      this.status = 1 // 同意
-      this.auditConfirm()
-    },
-    auditConfirm () {
+    handleDelete (index, row) {
       let _this = this
-      this.$axios
-        .post('/approval/work_time/confirm', {
-          id: _this.wid,
-          status: _this.status
+      this.$confirm('此操作将永久删除该书籍, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          // 前端删除 仅供测试
+          let tmp = { id: row.id }
+          console.log('zhxxxxxx' + row.id)
+          let tmpArr = [tmp]
+          _this.projects = _this.projects.filter(item =>
+            tmpArr.every(ele => ele.id !== item.id)
+          )
+          _this.tmpId = row.id
+          // 后端删除
+          this.$axios
+            .post('/approval/work_time/passive/delete', { id: _this.tmpId })
+            .then(resp => {
+              if (resp.data.status === 'ok') {
+                console.log(resp.data.status)
+                this.$message.success('已经删除')
+                // this.getAllProjects()
+              }
+            })
         })
-        .then(successResponse => {
-          let status = successResponse.data.status
-          if (status === 'ok') {
-            _this.dialogFormVisible = false
-            this.$message.success('已经更新')
-          }
-        })
-        .catch(failResponse => {
-          this.$message.error('更新失败')
-          // console.log('OMmmmG,my_audit')
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
         })
     },
-    getAllInfo (value) {
+    zhxFun () {
+      console.log('fuccckkkkkkkk')
+    },
+    getAllInfo () {
       // console.log('xxx')
       let _this = this
       this.$axios
-        .get('/approval/project/show', {
+        .get('/approval/work_time/passive/show', {
           params: {
-            id: value
+            id: _this.tmpId
           }
         })
         .then(successResponse => {
-          // console.log('hhzzzzzzhh')
           _this.$refs.edit.form = successResponse.data
-          // console.log(_this.$refs.edit.form.name)
         })
     },
-    zhandleEdit (index, row) {
-      let _this = this
-      _this.dialogFormVisible = true
-      _this.wid = row.id
-    },
     handleEdit (index, row) {
-      // console.log(row.id + 'zzzzz')
-      // console.log(this.$refs.edit.form.name)
+      console.log(row.id + 'zzzzz')
+      console.log(this.$refs.edit.form.name)
       // let _this = this
       // console.log(_this.tableDataTmp[row].id + 'zhx')
       this.$refs.edit.form = {
         id: row.id
       }
+      this.tmpId = row.id
       this.$refs.edit.form.id = row.id
-      this.getAllInfo(row.id)
+      console.log(this.$refs.edit.form.id)
+      this.getAllInfo()
       this.dialogFormVisible = true
       // console.log(index, row)
       // console.log(this.dialogFormVisible)
@@ -198,8 +212,17 @@ export default {
       // console.log(`当前页: ${val}`);
     },
     sortByDate (obj1, obj2, column) {
-      var a = Date.parse(obj1.update_time)
-      var b = Date.parse(obj2.update_time)
+      var a = Date.parse(obj1.start_time)
+      var b = Date.parse(obj2.start_time)
+      if (a > b) {
+        return -1
+      } else {
+        return 1
+      }
+    },
+    sortByDate2 (obj1, obj2, column) {
+      var a = Date.parse(obj1.end_time)
+      var b = Date.parse(obj2.end_time)
       if (a > b) {
         return -1
       } else {
@@ -210,7 +233,7 @@ export default {
     getAllProjects () {
       var _this = this
       this.$axios
-        .get('/approval/work_time/initiative', {
+        .get('/approval/work_time/passive', {
           params: {
             uid: _this.uid
           }
@@ -221,15 +244,21 @@ export default {
           _this.tableDataTmp = successResponse.data
         })
         .catch(failResponse => {
-          // console.log('OMmmmG,my_workTime')
+          console.log('OMmmmG,my_audit')
         })
     }
   },
   created () {
     // this.arr = this.biu.biu2
     // console.log('hhhhhhh')
-    this.uid = this.$store.getters.uid
+    this.uid = this.$route.query.uid
     this.getAllProjects()
+    console.log('try3')
+    // console.log(store.getters.uid)
+    console.log(this.$store.getters.uid)
+    // console.log(store.getters.username)
+    console.log(this.$store.getters.username)
+    console.log('try2')
   }
 }
 </script>

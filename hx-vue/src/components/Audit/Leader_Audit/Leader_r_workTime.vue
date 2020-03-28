@@ -1,5 +1,6 @@
 <template>
   <div>
+      jejejejej
     <div class="project_table">
       <el-table
         :data="
@@ -76,16 +77,14 @@
 </template>
 
 <script>
-import EditForm from './Manager_editForm'
-import SideMenu from './Manager_SideMenu'
+import SideMenu from './Leader_SideMenu'
 import { FlowStatusRules } from '../../home/rule/data-config'
 import ZxTag from '../../tag'
 export default {
   name: 'ManagerRAudit',
   components: {
     'side-menu': SideMenu,
-    'zx-tag': ZxTag,
-    'edit-form': EditForm
+    'zx-tag': ZxTag
   },
   data () {
     return {
