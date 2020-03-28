@@ -1,8 +1,8 @@
-import XmTag from './src/tag.vue'
+import ZxTag from './src/tag.vue'
 
 /* istanbul ignore next */
-XmTag.install = function (Vue) {
-  Vue.component(XmTag.name, XmTag)
+ZxTag.install = function (Vue) {
+  Vue.component(ZxTag.name, ZxTag)
 }
 
-export default XmTag
+export default ZxTag

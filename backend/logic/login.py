@@ -28,10 +28,10 @@ def login(username, password):
         db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
         if db.selectDB(sql) == 'Empty':
             res[0]['career'] = '3'
-            return (0, res)
+            return (0, res[0])
         else:
             res[0]['career'] = '2'
-            return (0, res)
+            return (0, res[0])
     else :
         sql = '''select login.id,employee.career
              from login join employee

@@ -9,7 +9,7 @@ app = Flask(__name__)
 app.register_blueprint(homepage_access, url_prefix='/api/homepage')
 app.register_blueprint(approval_access, url_prefix='/api/approval')
 app.register_blueprint(project_access, url_prefix='/api/project')
-app.register_blueprint(project_detail, url_prefix='/api/project_detail')
+app.register_blueprint(project_detail_access, url_prefix='/api/project_detail')
 
 CORS(app, supports_credentials=True)
 
