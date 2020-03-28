@@ -35,7 +35,13 @@
           :sortable="true"
           :sort-method="sortByDate2"
         ></el-table-column>
-        <el-table-column label="status" prop="status"></el-table-column>
+        <el-table-column label="status" prop="status">
+          <template slot-scope="props">
+            <zx-tag :type="FlowStatusRules[props.row.status]">
+              {{ FLOWS_STATUS[props.row.status] }}
+            </zx-tag>
+          </template>
+        </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
@@ -102,15 +108,7 @@ export default {
         { text: 'archived', value: 5 },
         { text: 'rejection', value: 6 }
       ],
-      FLOWS_STATUS: [
-        'pending',
-        'established',
-        'processing',
-        'paid',
-        'finished',
-        'archived',
-        'rejection'
-      ],
+      FLOWS_STATUS: ['驳回', '已审批'],
       projects: [
         {
           id: '',
