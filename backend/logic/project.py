@@ -20,7 +20,7 @@ def get_info(project_id=None, uid=None, keyword=None, detail=False, include_reje
     if detail == False:
         sql = '''select id, name, status, update_time from project'''
     else:
-        sql = '''select project.id, project.name, project.status, project.update_time, project.describe, project.scheduled_time, project.delivery_day, employee.name, project.major_milestones, project.adopting_technology, project.business_area, project.main_function from project join employee on employee.id = project.project_superior_id '''
+        sql = '''select project.id, project.name,project.project_superior_id, project.status, project.update_time, project.describe, project.scheduled_time, project.delivery_day, employee.name, project.major_milestones, project.adopting_technology, project.business_area, project.main_function from project join employee on employee.id = project.project_superior_id '''
 
     if keyword is not None:
         like = '%'
@@ -183,9 +183,9 @@ def get_project_member(project_id, function_id=None):
     if function_id is not None:
         p.clear()
         p['select_key'] = ['worker_id']
-        p['tablename'] = 'work_time'
-        p['key'] = ['function_id']
-        p['value'] = [' = '+function_id]
+        p['tablename'] = 'project_function'
+        p['key'] = ['id','project_id']
+        p['value'] = [' = '+function_id,' = '+project_id]
         db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
         worker_in = db.selectDB(d.selectSql(p))
         worker_list = []
@@ -260,14 +260,95 @@ def delete_function(project_id, function_id):
     return db.otherDB(d.updateSql(p))
 
 def modify_function(project_id, function_id, function_name, uid):
-    # TODO
     # uid(split by ',') change to list
+    p = {}
+    p['select_key'] = ['worker_id']
+    p['tablename'] = 'project_function'
+    p['key'] = ['id','project_id']
+    p['value'] = [' = '+function_id,' = '+project_id]
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    A = db.selectDB(d.selectSql(p))
+
+    only_A = []
+    A_and_B = []
+    only_B = []
+    for record in A:
+        if record['worker_id'] in uid:
+            A_and_B.append(record['worker_id'])
+        else:
+            only_A.append(record['worker_id'])
+    only_B = list(set(uid)-set(A_and_B))
+    #insert for only_B
+    p.clear()
+    p['tablename'] = 'project_function'
+    p['column'] = ['id','project_id','worker_id','function_name']
+    p['values'] = [function_id,project_id,'unknown',function_name]
+    for worker_id in only_B:
+        p['values'][2] = worker_id
+        db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+        db.otherDB(d.insertSql(p))
+    #delete for only_A
+    p.clear()
+    p['tablename'] = 'project_function'
+    p['key'] = ['id','project_id','worker_id']
+    p['value'] = [' = '+function_id,' = '+project_id,'unknown']
+    for worker_id in only_A:
+        p['value'][2] = ' = '+ worker_id
+        db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+        db.otherDB(d.deleteSql(p))
+    #update for A_and_B
+    p.clear()
+    p['tablename'] = 'project_function'
+    p['set_key'] = ['function_name']
+    p['set_value'] = [function_name]
+    p['where_key'] = ['id','project_id','worker_id']
+    p['where_value'] = [' = '+function_id,' = '+project_id,'unknown']
+    for worker_id in A_and_B:
+        p['where_value'][2] = ' = '+ worker_id
+        db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+        db.otherDB(d.updateSql(p))
+
     return 'ok'
 
 def modify_worker(project_id, uid):
-    # TODO
     # uid(split by ',') change to list
     # update user participate in project
+    p = {}
+    p['select_key'] = ['person_id']
+    p['tablename'] = 'project_participant'
+    p['key'] = ['project_id']
+    p['value'] = [' = '+project_id]
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    A = db.selectDB(d.selectSql(p))
+
+    only_A = []
+    A_and_B = []
+    only_B = []
+    for record in A:
+        if record['person_id'] in uid:
+            A_and_B.append(record['person_id'])
+        else:
+            only_A.append(record['person_id'])
+    only_B = list(set(uid)-set(A_and_B))
+    #insert for only_B
+    p.clear()
+    p['tablename'] = 'project_participant'
+    p['column'] = ['person_id','project_id']
+    p['values'] = ['unknown',project_id,]
+    for worker_id in only_B:
+        p['values'][0] = worker_id
+        db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+        db.otherDB(d.insertSql(p))
+    #delete for only_A
+    p.clear()
+    p['tablename'] = 'project_participant'
+    p['key'] = ['project_id','person_id']
+    p['value'] = [' = '+project_id,'unknown']
+    for worker_id in only_A:
+        p['value'][1] = ' = '+ worker_id
+        db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+        db.otherDB(d.deleteSql(p))
+    
     return 'ok'
 
 def get_authority(project_id, uid=None):

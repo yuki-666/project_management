@@ -41,7 +41,6 @@ class ConnectToMysql(object):
             print('You have an error in your SQL syntax;')  #sql语句有问题或其他问题
         finally:
             self.cursor.close()
-
              
     def __del__(self):   #关闭连接
           self.cursor.close()
@@ -93,6 +92,17 @@ def insertSql(p):
     for i in range(1,len(p['values'])):
         sql = sql + ''' ,'%s'   ''' % p['values'][i]
     sql = sql + ' ); '
+    print(sql)#结项再删
+    return sql
+
+def deleteSql(p):
+    #INSERT INTO table_name (column1,column2,column3,...) VALUES (value1,value2,value3,...);
+    sql = '''delete from ''' +p['tablename']
+    if 'key' in p:
+        sql = sql + ' where ' + p['key'][0] + p['value'][0]
+        for i in range(1,len(p['key'])):
+            sql = sql + ' and  ' + p['key'][i] + p['value'][i]
+    sql = sql + ' ; '
     print(sql)#结项再删
     return sql
 
