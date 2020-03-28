@@ -112,15 +112,10 @@ export default {
       // return row.status === value
     },
     filterTag (value, row) {
-      console.log(value)
-      // this.filterTagTable()
-      // return row.status === value
       return row.status === value
     },
     handleCurrentChange (currentPage) {
       this.currentPage = currentPage
-      console.log(this.currentPage)
-      // console.log(`当前页: ${val}`);
     },
     sortByDate (obj1, obj2, column) {
       var a = Date.parse(obj1.update_time)
@@ -145,7 +140,6 @@ export default {
           _this.tableDataTmp = successResponse.data
         })
         .catch(failResponse => {
-          console.log('OMmmmG')
         })
     },
     searchResult () {
@@ -159,15 +153,11 @@ export default {
         this.getAllProjects()
         return
       }
-
-      console.log(_this.projects)
-      console.log('after')
       this.$axios
         .post('/homepage/project_mine', {
           keyword: _this.$refs.SearchBar.keywords
         })
         .then(successResponse => {
-          console.log(successResponse.data)
           // id为空
           if (successResponse.data.length === 0) {
             _this.projects.filter(item => {
@@ -184,7 +174,7 @@ export default {
     }
   },
   created () {
-    this.uid = this.$route.query.uid
+    this.uid = this.$store.getters.uid
     this.getAllProjects()
   }
 }

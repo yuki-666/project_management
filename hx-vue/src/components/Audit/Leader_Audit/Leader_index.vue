@@ -30,8 +30,6 @@ export default {
   },
   methods: {
     listByCategory () {
-      console.log('hhhh')
-      console.log(this.$refs.sideMenu.cid)
       this.flag = '0'
       // eslint-disable-next-line eqeqeq
       if (this.$refs.sideMenu.cid == '0') {

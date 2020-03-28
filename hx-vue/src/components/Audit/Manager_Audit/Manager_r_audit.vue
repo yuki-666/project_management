@@ -102,22 +102,22 @@ export default {
       total: 10,
       FlowStatusRules,
       filter_status: [
-        { text: 'pending', value: 0 },
-        { text: 'established', value: 1 },
-        { text: 'processing', value: 2 },
-        { text: 'paid', value: 3 },
-        { text: 'finished', value: 4 },
-        { text: 'archived', value: 5 },
-        { text: 'rejection', value: 6 }
+        { text: 'rejection', value: 0 },
+        { text: 'pending', value: 1 },
+        { text: 'established', value: 2 },
+        { text: 'processing', value: 3 },
+        { text: 'paid', value: 4 },
+        { text: 'finished', value: 5 },
+        { text: 'archived', value: 6 }
       ],
       FLOWS_STATUS: [
+        'rejection',
         'pending',
         'established',
         'processing',
         'paid',
         'finished',
-        'archived',
-        'rejection'
+        'archived'
       ],
       projects: [
         {
@@ -130,11 +130,7 @@ export default {
     }
   },
   methods: {
-    zhxFun () {
-      console.log('fuccckkkkkkkk')
-    },
     getAllInfo () {
-      // console.log('xxx')
       let _this = this
       this.$axios
         .get('/approval/project/show', {
@@ -143,16 +139,10 @@ export default {
           }
         })
         .then(successResponse => {
-          console.log('hhzzzzzzhh')
           _this.$refs.edit.form = successResponse.data
-          console.log(_this.$refs.edit.form.name)
         })
     },
     handleEdit (index, row) {
-      console.log(row.id + 'zzzzz')
-      console.log(this.$refs.edit.form.name)
-      // let _this = this
-      // console.log(_this.tableDataTmp[row].id + 'zhx')
       this.$refs.edit.form = {
         id: row.id
       }
@@ -160,8 +150,6 @@ export default {
       this.$refs.edit.form.id = row.id
       this.getAllInfo()
       this.dialogFormVisible = true
-      // console.log(index, row)
-      // console.log(this.dialogFormVisible)
     },
     filterTagTable (filters) {
       this.projects = this.tableDataTmp
@@ -177,12 +165,10 @@ export default {
       }
     },
     filterTag (value, row) {
-      // console.log(value)
       return row.status === value
     },
     handleCurrentChange (currentPage) {
       this.currentPage = currentPage
-      // console.log(`当前页: ${val}`);
     },
     sortByDate (obj1, obj2, column) {
       var a = Date.parse(obj1.update_time)
@@ -203,27 +189,16 @@ export default {
           }
         })
         .then(successResponse => {
-          // console.log(successResponse)
           _this.projects = successResponse.data
           _this.tableDataTmp = successResponse.data
         })
         .catch(failResponse => {
-          console.log('OMmmmG,my_audit')
         })
     }
   },
   created () {
-    // this.arr = this.biu.biu2
-    // console.log('hhhhhhh')
     this.uid = this.$store.getters.uid
-    // this.uid = this.$route.query.uid
     this.getAllProjects()
-    console.log(this.uid + 'try3')
-    // console.log(store.getters.uid)
-    console.log(this.$store.getters.uid)
-    // console.log(store.getters.username)
-    console.log(this.$store.getters.username)
-    console.log('try2')
   }
 }
 </script>

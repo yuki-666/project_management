@@ -35,7 +35,13 @@
           :sortable="true"
           :sort-method="sortByDate2"
         ></el-table-column>
-        <el-table-column label="status" prop="status"></el-table-column>
+        <el-table-column label="status" prop="status">
+          <template slot-scope="props">
+            <zx-tag :type="FlowStatusRules[props.row.status]">
+              {{ FLOWS_STATUS[props.row.status] }}
+            </zx-tag>
+          </template>
+        </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
@@ -102,15 +108,7 @@ export default {
         { text: 'archived', value: 5 },
         { text: 'rejection', value: 6 }
       ],
-      FLOWS_STATUS: [
-        'pending',
-        'established',
-        'processing',
-        'paid',
-        'finished',
-        'archived',
-        'rejection'
-      ],
+      FLOWS_STATUS: ['驳回', '已审批'],
       projects: [
         {
           id: '',
@@ -134,7 +132,6 @@ export default {
         .then(() => {
           // 前端删除 仅供测试
           let tmp = { id: row.id }
-          console.log('zhxxxxxx' + row.id)
           let tmpArr = [tmp]
           _this.projects = _this.projects.filter(item =>
             tmpArr.every(ele => ele.id !== item.id)
@@ -145,9 +142,7 @@ export default {
             .post('/approval/work_time/passive/delete', { id: _this.tmpId })
             .then(resp => {
               if (resp.data.status === 'ok') {
-                console.log(resp.data.status)
                 this.$message.success('已经删除')
-                // this.getAllProjects()
               }
             })
         })
@@ -158,11 +153,7 @@ export default {
           })
         })
     },
-    zhxFun () {
-      console.log('fuccckkkkkkkk')
-    },
     getAllInfo () {
-      // console.log('xxx')
       let _this = this
       this.$axios
         .get('/approval/work_time/passive/show', {
@@ -175,20 +166,13 @@ export default {
         })
     },
     handleEdit (index, row) {
-      console.log(row.id + 'zzzzz')
-      console.log(this.$refs.edit.form.name)
-      // let _this = this
-      // console.log(_this.tableDataTmp[row].id + 'zhx')
       this.$refs.edit.form = {
         id: row.id
       }
       this.tmpId = row.id
       this.$refs.edit.form.id = row.id
-      console.log(this.$refs.edit.form.id)
       this.getAllInfo()
       this.dialogFormVisible = true
-      // console.log(index, row)
-      // console.log(this.dialogFormVisible)
     },
     filterTagTable (filters) {
       this.projects = this.tableDataTmp
@@ -204,12 +188,10 @@ export default {
       }
     },
     filterTag (value, row) {
-      // console.log(value)
       return row.status === value
     },
     handleCurrentChange (currentPage) {
       this.currentPage = currentPage
-      // console.log(`当前页: ${val}`);
     },
     sortByDate (obj1, obj2, column) {
       var a = Date.parse(obj1.start_time)
@@ -239,26 +221,16 @@ export default {
           }
         })
         .then(successResponse => {
-          // console.log(successResponse)
           _this.projects = successResponse.data
           _this.tableDataTmp = successResponse.data
         })
         .catch(failResponse => {
-          console.log('OMmmmG,my_audit')
         })
     }
   },
   created () {
-    // this.arr = this.biu.biu2
-    // console.log('hhhhhhh')
-    this.uid = this.$route.query.uid
+    this.uid = this.$store.getters.uid
     this.getAllProjects()
-    console.log('try3')
-    // console.log(store.getters.uid)
-    console.log(this.$store.getters.uid)
-    // console.log(store.getters.username)
-    console.log(this.$store.getters.username)
-    console.log('try2')
   }
 }
 </script>

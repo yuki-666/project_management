@@ -138,11 +138,9 @@ export default {
         })
         .catch(failResponse => {
           this.$message.error('更新失败')
-          // console.log('OMmmmG,my_audit')
         })
     },
     getAllInfo (value) {
-      // console.log('xxx')
       let _this = this
       this.$axios
         .get('/approval/project/show', {
@@ -151,9 +149,7 @@ export default {
           }
         })
         .then(successResponse => {
-          // console.log('hhzzzzzzhh')
           _this.$refs.edit.form = successResponse.data
-          // console.log(_this.$refs.edit.form.name)
         })
     },
     zhandleEdit (index, row) {
@@ -162,18 +158,12 @@ export default {
       _this.wid = row.id
     },
     handleEdit (index, row) {
-      // console.log(row.id + 'zzzzz')
-      // console.log(this.$refs.edit.form.name)
-      // let _this = this
-      // console.log(_this.tableDataTmp[row].id + 'zhx')
       this.$refs.edit.form = {
         id: row.id
       }
       this.$refs.edit.form.id = row.id
       this.getAllInfo(row.id)
       this.dialogFormVisible = true
-      // console.log(index, row)
-      // console.log(this.dialogFormVisible)
     },
     filterTagTable (filters) {
       this.projects = this.tableDataTmp
@@ -189,12 +179,10 @@ export default {
       }
     },
     filterTag (value, row) {
-      // console.log(value)
       return row.status === value
     },
     handleCurrentChange (currentPage) {
       this.currentPage = currentPage
-      // console.log(`当前页: ${val}`);
     },
     sortByDate (obj1, obj2, column) {
       var a = Date.parse(obj1.update_time)
@@ -215,18 +203,14 @@ export default {
           }
         })
         .then(successResponse => {
-          // console.log(successResponse)
           _this.projects = successResponse.data
           _this.tableDataTmp = successResponse.data
         })
         .catch(failResponse => {
-          // console.log('OMmmmG,my_workTime')
         })
     }
   },
   created () {
-    // this.arr = this.biu.biu2
-    // console.log('hhhhhhh')
     this.uid = this.$store.getters.uid
     this.getAllProjects()
   }

@@ -81,18 +81,12 @@ export default {
     }
   },
   watch: {
-    // show: function (value) {
-    //   this.dialogFormVisible = value
-    //   console.log(this.dialogFormVisible)
-    // }
     show () {
       this.dialogFormVisible = this.show
     }
   },
   methods: {
     dateFormat (value) {
-      console.log('hhhhhhh')
-      console.log(value)
       var date = new Date(value)
       var year = date.getFullYear()
       var month =
@@ -100,20 +94,12 @@ export default {
           ? '0' + (date.getMonth() + 1)
           : date.getMonth() + 1
       var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
-      console.log(year + '-' + month + '-' + day)
       var hour = ('0' + date.getHours()).slice(-2)
       var minute = ('0' + date.getMinutes()).slice(-2)
-      console.log(year + '-' + month + '-' + day + ' ' + hour + ':' + minute)
       return year + '-' + month + '-' + day + ' ' + hour + ':' + minute
     },
     onSubmit () {
       let _this = this
-      // console.log('test3')
-      // console.log(_this.select)
-      // console.log(_this.select.project_superior)
-      // console.log(_this.form.project_superior.project_superior_name)
-      // console.log('test2')
-      // console.log(_this.form.name)
       this.$axios
         .post('/approval/work_time/passive/modify', {
           id: _this.zid,
@@ -123,8 +109,6 @@ export default {
           end_time: _this.dateFormat(_this.form.end_time)
         })
         .then(successResponse => {
-          // console.log(successResponse)
-          console.log(successResponse.data)
           let status = successResponse.data.status
           if (status === 'ok') {
             _this.dialogFormVisible = false
@@ -132,10 +116,8 @@ export default {
             _this.$emit('updateAgain')
             this.$message.success('已经更新')
           }
-          // this.dialogFormVisible = false
         })
         .catch(failResponse => {
-          console.log('OMmmmG,my_audit')
         })
     },
     endDate () {
@@ -145,7 +127,7 @@ export default {
           if (_this.form.start_time) {
             return new Date(_this.form.start_time).getTime() >= time.getTime()
           } else {
-            return time.getTime() > Date.now()
+            return time.getTime() < Date.now() - 8.64e7// 8.64e7=1000*60*60*24一天
           }
         }
       }
@@ -159,25 +141,11 @@ export default {
               new Date(_this.form.end_time).getTime() <= time.getTime()
             )
           } else {
-            return time.getTime() > Date.now()
+            return time.getTime() < Date.now() - 8.64e7// 8.64e7=1000*60*60*24一天
           }
         }
       }
     },
-    // getAllInfo () {
-    //   // console.log('xxx')
-    //   let _this = this
-    //   this.$axios
-    //     .get('/approval/project/show', {
-    //       params: {
-    //         id: _this.form.id
-    //       }
-    //     })
-    //     .then(successResponse => {
-    //       // console.log('hhzzzzzzhh')
-    //       _this.form = successResponse.data
-    //     })
-    // },
     closeDialog () {
       this.dialogFormVisible = false
       this.$emit('update:show', false)

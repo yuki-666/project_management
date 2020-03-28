@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import store from '../../store'
+// import store from '../../store'
 import ManagerIndex from './Manager_Audit/Manager_index'
 import BossIndex from './Boss_Audit/Boss_index'
 import LeaderIndex from './Leader_Audit/Leader_index'
@@ -29,20 +29,19 @@ export default {
   },
   methods: {},
   created () {
-    console.log(store.getters.uid)
-    console.log(this.$store.getters.uid)
-    console.log('hhhhh' + this.$store.getters.career)
-    if (this.$store.getters.career === 0) {
-      console.log('onde')
+    // eslint-disable-next-line eqeqeq
+    if (this.$store.getters.career == 0) {
       this.flag = 0
-    } else if (this.$store.getters.career === 1) {
+    // eslint-disable-next-line eqeqeq
+    } else if (this.$store.getters.career == 1) {
       this.flag = 1
-    } else if (this.$store.getters.career === 2) {
+    // eslint-disable-next-line eqeqeq
+    } else if (this.$store.getters.career == 2) {
       this.flag = 2
-    } else if (this.$store.getters.career === 3) {
+    // eslint-disable-next-line eqeqeq
+    } else if (this.$store.getters.career == 3) {
       this.flag = 3
     }
-    console.log('try')
   }
 }
 </script>
