@@ -24,7 +24,7 @@
         >
           <el-date-picker
             v-model="form.start_time"
-            type="date"
+            type="datetime"
             placeholder="开始日期"
             :picker-options="startDatePicker"
           >
@@ -37,7 +37,7 @@
         >
           <el-date-picker
             v-model="form.end_time"
-            type="date"
+            type="datetime"
             placeholder="结束日期"
             :picker-options="endDatePicker"
           >
@@ -91,6 +91,8 @@ export default {
   },
   methods: {
     dateFormat (value) {
+      console.log('hhhhhhh')
+      console.log(value)
       var date = new Date(value)
       var year = date.getFullYear()
       var month =
@@ -98,7 +100,11 @@ export default {
           ? '0' + (date.getMonth() + 1)
           : date.getMonth() + 1
       var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
-      return year + '-' + month + '-' + day
+      console.log(year + '-' + month + '-' + day)
+      var hour = ('0' + date.getHours()).slice(-2)
+      var minute = ('0' + date.getMinutes()).slice(-2)
+      console.log(year + '-' + month + '-' + day + ' ' + hour + ':' + minute)
+      return year + '-' + month + '-' + day + ' ' + hour + ':' + minute
     },
     onSubmit () {
       let _this = this

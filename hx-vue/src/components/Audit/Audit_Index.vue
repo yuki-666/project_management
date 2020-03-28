@@ -3,7 +3,7 @@
     xxh
     <boss-index v-show="this.flag == 0" ref="bossIndex"></boss-index>
     <manager-index v-show="this.flag == 1" ref="managerIndex"></manager-index>
-    <!-- <leader-index v-show="this.flag == 2" ref="leaderIndex"></leader-index> -->
+    <leader-index v-show="this.flag == 2" ref="leaderIndex"></leader-index>
     <worker-index v-show="this.flag == 3" ref="workerIndex"></worker-index>
   </div>
 </template>
