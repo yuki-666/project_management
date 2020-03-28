@@ -102,22 +102,22 @@ export default {
       total: 10,
       FlowStatusRules,
       filter_status: [
-        { text: 'pending', value: 0 },
-        { text: 'established', value: 1 },
-        { text: 'processing', value: 2 },
-        { text: 'paid', value: 3 },
-        { text: 'finished', value: 4 },
-        { text: 'archived', value: 5 },
-        { text: 'rejection', value: 6 }
+        { text: 'rejection', value: 0 },
+        { text: 'pending', value: 1 },
+        { text: 'established', value: 2 },
+        { text: 'processing', value: 3 },
+        { text: 'paid', value: 4 },
+        { text: 'finished', value: 5 },
+        { text: 'archived', value: 6 }
       ],
       FLOWS_STATUS: [
+        'rejection',
         'pending',
         'established',
         'processing',
         'paid',
         'finished',
-        'archived',
-        'rejection'
+        'archived'
       ],
       projects: [
         {
