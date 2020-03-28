@@ -117,11 +117,7 @@ export default {
     }
   },
   methods: {
-    zhxFun () {
-      console.log('fuccckkkkkkkk')
-    },
     getAllInfo () {
-      // console.log('xxx')
       let _this = this
       this.$axios
         .get('/approval/project/show', {
@@ -130,26 +126,17 @@ export default {
           }
         })
         .then(successResponse => {
-          console.log('hhzzzzzzhh')
           _this.$refs.edit.form = successResponse.data
-          console.log(_this.$refs.edit.form.name)
         })
     },
     handleEdit (index, row) {
-      console.log(row.id + 'zzzzz')
-      console.log(this.$refs.edit.form.name)
-      // let _this = this
-      // console.log(_this.tableDataTmp[row].id + 'zhx')
       this.$refs.edit.form = {
         id: row.id
       }
       this.tmpId = row.id
       this.$refs.edit.form.id = row.id
-      console.log(this.$refs.edit.form.id)
       this.getAllInfo()
       this.dialogFormVisible = true
-      // console.log(index, row)
-      // console.log(this.dialogFormVisible)
     },
     filterTagTable (filters) {
       this.projects = this.tableDataTmp
@@ -165,7 +152,6 @@ export default {
       }
     },
     filterTag (value, row) {
-      // console.log(value)
       return row.status === value
     },
     handleCurrentChange (currentPage) {
@@ -191,26 +177,16 @@ export default {
           }
         })
         .then(successResponse => {
-          // console.log(successResponse)
           _this.projects = successResponse.data
           _this.tableDataTmp = successResponse.data
         })
         .catch(failResponse => {
-          console.log('OMmmmG,my_audit')
         })
     }
   },
   created () {
-    // this.arr = this.biu.biu2
-    // console.log('hhhhhhh')
-    this.uid = this.$route.query.uid
+    this.uid = this.$store.getters.uid
     this.getAllProjects()
-    console.log('try3')
-    // console.log(store.getters.uid)
-    console.log(this.$store.getters.uid)
-    // console.log(store.getters.username)
-    console.log(this.$store.getters.username)
-    console.log('try2')
   }
 }
 </script>

@@ -139,10 +139,6 @@ export default {
     }
   },
   watch: {
-    // show: function (value) {
-    //   this.dialogFormVisible = value
-    //   console.log(this.dialogFormVisible)
-    // }
     show () {
       this.dialogFormVisible = this.show
     }
@@ -160,12 +156,6 @@ export default {
     },
     onSubmit () {
       let _this = this
-      // console.log('test3')
-      // console.log(_this.select)
-      // console.log(_this.select.project_superior)
-      // console.log(_this.form.project_superior.project_superior_name)
-      // console.log('test2')
-      // console.log(_this.form.name)
       this.$axios
         .post('/approval/project/modify', {
           id: _this.zid,
@@ -180,8 +170,6 @@ export default {
           main_function: _this.form.main_function
         })
         .then(successResponse => {
-          // console.log(successResponse)
-          console.log(successResponse.data)
           let status = successResponse.data.status
           if (status === 'ok') {
             _this.dialogFormVisible = false
@@ -189,10 +177,8 @@ export default {
             _this.$emit('updateAgain')
             this.$message.success('已经更新')
           }
-          // this.dialogFormVisible = false
         })
         .catch(failResponse => {
-          console.log('OMmmmG,my_audit')
         })
     },
     beginDate () {
@@ -221,20 +207,6 @@ export default {
         }
       }
     },
-    // getAllInfo () {
-    //   // console.log('xxx')
-    //   let _this = this
-    //   this.$axios
-    //     .get('/approval/project/show', {
-    //       params: {
-    //         id: _this.form.id
-    //       }
-    //     })
-    //     .then(successResponse => {
-    //       // console.log('hhzzzzzzhh')
-    //       _this.form = successResponse.data
-    //     })
-    // },
     closeDialog () {
       this.dialogFormVisible = false
       this.$emit('update:show', false)
