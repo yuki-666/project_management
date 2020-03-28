@@ -28,14 +28,23 @@ def approval_project_show():
         return json.dumps('PARAM ERROR')
 
     data_project = project.get_info(project_id=request_data['id'], detail=True)
+    
     data_project_superior = user.get_project_superior()
+    for i in range(len(data_project_superior)):
+        data_project_superior[i]['project_superior_id'] = data_project_superior[i]['id']
+        data_project_superior[i]['project_superior_name'] = data_project_superior[i]['name']
+        data_project_superior[i].pop('id')
+        data_project_superior[i].pop('name')
 
     if has_error(data_project) or has_error(data_project_superior):
         return json.dumps('BACKEND ERROR')
     else:
-        data = data_project
-        data['project_superior'] = data_project_superior
-        return json.dumps(data)
+        ret = {}
+        ret = data_project[0]
+        ret['project_superior'] = data_project_superior
+        # TODO
+        ret['current_project_superior_id'] = 1
+        return json.dumps(ret)
 
 @approval_access.route('/project/modify', methods=['POST'])
 def approval_project_modify():
