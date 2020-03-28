@@ -20,8 +20,7 @@ def get_info(project_id=None, uid=None, keyword=None, detail=False, include_reje
     if detail == False:
         sql = '''select id, name, status, update_time from project'''
     else:
-        sql = '''select `project.id`, `project.name`, `project.status`, `project.update_time`, `project.describe`, `project.scheduled_time`, `project.delivery_day`, `employee.name`, `project.major_milestones`, `project.adopting_technology`, `project.business_area`, `project.main_function` 
-         from project join employee on employee.id = project.project_superior_id'''
+        sql = '''select project.id, project.name, project.status, project.update_time, project.describe, project.scheduled_time, project.delivery_day, project.major_milestones, project.adopting_technology, project.business_area, project.main_function from project join employee on employee.id = project.project_superior_id'''
 
     if keyword is not None:
         like = '%'
@@ -50,11 +49,9 @@ def get_info(project_id=None, uid=None, keyword=None, detail=False, include_reje
         return res
 
     if project_id is not None:
-        sql += ''' where id = '%s' ''' % project_id
+        sql += ''' where project.id = '%s' ''' % project_id
     elif uid is not None:
-        sql += ''' join project_participant
-                   on project_participant.project_id = project.id 
-                   where project_participant.person_id = '%s' ''' % uid
+        sql += ''' join project_participant on project_participant.project_id = project.id where project_participant.person_id = '%s' ''' % uid
 
     # measure include_reject
     if include_reject == False:
@@ -64,7 +61,6 @@ def get_info(project_id=None, uid=None, keyword=None, detail=False, include_reje
         else:
             # project_id or uid
             sql += ' and status > 0;'
-    
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     res = db.selectDB(sql)
     return [] if res == 'Empty' else res
@@ -97,15 +93,16 @@ def confirm(project_id, status):
 def modify(project_id, project_name, describe, scheduled_time, delivery_day, project_superior_id, major_milestones, adopting_technology, business_area, main_function):
     # modify project info, search by id
     sql = '''update project
-    set name = '%s', describe = '%s' ,reserve_date = '%s',submit_date = '%s', project_leader_id = '%s',major_milestones = '%s',tech = '%s',domain_id = '%s',main_function ='%s'
-    where id = '%s';''' %(project_name,  describe,scheduled_time, delivery_day, project_superior_id, \
-    major_milestones, adopting_technology, business_area, main_function,project_id)
+    set name = '%s', `describe` = '%s', scheduled_time = '%s', delivery_day = '%s', project_superior_id = '%s', major_milestones = '%s', adopting_technology = '%s', business_area = '%s', main_function ='%s'
+    where id = '%s';''' %(project_name, describe, scheduled_time, delivery_day, project_superior_id, \
+    major_milestones, adopting_technology, business_area, main_function, project_id)
     
     # id | name  | status | customer_id | main_function 
     #    | domain_id | tech   | project_leader_id | submit_date | reserve_date | update_time     
 
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-    return db.otherDB(sql)
+    res = db.otherDB(sql)
+    return res
 
 def create(name, describe, development_type, scheduled_time, delivery_day, project_superior_id, custom_id, major_milestones, adopting_technology, business_area, main_function):
     # id:

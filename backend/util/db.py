@@ -12,24 +12,22 @@ class ConnectToMysql(object):
         self.password = password
         self.database = database
         self.port = port
-        self.db = pymysql.connect(self.host,self.username,self.password,self.database,self.port,charset='utf8')
+        self.db = pymysql.connect(self.host, self.username, self.password, self.database, self.port, charset='utf8', autocommit=True)
         self.cursor = self.db.cursor()
     
     def otherDB(self,sql): #增删改
         try:
             if self.cursor.execute(sql) == 0:
-                return 'none'#无数据符合where条件
-            else :
+                return 'none' # 无数据符合where条件
+            else:
                 return 'ok'
-            self.db.commit()
         except:
-            #print('You have an error in your SQL syntax;') #sql语句有问题或其他问题
+            print('You have an error in your SQL syntax;') # sql语句有问题或其他问题
             self.db.rollback()
         finally:
             self.cursor.close()
-
             
-    def selectDB(self,sql):   #查询
+    def selectDB(self, sql):   #查询
         try:
             if self.cursor.execute(sql) == 0:
                 return 'Empty'  #查询无数据
@@ -49,20 +47,16 @@ class ConnectToMysql(object):
 
 def selectSql(p):
     sql = '''select ''' + p['select_key'][0]
-    for i in range(1,len(p['select_key'])):
+    for i in range(1, len(p['select_key'])):
         sql = sql + ''', ''' + p['select_key'][i] 
     sql = sql + ''' from ''' + p['tablename'] 
-    if len(p['join_tablename'])>0:
-        sql = sql + ''' join ''' + p['join_tablename'][0]
-        for i in range(1,len(p['join_tablename'])):
-            sql = sql + ''',''' + p['join_tablename'][i] 
-        if len(p['on_key'])>0:
-            sql = sql + ''' on ''' + p['on_key'][0] + ''' = '''+p['on_value'][0]
-            for i in range(1,len(p['on_key'])):
-                sql = sql + ''' and ''' + p['on_key'][i] + ''' = '''+p['on_value'][i]
-    if len(p['key'])>0:
+    if len(p['join_tablename']) > 0:
+        for i in range(len(p['join_tablename'])):
+            sql = sql + ''' join ''' + p['join_tablename'][i]
+            sql = sql + ''' on ''' + p['on_key'][i] + ''' = '''+p['on_value'][i]
+    if 'key' in p.keys() and len(p['key']) > 0:
         sql = sql + ''' where ''' + p['key'][0] + p['value'][0]
-        for i in range(1,len(p['key'])):
+        for i in range(1, len(p['key'])):
             sql = sql + ''' and ''' + p['key'][i] + p['value'][i]
     sql = sql + ''';'''
     return sql

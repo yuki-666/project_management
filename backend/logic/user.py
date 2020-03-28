@@ -6,16 +6,10 @@ import config
 import util.db as d
 
 def get_project_superior():
-    # return all project_superior
-    # return (project_superior_id, project_superior_name)
-    p = {}
-    p['select_key'] = ['distinct project.project_superior_id','employee.name']
-    p['tablename'] = 'project'
-    p['join_tablename'] = ['employee']
-    p['on_key'] = ['project.project_superior_id']
-    p['on_value'] = ['employee.id']
+    sql = 'select id, name from employee where career = 0'
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-    return db.selectDB(d.selectSql(p))
+    res = db.selectDB(sql)
+    return res
 
 def get_custom():
     # return all custom
