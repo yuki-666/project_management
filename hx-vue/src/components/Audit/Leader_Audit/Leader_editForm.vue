@@ -138,25 +138,25 @@ export default {
           console.log('OMmmmG,my_audit')
         })
     },
-    beginDate () {
+    endDate () {
       let _this = this
       return {
         disabledDate (time) {
           if (_this.form.start_time) {
-            return new Date(_this.form.start_time).getTime() < time.getTime()
+            return new Date(_this.form.start_time).getTime() >= time.getTime()
           } else {
             return time.getTime() > Date.now()
           }
         }
       }
     },
-    endDate () {
+    beginDate () {
       let _this = this
       return {
         disabledDate (time) {
           if (_this.form.end_time) {
             return (
-              new Date(_this.form.end_time).getTime() > time.getTime()
+              new Date(_this.form.end_time).getTime() <= time.getTime()
             )
           } else {
             return time.getTime() > Date.now()
