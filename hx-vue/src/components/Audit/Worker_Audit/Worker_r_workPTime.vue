@@ -232,7 +232,7 @@ export default {
     }
   },
   created () {
-    this.uid = this.$route.query.uid
+    this.uid = this.$store.getters.uid
     this.getAllProjects()
   }
 }
