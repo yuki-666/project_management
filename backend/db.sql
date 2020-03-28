@@ -215,7 +215,6 @@ CREATE TABLE `project_function` (
   `worker_id` varchar(45) NOT NULL COMMENT '项目负责人ID',
   `parent_function_id` varchar(45) DEFAULT NULL COMMENT '父功能id',
   `delete_label` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`,`project_id`,`worker_id`),
   KEY `project_id_idx` (`project_id`),
   KEY `project_id` (`project_id`),
   KEY `worker_id_idx` (`worker_id`),

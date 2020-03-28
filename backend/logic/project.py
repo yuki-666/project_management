@@ -258,7 +258,7 @@ def delete_function(project_id, function_id):
     return db.otherDB(d.updateSql(p))
 
 def modify_function(project_id, function_id, function_name, uid):
-    # uid(split by ',') change to list
+    uid = uid.split(',')
     p = {}
     p['select_key'] = ['worker_id']
     p['tablename'] = 'project_function'
@@ -311,6 +311,7 @@ def modify_function(project_id, function_id, function_name, uid):
 def modify_worker(project_id, uid):
     # uid(split by ',') change to list
     # update user participate in project
+    uid = uid.split(',')
     p = {}
     p['select_key'] = ['person_id']
     p['tablename'] = 'project_participant'
