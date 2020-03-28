@@ -143,9 +143,13 @@ export default {
       return {
         disabledDate (time) {
           if (_this.form.start_time) {
+            // console.log('12333333333333')
+            // console.log(_this.form.start_time)
+            // console.log(new Date(_this.form.start_time).getTime())
+            // console.log(Date.parse(new Date(_this.form.start_time).getTime()))
             return new Date(_this.form.start_time).getTime() >= time.getTime()
           } else {
-            return time.getTime() > Date.now()
+            return time.getTime() < Date.now() - 8.64e7// 8.64e7=1000*60*60*24一天
           }
         }
       }
@@ -159,7 +163,7 @@ export default {
               new Date(_this.form.end_time).getTime() <= time.getTime()
             )
           } else {
-            return time.getTime() > Date.now()
+            return time.getTime() < Date.now() - 8.64e7// 8.64e7=1000*60*60*24一天
           }
         }
       }
