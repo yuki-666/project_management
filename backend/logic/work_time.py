@@ -63,9 +63,9 @@ def get_info_by_work_time_id(work_time_id):
 def get_info_by_uid_project_id(uid, project_id):
     para_dict = {}
     para_dict['select_key'] = ['work_time.id', 'project.name', 'project_function.function_name', 'work_time.event_name',\
-     'work_time.start_time', 'work_time.end_time','work_time.date','timestampdiff(minute,work_time.start_time,work_time.end_time)','work_time.remain','work_time.status','work_time.describe']
+     'work_time.start_time', 'work_time.end_time','work_time.date','timestampdiff(minute,work_time.start_time,work_time.end_time) as workTime','work_time.remain','work_time.status','work_time.describe']
     para_dict['tablename'] = 'work_time'
-    para_dict['join_tablename'] = ['project,project_function']
+    para_dict['join_tablename'] = ['project','project_function']
     para_dict['on_key'] = ['project.id','project_function.id']
     para_dict['on_value'] = ['work_time.project_id','work_time.function_id']
     para_dict['key'] = ['work_time.worker_id','work_time.project_id']
@@ -73,7 +73,10 @@ def get_info_by_uid_project_id(uid, project_id):
     
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     res = db.selectDB(d.selectSql(para_dict))
-    # return (work_time_id, project_name, function_name, activity_name, start_time, end_time, date, work_time, remain, status, describe)
+    for record in res:
+        record['workTime'] = record['workTime']/60
+    return res
+    # return (work_time_id, project_name, function_name, activity_name, start_time, end_time, date, workTime, remain, status, describe)
     
 
 def confirm(work_time_id, status):
@@ -117,9 +120,6 @@ def delete(work_time_id):
     p = {}
     p['select_key'] = ['delete_label']
     p['tablename'] = 'work_time'
-    p['join_tablename'] = []
-    p['on_key'] = []
-    p['on_value'] = []
     p['key'] = ['id']
     work_time_id = '=' + work_time_id
     p['value'] = [work_time_id]

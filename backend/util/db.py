@@ -48,18 +48,19 @@ class ConnectToMysql(object):
           self.db.close()
 
 def selectSql(p):
-    sql = '''select `%s`  ''' % p['select_key'][0]
+    sql = '''select  ''' + p['select_key'][0]
     for i in range(1,len(p['select_key'])):
-        sql = sql + ''' , `%s` ''' % p['select_key'][i] 
-    sql = sql + ''' from ''' + p['tablename'] 
+        sql = sql + ''' ,  ''' + p['select_key'][i] 
+    sql = sql + ''' from '''
     if 'join_tablename' in p:
-        sql = sql + ''' join ''' + p['join_tablename'][0]
-        for i in range(1,len(p['join_tablename'])):
-            sql = sql + ''',''' + p['join_tablename'][i] 
+        sql_join = p['tablename'] + ' join ' + p['join_tablename'][0]
         if 'on_key' in p:
-            sql = sql + ''' on ''' + p['on_key'][0] + ''' = '''+p['on_value'][0]
-            for i in range(1,len(p['on_key'])):
-                sql = sql + ''' and ''' + p['on_key'][i] + ''' = '''+p['on_value'][i]
+            sql_join = sql_join + ' on ' + p['on_key'][0] + ' = ' + p['on_value'][0]
+        for i in range(1,len(p['join_tablename'])):
+            sql_join = ' ( ' + sql_join + ' ) join ' + p['join_tablename'][i] + ' on ' + p['on_key'][i] + ' = ' + p['on_value'][i]
+        sql = sql + sql_join
+    else :
+        sql = sql + p['tablename']
     if 'key' in p:
         sql = sql + ''' where ''' + p['key'][0] + p['value'][0]
         for i in range(1,len(p['key'])):
@@ -84,9 +85,9 @@ def insertSql(p):
     #INSERT INTO table_name (column1,column2,column3,...) VALUES (value1,value2,value3,...);
     sql = '''insert into ''' +p['tablename']
     if 'column' in p:
-        sql = sql + ' (`%s` ' % p['column'][0]
+        sql = sql + ' ( ' + p['column'][0]
         for i in range(1,len(p['column'])):
-            sql = sql + ' , `%s` ' % p['column'][i]
+            sql = sql + ' ,  ' + p['column'][i]
         sql = sql + ' ) '
     sql = sql + ''' VALUES ('%s'   ''' % p['values'][0]
     for i in range(1,len(p['values'])):
