@@ -39,7 +39,6 @@ class ConnectToMysql(object):
             print('You have an error in your SQL syntax;')  #sql语句有问题或其他问题
         finally:
             self.cursor.close()
-
              
     def __del__(self):   #关闭连接
           self.cursor.close()
@@ -64,7 +63,7 @@ def selectSql(p):
         for i in range(1, len(p['key'])):
             sql = sql + ''' and ''' + p['key'][i] + p['value'][i]
     sql = sql + ''';'''
-    print(sql)#结项再删
+    # print(sql)#结项再删
     return sql
 
 def updateSql(p):
@@ -76,7 +75,7 @@ def updateSql(p):
         for i in range(1,len(p['where_key'])):
             sql = sql + ''' and ''' + p['where_key'][i] + p['where_value'][i]
     sql = sql + ''';'''
-    print(sql)#结项再删
+    # print(sql)#结项再删
     return sql
 
 def insertSql(p):
@@ -91,7 +90,14 @@ def insertSql(p):
     for i in range(1,len(p['values'])):
         sql = sql + ''' ,'%s'   ''' % p['values'][i]
     sql = sql + ' ); '
-    print(sql)#结项再删
+    # print(sql)#结项再删
     return sql
 
-
+# 使用实例
+if __name__ == '__main__':
+    # 创建连接
+    db = ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    # sql语句
+    sql = "select username from login where id='0012'"
+    # 调用函数
+    print(db.selectDB(sql))
