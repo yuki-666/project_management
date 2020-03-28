@@ -129,49 +129,133 @@ def create(name, describe, development_type, scheduled_time, delivery_day, proje
  
     p.clear()
     p['tablename'] = 'project'
-    p['column'] = ['id','name','describe', 'scheduled_time', 'delivery_day', 'project_superior_id', 'customer_id','major_milestones', 'adopting_technology', 'business_area', 'main_function']
+    p['column'] = ['id','`name`','`describe`', 'scheduled_time', 'delivery_day', 'project_superior_id', 'customer_id','major_milestones', 'adopting_technology', 'business_area', 'main_function']
     p['values'] = [id + sequence_number,name,describe, scheduled_time, delivery_day, project_superior_id, custom_id, major_milestones, adopting_technology, business_area, main_function]
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     return db.otherDB(d.insertSql(p))
 
 def get_function(project_id):
-    # TODO
     # get function list from project_id
     # worker_id and worker_name: list->str, split by ','
     # return function_id, function_name, worker_id, worker_name, parent_function_id
-    pass
+    p = {}
+    p['select_key'] = ['f.id','f.function_name','f.worker_id','e.name','f.parent_function_id','rank() over(order by f.id)']
+    p['tablename'] = 'project_function as f'
+    p['join_tablename'] = ['employee as e']
+    p['on_key'] = ['f.worker_id']
+    p['on_value'] = ['e.id']
+    p['key'] = ['f.project_id']
+    p['value'] = [' = '+project_id]
+    
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    return db.selectDB(d.selectSql(p))
+    
 
 def get_children_function(project_id, parent_function_id):
-    # TODO
     # get function list from project_id, whose parent function id == parent_function_id
     # worker_id and worker_name: list->str, split by ','
     # return function_id, function_name, worker_id, worker_name, parent_function_id
-    pass
+    p = {}
+    p['select_key'] = ['f.id','f.function_name','f.worker_id','e.name','f.parent_function_id','rank() over(order by f.id)']
+    p['tablename'] = 'project_function as f'
+    p['join_tablename'] = ['employee as e']
+    p['on_key'] = ['f.worker_id']
+    p['on_value'] = ['e.id']
+    p['key'] = ['f.project_id','f.parent_function_id']
+    p['value'] = [' = '+project_id,' = '+parent_function_id]
+    
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    return db.selectDB(d.selectSql(p))
 
 def get_project_member(project_id, function_id=None):
-    # TODO
+    p={}
+    p['select_key'] = ['employee.id','employee.name']
+    p['tablename'] = 'employee'
+    p['join_tablename'] = ['project_participant']
+    p['on_key'] = ['employee.id']
+    p['on_value'] = ['project_participant.person_id']
+    p['key'] = ['project_participant.project_id']
+    p['value'] = [' = ' + project_id]
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    res = db.selectDB(d.selectSql(p))
     if function_id is not None:
-        # status: if user is in function
-        # return uid, name, status
-        pass
-    else:
-        # return uid, name
-        pass
-    pass
+        p.clear()
+        p['select_key'] = ['worker_id']
+        p['tablename'] = 'work_time'
+        p['key'] = ['function_id']
+        p['value'] = [' = '+function_id]
+        db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+        worker_in = db.selectDB(d.selectSql(p))
+        worker_list = []
+        for i in worker_in:
+            worker_list.append(i['worker_id'])
+        for i in res:
+            if i['id'] in worker_list:
+                i['status'] = 1
+            else:
+                i['status'] = 0     
+    return res
+
+def add(a,index):
+    if a[index] < '9' or (a[index] >= 'a' and a[index] < 'z') or (a[index] >= 'A' and a[index] < 'Z'):
+        a[index] = chr(ord(a[index])+1)
+    else :
+        if a[index] == '9':
+            a[index] = 'a'
+        else :
+            if a[index] == 'z':
+                a[index] = 'A'
+            else :
+                if a[index] == 'Z':
+                    a[index] = '0'
+                    add(a,index-1)
 
 def add_function(project_id, parent_function_id, function_name):
-    # TODO
     # new function id:
     # 1. last_function_id = max function_id starts with parent_function_id
     # 2. new_function_id = last_function_id + 1, 3 digits, each digit: 012……789abc……xyzABC……XYZ
-    return 'ok'
+    #worker_id not null
+    p={}
+    p['select_key'] = ['max(id)']
+    p['tablename'] = 'project_function'
+    p['key'] = ['project_id','parent_function_id']
+    p['value'] = [' = '+project_id,' = '+parent_function_id]
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    last_function_id = db.selectDB(d.selectSql(p))[0]['max(id)']
+    
+    three_id = list(last_function_id[-3:])
+    add(three_id,2)
+    new_function_id = parent_function_id + three_id[0] + three_id[1] + three_id[2]
+    
+    p.clear()
+    p['tablename'] = 'project_function'
+    p['column'] = ['id','function_name','project_id','parent_function_id']
+    p['values'] = [new_function_id,function_name,project_id,parent_function_id]
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    return db.otherDB(d.insertSql(p))
 
 def delete_function(project_id, function_id):
-    # TODO
     # check if delete_label == 0, return 'error' if delete_label == 1
+    p={}
+    p['select_key'] = ['delete_label']
+    p['tablename'] = 'project_function'
+    p['key'] = ['project_id','id','delete_label']
+    p['value'] = [' = '+project_id,' = '+function_id,' = 0']
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    res = db.selectDB(d.selectSql(p))
+    if res == 'Empty':
+        return 'error'
     # 1. set delete_label to 1
     # 2. set children functions' delete_label to 1 (children function: function id starts with function_id)
-    return 'ok'
+    # children function is parent of grandson function.when children function canceled,children of children function should also canceled
+    p.clear()
+    p['tablename'] = 'project_function'
+    p['set_key'] = ['delete_label']
+    p['set_value'] = ['1']
+    p['where_key'] = ['project_id','id']
+    p['where_value'] =  [' = '+project_id,''' like '%s' ''' %(function_id+'%')]
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    return db.otherDB(d.updateSql(p))
 
 def modify_function(project_id, function_id, function_name, uid):
     # TODO
@@ -185,20 +269,42 @@ def modify_worker(project_id, uid):
     return 'ok'
 
 def get_authority(project_id, uid=None):
-    # TODO
+    p={}
     if uid is not None:
-        # return (git_authority, file_authority, mail_authority)
-        pass
+        # return ( git_authority, file_authority, mail_authority)
+        p['select_key'] = ['a.git_authority','a.file_authority','a.mail_authority']
+        p['tablename'] = 'authority as a'
+        p['key'] = ['a.project_id','a.worker_id']
+        p['value'] = [' = '+project_id,' = '+uid]
+        db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+        
     else:
-        # get total user in project
         # return (uid, name, git_authority, file_authority, mail_authority)
-        pass
+        p['select_key'] = ['a.worker_id','e.name','a.git_authority','a.file_authority','a.mail_authority']
+        p['tablename'] = 'authority as a'
+        p['join_tablename'] = ['employee as e']
+        p['on_key'] = ['a.worker_id']
+        p['on_value'] = ['e.id']
+        p['key'] = ['a.project_id']
+        p['value'] = [' = '+project_id]
+        db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    return db.selectDB(d.selectSql(p))
+        
+        
 
 def modify_authority(project_id, uid, git_authority, file_authority, mail_authority):
-    # TODO
     # if can't find project_id uid in table, return 'error'
     # update authority
-    return 'ok'
+    p={}
+    p['tablename'] = 'authority'
+    p['set_key'] = ['git_authority', 'file_authority', 'mail_authority']
+    p['set_value'] = [git_authority, file_authority, mail_authority]
+    p['where_key'] = ['project_id','worker_id']
+    p['where_value'] = [' = '+project_id,' = '+uid]
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    if db.otherDB(d.updateSql(p)) == 'ok':
+        return 'ok'
+    return 'error'
 
 if __name__ == '__main__':
     print(get_info(keyword='系统', include_reject=True))

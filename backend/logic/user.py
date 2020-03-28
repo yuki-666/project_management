@@ -19,15 +19,31 @@ def get_custom():
     p['tablename'] = 'customer'
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     return db.selectDB(d.selectSql(p))
-    pass
 
 def get_total_user(project_id=None):
-    # TODO
+    p={}
+    p['select_key'] = ['id','name']
+    p['tablename'] = 'employee'
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    res = db.selectDB(d.selectSql(p))
     # return total user in company
     if project_id is not None:
         # status: if user in project
         # return uid, name, status
-        pass
-    else:
-        # return uid, name
-        pass
+        p['select_key'] = ['person_id']
+        p['tablename'] = 'project_participant'
+        p['key'] = ['project_id']
+        p['value'] = [' = '+project_id]
+        db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+        worker_in = db.selectDB(d.selectSql(p))
+        w_list = []
+        for i in worker_in:
+            w_list.append(i['person_id'])
+        for i in res:
+            if i['id'] in w_list:
+                i['status'] = 1
+            else :
+                i['status'] = 0
+    return res
+
+ 
