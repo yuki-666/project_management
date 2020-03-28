@@ -60,7 +60,6 @@ export default {
   methods: {
     login () {
       var _this = this
-      console.log(this.$store.state)
       if (!this.loginForm.username) {
         this.$message.error('用户名不能为空')
         return
@@ -82,6 +81,11 @@ export default {
             var path = this.$route.query.redirect
             _this.career = successResponse.data.career
             _this.uid = successResponse.data.uid
+            localStorage.setItem('zuid', successResponse.data.uid)
+            _this.$store.commit('handleUid', successResponse.data.uid)
+            localStorage.setItem('zcareer', successResponse.data.career)
+            _this.$store.commit('handleCareer', successResponse.data.career)
+            // zhx_e
             this.$router.push({
               path: path === '/' || path === undefined ? '/index' : path,
               query: {
@@ -92,33 +96,14 @@ export default {
           }
           if (successResponse.data.status === 1) {
             this.$message.error('用户不存在')
-            // console.log(this.career)
-            console.log('username_not_exist')
           }
           if (successResponse.data.status === 2) {
             this.$message.error('密码错误')
-            console.log('password_error')
           }
         })
         .catch(failResponse => {
-          console.log('Oh～no～')
         })
     }
-    // zhx to xxh
-
-    // login () {
-    //   this.$axios
-    //     .post('/login', {
-    //       username: this.loginForm.username,
-    //       password: this.loginForm.password
-    //     })
-    //     .then(successResponse => {
-    //       if (successResponse.data.code === 200) {
-    //         this.$router.replace({ path: '/index' })
-    //       }
-    //     })
-    //     .catch(failResponse => {})
-    // }
   }
 }
 </script>

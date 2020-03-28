@@ -12,24 +12,22 @@ class ConnectToMysql(object):
         self.password = password
         self.database = database
         self.port = port
-        self.db = pymysql.connect(self.host,self.username,self.password,self.database,self.port,charset='utf8')
+        self.db = pymysql.connect(self.host, self.username, self.password, self.database, self.port, charset='utf8', autocommit=True)
         self.cursor = self.db.cursor()
     
     def otherDB(self,sql): #增删改
         try:
             if self.cursor.execute(sql) == 0:
-                return 'none'#无数据符合where条件或者改了和没改一样
-            else :
-                self.db.commit()
+                return 'none' # 无数据符合where条件或改了和没改一样
+            else:
                 return 'ok'
         except:
-            #print('You have an error in your SQL syntax;') #sql语句有问题或其他问题
+            print('You have an error in your SQL syntax;') # sql语句有问题或其他问题
             self.db.rollback()
         finally:
             self.cursor.close()
-
             
-    def selectDB(self,sql):   #查询
+    def selectDB(self, sql):   #查询
         try:
             if self.cursor.execute(sql) == 0:
                 return 'Empty'  #查询无数据
@@ -63,7 +61,7 @@ def selectSql(p):
         sql = sql + p['tablename']
     if 'key' in p:
         sql = sql + ''' where ''' + p['key'][0] + p['value'][0]
-        for i in range(1,len(p['key'])):
+        for i in range(1, len(p['key'])):
             sql = sql + ''' and ''' + p['key'][i] + p['value'][i]
     sql = sql + ''';'''
     print(sql)#结项再删

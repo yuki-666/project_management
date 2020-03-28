@@ -7,11 +7,11 @@
   >
     <el-menu-item index="0">
       <i class="el-icon-menu"></i>
-      <span slot="title">项目审批</span>
+      <span slot="title">工时审批</span>
     </el-menu-item>
     <el-menu-item index="1">
       <i class="el-icon-menu"></i>
-      <span slot="title">工时审批</span>
+      <span slot="title">被审批工时</span>
     </el-menu-item>
   </el-menu>
 </template>

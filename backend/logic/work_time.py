@@ -9,7 +9,7 @@ import config
 def get_info_by_uid(uid, is_superior=False, include_finished=False):
     # id | worker_id | project_id | date  | event_name | remain | status | remarks |start_time|end_time
     para_dict = {}
-    para_dict['select_key'] = ['work_time.id', 'employee.name', 'work_time.function_name', 'work_time.event_name', 'work_time.start_time', 'work_time.end_time']
+    para_dict['select_key'] = ['work_time.id', 'employee.name', 'work_time.function_id', 'work_time.event_name', 'work_time.start_time', 'work_time.end_time']
     para_dict['select_value'] = []
     para_dict['tablename'] = 'work_time'
     para_dict['join_tablename'] = ['employee']
@@ -35,17 +35,20 @@ def get_info_by_uid(uid, is_superior=False, include_finished=False):
         uid = '=' + uid
         para_dict['value'].append(uid)
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-    return db.selectDB(d.selectSql(para_dict))
+    res = db.selectDB(d.selectSql(para_dict))
+    if res == 'Empty':
+        return []
+    return res
     # is_superior=True: uid是上级的uid，要获取他所有项目下级的工时
     # is_superior=False: uid是自己的uid，获取自己所有工时
     # include_finished: whether return approved part
 
 def get_info_by_work_time_id(work_time_id):
     para_dict = {}
-    para_dict['select_key'] = ['work_time.id', 'employee.name', 'work_time.function_name', 'work_time.event_name', 'work_time.start_time', 'work_time.end_time','work_time.delete_label']
+    para_dict['select_key'] = ['work_time.id', 'employee.name', 'work_time.function_id', 'work_time.event_name', 'work_time.start_time', 'work_time.end_time']
     para_dict['select_value'] = []
     para_dict['tablename'] = 'work_time'
-    para_dict['key'] = ['work_time.id','delete_label']
+    para_dict['key'] = ['work_time.id','work_time.delete_label']
     work_time_id = '=' + work_time_id
     para_dict['value'] = [work_time_id,'!=1']
     para_dict['join_tablename'] = ['employee']
@@ -117,28 +120,17 @@ def modify(work_time_id, function_name, event_name, start_time, end_time):
     # return error if delete label = 1
 
 def delete(work_time_id):
-    p = {}
-    p['select_key'] = ['delete_label']
-    p['tablename'] = 'work_time'
-    p['key'] = ['id']
-    work_time_id = '=' + work_time_id
-    p['value'] = [work_time_id]
+    sql = f'select delete_label from work_time where id = {work_time_id};'
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-    res = db.selectDB(d.selectSql(p))
-    if res == 'Empty':#id不存在
+    res = db.selectDB(sql)
+    if res == 'Empty': 
+        # can't find work_time_id
         return 'error'
-    if res[0]['delete_label'] =='1':#已删除
+    if res[0]['delete_label'] == '1':
+        # already delete
         return 'ok'
 
-    para_dict = {}
-    para_dict['tablename'] = 'work_time'
-    para_dict['set_key'] = ['delete_label']
-    para_dict['set_value'] = ['1']
-    para_dict['where_key'] = ['id']
-    work_time_id = '=' + work_time_id
-    para_dict['where_value'] = [work_time_id]
-
+    sql = f'update work_time set delete_label = 1 where id = {work_time_id};'
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-    return db.otherDB(d.updateSql(para_dict))
-    # return 'error' if work_time_id not found
-    # add delete label (set delete_label column to 1, default is 0)
+    res = db.otherDB(sql)
+    return res

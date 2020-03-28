@@ -1,5 +1,6 @@
 <template>
   <div>
+      jejejejej
     <div class="project_table">
       <el-table
         :data="
@@ -12,35 +13,41 @@
         stripe
         @filter-change="filterTagTable"
       >
-        <el-table-column label="项目id" prop="id" sortable></el-table-column>
+        <el-table-column label="工时id" prop="id" sortable></el-table-column>
         <el-table-column
-          label="项目名称"
-          prop="name"
+          label="worker_name"
+          prop="worker_name"
           sortable
         ></el-table-column>
         <el-table-column
-          label="项目状态"
-          prop="status"
-          column-key="status"
-          :filters="filter_status"
-          filter-placement="bottom-end"
-        >
-          <template slot-scope="props">
-            <zx-tag :type="FlowStatusRules[props.row.status]">
-              {{ FLOWS_STATUS[props.row.status] }}
-            </zx-tag>
-          </template>
-        </el-table-column>
+          label="功能名称"
+          prop="function_name"
+          sortable
+        ></el-table-column>
         <el-table-column
-          label="更新时间"
-          prop="update_time"
+          label="活动名称"
+          prop="event_name"
+          sortable
+        ></el-table-column>
+        <el-table-column
+          label="start_time"
+          prop="start_time"
+          :sortable="true"
+          :sort-method="sortByDate"
+        ></el-table-column>
+        <el-table-column
+          label="end_time"
+          prop="end_time"
           :sortable="true"
           :sort-method="sortByDate"
         ></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
-              >修改</el-button
+            <el-button
+              size="mini"
+              type="primary"
+              @click="zhandleEdit(scope.$index, scope.row)"
+              >确认</el-button
             >
           </template>
         </el-table-column>
@@ -55,100 +62,107 @@
         </el-pagination>
       </el-row>
     </div>
-    <edit-form
-      :show.sync="dialogFormVisible"
-      :zid="tmpId"
-      @updateAgain="getAllInfo"
-      ref="edit"
-    ></edit-form>
+    <!-- <edit-form :show.sync="dialogFormVisible" ref="edit"></edit-form> -->
+    <el-dialog
+      title="审批提醒"
+      :visible.sync="dialogFormVisible"
+      @close="dialogFormVisible = false"
+    >
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="auditNo">不 审 批</el-button>
+        <el-button type="primary" @click="auditYes">审 批</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import EditForm from './Manager_editForm'
-import SideMenu from './Manager_SideMenu'
+import SideMenu from './Leader_SideMenu'
 import { FlowStatusRules } from '../../home/rule/data-config'
 import ZxTag from '../../tag'
 export default {
   name: 'ManagerRAudit',
   components: {
     'side-menu': SideMenu,
-    'zx-tag': ZxTag,
-    'edit-form': EditForm
+    'zx-tag': ZxTag
   },
   data () {
     return {
       // arr: [],
       select: '',
-      tmpId: -1,
-      // biu: {
-      //   biu2: [
-      //     {
-      //       id: '5',
-      //       name: '2'
-      //     },
-      //     {
-      //       id: '6',
-      //       name: '4'
-      //     }
-      //   ],
-      //   zz: '2'
-      // },
       dialogFormVisible: false,
       uid: 0,
+      wid: '', // 工时id
       tableDataTmp: [],
       currentPage: 1,
       pagesize: 5,
       total: 10,
       FlowStatusRules,
-      filter_status: [
-        { text: 'rejection', value: 0 },
-        { text: 'pending', value: 1 },
-        { text: 'established', value: 2 },
-        { text: 'processing', value: 3 },
-        { text: 'paid', value: 4 },
-        { text: 'finished', value: 5 },
-        { text: 'archived', value: 6 }
-      ],
-      FLOWS_STATUS: [
-        'rejection',
-        'pending',
-        'established',
-        'processing',
-        'paid',
-        'finished',
-        'archived'
-      ],
+      status: 0,
       projects: [
         {
           id: '',
-          name: '',
-          status: '',
-          update_time: ''
+          worker_name: '',
+          function_name: '',
+          event_name: '',
+          start_time: '',
+          end_time: ''
         }
       ]
     }
   },
   methods: {
-    getAllInfo () {
+    auditNo () {
+      // this.dialogFormVisible = false;
+      this.status = 0 // 不同意
+      this.auditConfirm()
+    },
+    auditYes () {
+      // this.dialogFormVisible = false;
+      this.status = 1 // 同意
+      this.auditConfirm()
+    },
+    auditConfirm () {
+      let _this = this
+      this.$axios
+        .post('/approval/work_time/confirm', {
+          id: _this.wid,
+          status: _this.status
+        })
+        .then(successResponse => {
+          let status = successResponse.data.status
+          if (status === 'ok') {
+            _this.dialogFormVisible = false
+            this.$message.success('已经更新')
+          }
+        })
+        .catch(failResponse => {
+          this.$message.error('更新失败')
+        })
+    },
+    getAllInfo (value) {
       let _this = this
       this.$axios
         .get('/approval/project/show', {
           params: {
-            id: _this.tmpId
+            id: value
           }
         })
         .then(successResponse => {
           _this.$refs.edit.form = successResponse.data
         })
     },
+    zhandleEdit (index, row) {
+      let _this = this
+      _this.dialogFormVisible = true
+      _this.wid = row.id
+    },
     handleEdit (index, row) {
       this.$refs.edit.form = {
         id: row.id
       }
-      this.tmpId = row.id
       this.$refs.edit.form.id = row.id
-      this.getAllInfo()
+      this.getAllInfo(row.id)
       this.dialogFormVisible = true
     },
     filterTagTable (filters) {
@@ -183,7 +197,7 @@ export default {
     getAllProjects () {
       var _this = this
       this.$axios
-        .get('/approval/project', {
+        .get('/approval/work_time/initiative', {
           params: {
             uid: _this.uid
           }

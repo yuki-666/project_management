@@ -40,7 +40,7 @@
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
-              >修改</el-button
+              >查看</el-button
             >
           </template>
         </el-table-column>
@@ -58,15 +58,15 @@
     <edit-form
       :show.sync="dialogFormVisible"
       :zid="tmpId"
-      @updateAgain="getAllInfo"
+      @updateAgain="this.getAllInfo"
       ref="edit"
     ></edit-form>
   </div>
 </template>
 
 <script>
-import EditForm from './Manager_editForm'
-import SideMenu from './Manager_SideMenu'
+import EditForm from './Boss_editForm'
+import SideMenu from './Boss_SideMenu'
 import { FlowStatusRules } from '../../home/rule/data-config'
 import ZxTag from '../../tag'
 export default {
@@ -80,44 +80,31 @@ export default {
     return {
       // arr: [],
       select: '',
-      tmpId: -1,
-      // biu: {
-      //   biu2: [
-      //     {
-      //       id: '5',
-      //       name: '2'
-      //     },
-      //     {
-      //       id: '6',
-      //       name: '4'
-      //     }
-      //   ],
-      //   zz: '2'
-      // },
       dialogFormVisible: false,
       uid: 0,
+      tmpId: -1,
       tableDataTmp: [],
       currentPage: 1,
       pagesize: 5,
       total: 10,
       FlowStatusRules,
       filter_status: [
-        { text: 'rejection', value: 0 },
-        { text: 'pending', value: 1 },
-        { text: 'established', value: 2 },
-        { text: 'processing', value: 3 },
-        { text: 'paid', value: 4 },
-        { text: 'finished', value: 5 },
-        { text: 'archived', value: 6 }
+        { text: 'pending', value: 0 },
+        { text: 'established', value: 1 },
+        { text: 'processing', value: 2 },
+        { text: 'paid', value: 3 },
+        { text: 'finished', value: 4 },
+        { text: 'archived', value: 5 },
+        { text: 'rejection', value: 6 }
       ],
       FLOWS_STATUS: [
-        'rejection',
         'pending',
         'established',
         'processing',
         'paid',
         'finished',
-        'archived'
+        'archived',
+        'rejection'
       ],
       projects: [
         {
@@ -169,6 +156,7 @@ export default {
     },
     handleCurrentChange (currentPage) {
       this.currentPage = currentPage
+      // console.log(`当前页: ${val}`);
     },
     sortByDate (obj1, obj2, column) {
       var a = Date.parse(obj1.update_time)

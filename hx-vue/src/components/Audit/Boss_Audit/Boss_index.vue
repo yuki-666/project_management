@@ -4,24 +4,25 @@
       <side-menu @indexSelect="listByCategory" ref="sideMenu"></side-menu>
     </el-aside>
     <el-main>
+        hello,Boss
       <!-- <manager-r-audit v-show="this.$refs.sideMenu.cid == 0"></manager-r-audit>
       <manager-r-audit v-show="this.$refs.sideMenu.cid == 1"></manager-r-audit> -->
       <manager-r-audit v-show="this.flag == '0'"></manager-r-audit>
-      <manager-r-work-time v-show="this.flag == '1'"></manager-r-work-time>
+      <!-- <manager-r-work-time v-show="this.flag == '1'"></manager-r-work-time> -->
     </el-main>
   </el-container>
 </template>
 
 <script>
-import SideMenu from './Manager_SideMenu'
-import ManagerRAudit from './Manager_r_audit'
-import ManagerRWorkTime from './Manager_r_workTime'
+import SideMenu from './Boss_SideMenu'
+import ManagerRAudit from './Boss_r_audit'
+// import ManagerRWorkTime from './Manager_r_workTime'
 export default {
   name: 'ManagerIndex',
   components: {
     'side-menu': SideMenu,
-    'manager-r-audit': ManagerRAudit,
-    'manager-r-work-time': ManagerRWorkTime
+    'manager-r-audit': ManagerRAudit
+    // 'manager-r-work-time': ManagerRWorkTime
   },
   data () {
     return {

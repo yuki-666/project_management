@@ -27,9 +27,9 @@
           filter-placement="bottom-end"
         >
           <template slot-scope="props">
-            <xm-tag :type="FlowStatusRules[props.row.status]">
+            <zx-tag :type="FlowStatusRules[props.row.status]">
               {{ FLOWS_STATUS[props.row.status] }}
-            </xm-tag>
+            </zx-tag>
           </template>
         </el-table-column>
         <el-table-column
@@ -54,11 +54,11 @@
 <script>
 import { FlowStatusRules } from './rule/data-config'
 import SearchBar from './home_component/SearchBar'
-import XmTag from '../tag'
+import ZxTag from '../tag'
 export default {
   components: {
     'search-bar': SearchBar,
-    'xm-tag': XmTag
+    'zx-tag': ZxTag
   },
   name: 'AppIndex',
   data () {
@@ -112,15 +112,10 @@ export default {
       // return row.status === value
     },
     filterTag (value, row) {
-      console.log(value)
-      // this.filterTagTable()
-      // return row.status === value
       return row.status === value
     },
     handleCurrentChange (currentPage) {
       this.currentPage = currentPage
-      console.log(this.currentPage)
-      // console.log(`当前页: ${val}`);
     },
     sortByDate (obj1, obj2, column) {
       var a = Date.parse(obj1.update_time)
@@ -145,7 +140,6 @@ export default {
           _this.tableDataTmp = successResponse.data
         })
         .catch(failResponse => {
-          console.log('OMmmmG')
         })
     },
     searchResult () {
@@ -159,15 +153,11 @@ export default {
         this.getAllProjects()
         return
       }
-
-      console.log(_this.projects)
-      console.log('after')
       this.$axios
         .post('/homepage/project_mine', {
           keyword: _this.$refs.SearchBar.keywords
         })
         .then(successResponse => {
-          console.log(successResponse.data)
           // id为空
           if (successResponse.data.length === 0) {
             _this.projects.filter(item => {
@@ -184,7 +174,7 @@ export default {
     }
   },
   created () {
-    this.uid = this.$route.query.uid
+    this.uid = this.$store.getters.uid
     this.getAllProjects()
   }
 }
