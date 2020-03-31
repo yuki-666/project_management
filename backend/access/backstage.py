@@ -2,7 +2,7 @@ import os
 import sys
 sys.path.append(os.path.join(os.path.dirname(__file__) , '..'))
 
-from flask import json, Blueprint
+from flask import Blueprint, json, send_from_directory
 from logic import login, user
 from util.access import *
 
@@ -88,12 +88,23 @@ def back_show_normal_account():
 
 @backstage_access.route('/export_normal_account_sample', methods=['GET'])
 def back_export_normal_account_sample():
-    # download file
-    # file
-    return json.dumps({'status': 'ok'})
+    request_data = get_value_dict()
+    if not check_dict(request_data, ['username']):
+        return json.dumps('PARAM ERROR')
+    return send_from_directory('../data', 'sample_file.xlsx', as_attachment=True)
 
 @backstage_access.route('/import_normal_account', methods=['POST'])
 def back_import_normal_account():
-    # upload file
-    # status: "ok"
+    file_dir = '../data'
+    if not os.path.exists(file_dir):
+        os.makedirs(file_dir)
+
+    f = request.files['file']
+    if not f.filename.endswith('xlsx'):
+        return json.dumps({'status': 1})
+    
+    file_name = os.path.join(file_dir, 'temp.xlsx')
+    f.save(file_name)
+    user.import_normal_account(file_name)
+
     return json.dumps({'status': 'ok'})

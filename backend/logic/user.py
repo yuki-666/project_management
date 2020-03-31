@@ -1,4 +1,5 @@
 import os
+import pandas as pd
 import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__) , '..'))
@@ -77,4 +78,17 @@ def delete_normal_account(username):
 def modify_normal_account(username, password, name, career, department):
     # TODO
     # return 'error' if username not exist
+    return 'ok'
+
+def import_normal_account(file_name):
+    data = pd.read_csv(file_name, sep='\t')
+    data = data.values.tolist()
+
+    # TODO
+    # get max uid in db (uid = max(xxx))
+    for username, password, name, career, department in data:
+        uid = uid + 1
+        # TODO
+        # add data to db
+
     return 'ok'

@@ -22,3 +22,7 @@ approval_status(work_time):
 0: rejection
 1: pending
 2: approved
+
+file upload:
+0: ok
+1: format error

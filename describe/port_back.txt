@@ -19,7 +19,7 @@ username, password, name, career, department
 status: "ok"
 
 /back/export_normal_account_sample (get)
-username: 'username'
+username
 file
 
 /back/import_normal_account (post)
