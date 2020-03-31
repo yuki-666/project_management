@@ -9,12 +9,12 @@ import config
 def get_info_by_uid(uid, is_superior=False, include_finished=False):
     # id | worker_id | project_id | date  | event_name | remain | status | remarks |start_time|end_time
     para_dict = {}
-    para_dict['select_key'] = ['work_time.id', 'employee.name', 'work_time.function_id', 'work_time.event_name', 'work_time.start_time', 'work_time.end_time']
+    para_dict['select_key'] = ['work_time.id', 'employee.name', 'project_function.function_name', 'work_time.event_name', 'work_time.start_time', 'work_time.end_time']
     para_dict['select_value'] = []
     para_dict['tablename'] = 'work_time'
-    para_dict['join_tablename'] = ['employee']
-    para_dict['on_key'] = ['work_time.worker_id']
-    para_dict['on_value'] = ['employee.id']
+    para_dict['join_tablename'] = ['employee','project_function']
+    para_dict['on_key'] = ['work_time.worker_id','work_time.function_id']
+    para_dict['on_value'] = ['employee.id','project_function.id']
     para_dict['key'] = ['work_time.delete_label']
     para_dict['value'] = ['=0']
     if include_finished:
@@ -45,15 +45,15 @@ def get_info_by_uid(uid, is_superior=False, include_finished=False):
 
 def get_info_by_work_time_id(work_time_id):
     para_dict = {}
-    para_dict['select_key'] = ['work_time.id', 'employee.name', 'work_time.function_id', 'work_time.event_name', 'work_time.start_time', 'work_time.end_time']
+    para_dict['select_key'] = ['work_time.id', 'employee.name', 'project_function.function_name', 'work_time.event_name', 'work_time.start_time', 'work_time.end_time','work_time.delete_label']
     para_dict['select_value'] = []
     para_dict['tablename'] = 'work_time'
     para_dict['key'] = ['work_time.id','work_time.delete_label']
     work_time_id = '=' + work_time_id
     para_dict['value'] = [work_time_id,'!=1']
-    para_dict['join_tablename'] = ['employee']
-    para_dict['on_key'] = ['employee.id']
-    para_dict['on_value'] = ['work_time.worker_id']
+    para_dict['join_tablename'] = ['employee','project_function']
+    para_dict['on_key'] = ['employee.id','project_function.id']
+    para_dict['on_value'] = ['work_time.worker_id','work_time.function_id']
 
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     res = db.selectDB(d.selectSql(para_dict))

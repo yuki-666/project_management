@@ -93,11 +93,15 @@ def insertSql(p):
     # print(sql)#结项再删
     return sql
 
-# 使用实例
-if __name__ == '__main__':
-    # 创建连接
-    db = ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-    # sql语句
-    sql = "select username from login where id='0012'"
-    # 调用函数
-    print(db.selectDB(sql))
+def deleteSql(p):
+    #INSERT INTO table_name (column1,column2,column3,...) VALUES (value1,value2,value3,...);
+    sql = '''delete from ''' +p['tablename']
+    if 'key' in p:
+        sql = sql + ' where ' + p['key'][0] + p['value'][0]
+        for i in range(1,len(p['key'])):
+            sql = sql + ' and  ' + p['key'][i] + p['value'][i]
+    sql = sql + ' ; '
+    print(sql)#结项再删
+    return sql
+
+

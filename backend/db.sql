@@ -215,11 +215,10 @@ CREATE TABLE `project_function` (
   `worker_id` varchar(45) NOT NULL COMMENT '项目负责人ID',
   `parent_function_id` varchar(45) DEFAULT NULL COMMENT '父功能id',
   `delete_label` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`,`project_id`,`worker_id`),
   KEY `project_id_idx` (`project_id`),
   KEY `project_id` (`project_id`),
   KEY `worker_id_idx` (`worker_id`),
-  CONSTRAINT `project_fubction_project_id` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `project_function_project_id` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `project_function_worker_id` FOREIGN KEY (`worker_id`) REFERENCES `employee` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
