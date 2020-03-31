@@ -1,4 +1,5 @@
 import os
+import pandas as pd
 import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__) , '..'))
@@ -46,4 +47,48 @@ def get_total_user(project_id=None):
                 i['status'] = 0
     return res
 
- 
+def get_normal_account():
+    # TODO
+    # return username, name, career, department
+    pass
+
+def create_super_account(username, password):
+    # TODO
+    # return 0/1 (ok, username already exist)
+    pass
+
+def create_normal_account(username, password, name, career, department):
+    # TODO
+    # return 0/1 (ok, username already exist)
+    pass
+
+def delete_normal_account(username):
+    # TODO
+    # true delete, not set delete_label
+    # 1. find uid
+    # 2. delete in authority
+    # 3. delete in employee
+    # 4. delete in login
+    # 5. delete in work_time
+    # 6. delete in project_participant
+    # 7. delete in function_participant
+    # return 'error' if username not exist
+    return 'ok'
+
+def modify_normal_account(username, password, name, career, department):
+    # TODO
+    # return 'error' if username not exist
+    return 'ok'
+
+def import_normal_account(file_name):
+    data = pd.read_csv(file_name, sep='\t')
+    data = data.values.tolist()
+
+    # TODO
+    # get max uid in db (uid = max(xxx))
+    for username, password, name, career, department in data:
+        uid = uid + 1
+        # TODO
+        # add data to db
+
+    return 'ok'

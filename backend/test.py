@@ -33,4 +33,13 @@ def test_project():
     print(r.text)
 
 if __name__ == "__main__":
-    test_project()
+    # url = base_url + '/back/export_normal_account_sample?username=1'
+    # r = requests.get(url)
+    # with open("test.xlsx", "wb") as fout:  
+    #     fout.write(r.content)
+
+    import pandas as pd
+    data = pd.read_csv('sample_file.xlsx', sep='\t')
+    data = data.values.tolist()
+    print(data)
+    

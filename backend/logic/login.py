@@ -44,3 +44,9 @@ def login(username, password):
             return 1
         else:
             return 2
+
+def login_super(username, password):
+    # TODO
+    # super account login
+    # return 0/1 (ok/fail)
+    pass
