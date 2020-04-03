@@ -139,11 +139,11 @@ def get_function(project_id):
     # worker_id and worker_name: list->str, split by ','
     # return function_id, function_name, worker_id, worker_name, parent_function_id
     p = {}
-    p['select_key'] = ['f.id','f.function_name','f.worker_id','e.name','f.parent_function_id','rank() over(order by f.id)']
+    p['select_key'] = ['f.id','f.function_name','fp.worker_id','e.name','f.parent_function_id','rank() over(order by f.id)']
     p['tablename'] = 'project_function as f'
-    p['join_tablename'] = ['employee as e']
-    p['on_key'] = ['f.worker_id']
-    p['on_value'] = ['e.id']
+    p['join_tablename'] = ['function_partition as fp','employee as e']
+    p['on_key'] = ['f.id','fp.worker_id']
+    p['on_value'] = ['fp.function_id','e.id']
     p['key'] = ['f.project_id']
     p['value'] = [' = '+project_id]
     
@@ -156,11 +156,11 @@ def get_children_function(project_id, parent_function_id):
     # worker_id and worker_name: list->str, split by ','
     # return function_id, function_name, worker_id, worker_name, parent_function_id
     p = {}
-    p['select_key'] = ['f.id','f.function_name','f.worker_id','e.name','f.parent_function_id','rank() over(order by f.id)']
+    p['select_key'] = ['f.id','f.function_name','fp.worker_id','e.name','f.parent_function_id','rank() over(order by f.id)']
     p['tablename'] = 'project_function as f'
-    p['join_tablename'] = ['employee as e']
-    p['on_key'] = ['f.worker_id']
-    p['on_value'] = ['e.id']
+    p['join_tablename'] = ['function_partition as fp','employee as e']
+    p['on_key'] = ['f.id','fp.worker_id']
+    p['on_value'] = ['fp.function_id','e.id']
     p['key'] = ['f.project_id','f.parent_function_id']
     p['value'] = [' = '+project_id,' = '+parent_function_id]
     
@@ -181,7 +181,7 @@ def get_project_member(project_id, function_id=None):
     if function_id is not None:
         p.clear()
         p['select_key'] = ['worker_id']
-        p['tablename'] = 'project_function'
+        p['tablename'] = 'function_partition'
         p['key'] = ['id','project_id']
         p['value'] = [' = '+function_id,' = '+project_id]
         db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
@@ -258,11 +258,21 @@ def delete_function(project_id, function_id):
     return db.otherDB(d.updateSql(p))
 
 def modify_function(project_id, function_id, function_name, uid):
-    uid = uid.split(',')
+    #function_name
     p = {}
-    p['select_key'] = ['worker_id']
     p['tablename'] = 'project_function'
-    p['key'] = ['id','project_id']
+    p['set_key'] = ['function_name']
+    p['set_value'] = [function_name]
+    p['where_key'] = ['id','project_id']
+    p['where_value'] = [' = '+function_id,' = '+project_id]
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    db.otherDB(d.updateSql(p))
+    #uid
+    uid = uid.split(',')
+    p.clear()
+    p['select_key'] = ['worker_id']
+    p['tablename'] = 'function_partition'
+    p['key'] = ['function_id','project_id']
     p['value'] = [' = '+function_id,' = '+project_id]
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     A = db.selectDB(d.selectSql(p))
@@ -278,34 +288,22 @@ def modify_function(project_id, function_id, function_name, uid):
     only_B = list(set(uid)-set(A_and_B))
     #insert for only_B
     p.clear()
-    p['tablename'] = 'project_function'
-    p['column'] = ['id','project_id','worker_id','function_name']
-    p['values'] = [function_id,project_id,'unknown',function_name]
+    p['tablename'] = 'function_partition'
+    p['column'] = ['function_id','project_id','worker_id']
+    p['values'] = [function_id,project_id,'unknown']
     for worker_id in only_B:
         p['values'][2] = worker_id
         db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
         db.otherDB(d.insertSql(p))
     #delete for only_A
     p.clear()
-    p['tablename'] = 'project_function'
-    p['key'] = ['id','project_id','worker_id']
+    p['tablename'] = 'function_partition'
+    p['key'] = ['function_id','project_id','worker_id']
     p['value'] = [' = '+function_id,' = '+project_id,'unknown']
     for worker_id in only_A:
         p['value'][2] = ' = '+ worker_id
         db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
         db.otherDB(d.deleteSql(p))
-    #update for A_and_B
-    p.clear()
-    p['tablename'] = 'project_function'
-    p['set_key'] = ['function_name']
-    p['set_value'] = [function_name]
-    p['where_key'] = ['id','project_id','worker_id']
-    p['where_value'] = [' = '+function_id,' = '+project_id,'unknown']
-    for worker_id in A_and_B:
-        p['where_value'][2] = ' = '+ worker_id
-        db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-        db.otherDB(d.updateSql(p))
-
     return 'ok'
 
 def modify_worker(project_id, uid):

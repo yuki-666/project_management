@@ -131,8 +131,38 @@ CREATE TABLE `employee` (
 
 LOCK TABLES `employee` WRITE;
 /*!40000 ALTER TABLE `employee` DISABLE KEYS */;
-INSERT INTO `employee` VALUES ('0000','老板','女','0',NULL,'000111',NULL,NULL,0),('0011','卡桑','男','0','0000','12344321','软件1组','12344321',0),('0012','小黄','女','1','0011','11112222','软件1组','11112222',0),('0013','费费','女',NULL,'0011','22223333','软件1组','22223333',0),('0014','坤','女',NULL,'0013','33334444','软件1组','33334444',0),('0015','大虾','男',NULL,'0013','44445555','软件1组','44445555',0),('0016','倩','女',NULL,'0011','55556666','软件1组','55556666',0),('0017','工具人','男',NULL,'0016','66667777','软件1组','66667777',0);
+INSERT INTO `employee` VALUES ('0000','老板','女','0',NULL,'000111',NULL,NULL,0),('0011','卡桑','男','0','0000','12344321','软件1组','12344321',0),('0012','小黄','女','0','0011','11112222','软件1组','11112222',0),('0013','费费','女',NULL,'0011','22223333','软件1组','22223333',0),('0014','坤','女',NULL,'0013','33334444','软件1组','33334444',0),('0015','大虾','男',NULL,'0013','44445555','软件1组','44445555',0),('0016','倩','女',NULL,'0011','55556666','软件1组','55556666',0),('0017','工具人','男',NULL,'0016','66667777','软件1组','66667777',0);
 /*!40000 ALTER TABLE `employee` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `function_partition`
+--
+
+DROP TABLE IF EXISTS `function_partition`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `function_partition` (
+  `project_id` varchar(45) NOT NULL COMMENT '项目ID',
+  `function_id` varchar(45) NOT NULL COMMENT '项目功能ID',
+  `worker_id` varchar(45) NOT NULL COMMENT '员工ID',
+  PRIMARY KEY (`project_id`,`function_id`,`worker_id`),
+  KEY `function_partition_function_id_idx` (`function_id`),
+  KEY `function_partition_worker_id_idx` (`worker_id`),
+  CONSTRAINT `function_partition_function_id` FOREIGN KEY (`function_id`) REFERENCES `project_function` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `function_partition_project_id` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `function_partition_worker_id` FOREIGN KEY (`worker_id`) REFERENCES `employee` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `function_partition`
+--
+
+LOCK TABLES `function_partition` WRITE;
+/*!40000 ALTER TABLE `function_partition` DISABLE KEYS */;
+INSERT INTO `function_partition` VALUES ('2020-0000-D-01','001002','0012'),('2020-0000-D-01','001003','0013'),('2020-0000-D-01','002','0013'),('2020-0000-D-02','002004','0012'),('2020-0000-D-02','002005','0014'),('2020-0000-D-02','002005','0015'),('2020-0000-D-02','0029ZZ','0016'),('2020-0000-D-02','0029ZZ','0017');
+/*!40000 ALTER TABLE `function_partition` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -196,7 +226,7 @@ CREATE TABLE `project` (
 
 LOCK TABLES `project` WRITE;
 /*!40000 ALTER TABLE `project` DISABLE KEYS */;
-INSERT INTO `project` VALUES ('01','图书馆系统',0,'001','good','图书租借',NULL,'01',NULL,'0000','2020-03-20','2020-03-25','2020-01-12 02:23:45',0),('02','外卖系统',1,'002','hi','点外卖',NULL,'01',NULL,'0000','2020-03-20','2020-03-25','2020-01-12 02:23:45',0),('03','租车系统',1,'003','hdjfd','二手车',NULL,'02',NULL,'0000','2020-03-21','2020-03-22','2020-03-22 03:23:22',0);
+INSERT INTO `project` VALUES ('01','租车系统',1,'003','hdjfd','二手车',NULL,'02',NULL,'0000','2020-03-21','2020-03-22','2020-03-22 03:23:22',0),('2020-0000-D-01','图书馆系统',0,'001','good','图书租借',NULL,'01',NULL,'0000','2020-03-20','2020-03-25','2020-01-12 02:23:45',0),('2020-0000-D-02','外卖系统',0,'002','hi','点外卖',NULL,'01',NULL,'0000','2020-03-20','2020-03-25','2020-01-12 02:23:45',0);
 /*!40000 ALTER TABLE `project` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -212,15 +242,12 @@ CREATE TABLE `project_function` (
   `project_id` varchar(45) NOT NULL COMMENT '项目id',
   `function_name` varchar(45) DEFAULT NULL COMMENT '功能名称',
   `function_status` int(11) DEFAULT NULL COMMENT '功能状态',
-  `worker_id` varchar(45) NOT NULL COMMENT '项目负责人ID',
   `parent_function_id` varchar(45) DEFAULT NULL COMMENT '父功能id',
   `delete_label` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`,`project_id`,`worker_id`),
+  PRIMARY KEY (`id`,`project_id`),
   KEY `project_id_idx` (`project_id`),
   KEY `project_id` (`project_id`),
-  KEY `worker_id_idx` (`worker_id`),
-  CONSTRAINT `project_fubction_project_id` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `project_function_worker_id` FOREIGN KEY (`worker_id`) REFERENCES `employee` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `project_function_project_id` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -230,7 +257,7 @@ CREATE TABLE `project_function` (
 
 LOCK TABLES `project_function` WRITE;
 /*!40000 ALTER TABLE `project_function` DISABLE KEYS */;
-INSERT INTO `project_function` VALUES ('01','01','图书馆登录',0,'0013',NULL,0),('02','01','图书馆登录',0,'0012','01',0),('03','01','图书租借',1,'0014','01',0),('04','02','拼单数据库',1,'0015','02',0),('05','02','拼单测试',1,'0016','02',0);
+INSERT INTO `project_function` VALUES ('001002','01','图书馆登录',0,'001',0),('001003','01','图书租借',1,'001',0),('002','2020-0000-D-02','图书馆登录',0,NULL,0),('002004','2020-0000-D-02','拼单数据库',1,'002',0),('002005','2020-0000-D-02','拼单测试',1,'002',0),('0029ZZ','2020-0000-D-02','拼单测试',1,'002',0);
 /*!40000 ALTER TABLE `project_function` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -284,6 +311,7 @@ CREATE TABLE `work_time` (
   `remain` varchar(45) DEFAULT NULL COMMENT '剩余工时',
   `status` varchar(45) DEFAULT NULL COMMENT '审批状态',
   `remarks` varchar(45) DEFAULT NULL COMMENT '备注',
+  `describe` varchar(45) DEFAULT NULL COMMENT '描述',
   `delete_label` int(11) DEFAULT NULL COMMENT '删除标记',
   PRIMARY KEY (`id`),
   KEY `work_time_project_id_idx` (`project_id`),
@@ -301,7 +329,7 @@ CREATE TABLE `work_time` (
 
 LOCK TABLES `work_time` WRITE;
 /*!40000 ALTER TABLE `work_time` DISABLE KEYS */;
-INSERT INTO `work_time` VALUES (1,'0012','01','2020-03-14','01','图书馆','2020-01-02 04:00:00','2020-01-03 02:00:00','5','0',NULL,1),(2,'0012','01','2020-03-15','01','图书馆代码','2020-02-10 02:00:00','2000-02-11 02:00:00','8','1',NULL,0),(3,'0013','01','2020-03-16','02','图书馆代码实现','2020-03-10 02:00:00','2020-03-11 02:00:00','9','1',NULL,0),(4,'0013','01','2020-03-14','02','图书馆代码实现','2020-03-10 02:00:00','2020-03-11 02:00:00','10','0',NULL,1),(5,'0014','02','2020-03-15','03','拼单','2020-03-10 02:00:00','2020-03-11 02:00:00','3','1',NULL,0),(6,'0015','02','2020-03-13','03','外卖系统','2020-03-10 02:00:00','2020-03-11 02:00:00','4','1',NULL,1),(7,'0014','01','2020-03-15','04','图书馆页面','2020-03-10 02:00:00','2020-03-11 02:00:00','6','0',NULL,0),(8,'0016','02','2020-03-16','04','测试','2020-03-10 02:00:00','2020-03-11 02:00:00','9','0',NULL,1),(9,'0017','01','2020-03-15','05','测试','2020-03-10 02:00:00','2020-03-11 02:00:00','7','1',NULL,0),(10,'0011','02','2020-03-16','05','代码设计','2020-03-10 02:00:00','2020-03-11 02:00:00','0','0',NULL,0);
+INSERT INTO `work_time` VALUES (1,'0012','01','2020-03-14','01','图书馆','2020-01-02 04:00:00','2020-01-03 02:00:00','5','0',NULL,'emm',1),(2,'0012','01','2020-03-15','01','图书馆代码','2020-02-10 02:00:00','2000-02-11 02:00:00','8','1',NULL,'emm',0),(3,'0013','01','2020-03-16','02','图书馆代码实现','2020-03-10 02:00:00','2020-03-11 02:00:00','9','1',NULL,'emm',0),(4,'0013','01','2020-03-14','02','图书馆代码实现','2020-03-10 02:00:00','2020-03-11 02:00:00','10','0',NULL,'emm',1),(5,'0014','02','2020-03-15','03','拼单','2020-03-10 02:00:00','2020-03-11 02:00:00','3','1',NULL,'emm',0),(6,'0015','02','2020-03-13','03','外卖系统','2020-03-10 02:00:00','2020-03-11 02:00:00','4','1',NULL,'emm',1),(7,'0014','01','2020-03-15','04','图书馆页面','2020-03-10 02:00:00','2020-03-11 02:00:00','6','0',NULL,'emm',0),(8,'0016','02','2020-03-16','04','测试','2020-03-10 02:00:00','2020-03-11 02:00:00','9','0',NULL,'emm',1),(9,'0017','01','2020-03-15','05','测试','2020-03-10 02:00:00','2020-03-11 02:00:00','7','1',NULL,'emm',0),(10,'0011','02','2020-03-16','05','代码设计','2020-03-10 02:00:00','2020-03-11 02:00:00','0','0',NULL,'emm',0);
 /*!40000 ALTER TABLE `work_time` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -314,4 +342,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-03-21 20:36:39
+-- Dump completed on 2020-03-31 11:29:30
