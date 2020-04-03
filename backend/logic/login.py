@@ -23,7 +23,8 @@ def login(username, password):
 
         # leader or worker
         sql = '''select 2 from project_participant join login
-                 where login.username = '%s' and login.id = project_participant.leader_id;''' % username
+                 on login.id = project_participant.leader_id
+                 where login.username = '%s' ;''' % username
                  
         db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
         if db.selectDB(sql) == 'Empty':
@@ -46,7 +47,12 @@ def login(username, password):
             return 2
 
 def login_super(username, password):
-    # TODO
     # super account login
     # return 0/1 (ok/fail)
-    pass
+    sql = f'''select username
+             from super_login 
+             where username = '{username}' and password = '{password}';'''
+    
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    return 1 if db.selectDB(sql) == 'Empty' else 0
+
