@@ -147,6 +147,7 @@ export default {
         })
     },
     searchResult () {
+      this.getAllProjects()
       let _this = this
       let projectsTmp = _this.projects
       if (
@@ -154,7 +155,6 @@ export default {
         _this.$refs.SearchBar.keywords === '' ||
         _this.$refs.SearchBar.keywords === undefined
       ) {
-        this.getAllProjects()
         return
       }
       this.$axios
