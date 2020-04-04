@@ -1,14 +1,22 @@
 <template>
   <div>
     <el-dialog
-      title="项目审批"
+      title="修改工时"
       :visible.sync="dialogFormVisible"
       @close="$emit('update:show', false)"
       center
     >
       <el-form :model="form">
-        <el-form-item label="funcName" :label-width="formLabelWidth" prop="function_name">
-          <el-input v-model="form.function_name" autocomplete="off"></el-input>
+        <el-form-item
+          label="项目名称"
+          :label-width="formLabelWidth"
+          prop="function_name"
+        >
+          <el-input
+            v-model="form.function_name"
+            autocomplete="off"
+            disabled
+          ></el-input>
         </el-form-item>
         <el-form-item
           label="event_name"
@@ -60,8 +68,8 @@ export default {
       default: false
     },
     zid: {
-      type: Number,
-      default: -1
+      type: String,
+      default: ''
     }
   },
   data () {
@@ -75,7 +83,8 @@ export default {
         function_name: '',
         event_name: 'c',
         start_time: '',
-        end_time: ''
+        end_time: '',
+        status: ''
       },
       formLabelWidth: '100px'
     }
@@ -117,8 +126,7 @@ export default {
             this.$message.success('已经更新')
           }
         })
-        .catch(failResponse => {
-        })
+        .catch(failResponse => {})
     },
     endDate () {
       let _this = this
@@ -127,7 +135,7 @@ export default {
           if (_this.form.start_time) {
             return new Date(_this.form.start_time).getTime() >= time.getTime()
           } else {
-            return time.getTime() < Date.now() - 8.64e7// 8.64e7=1000*60*60*24一天
+            return time.getTime() < Date.now() - 8.64e7 // 8.64e7=1000*60*60*24一天
           }
         }
       }
@@ -137,11 +145,9 @@ export default {
       return {
         disabledDate (time) {
           if (_this.form.end_time) {
-            return (
-              new Date(_this.form.end_time).getTime() <= time.getTime()
-            )
+            return new Date(_this.form.end_time).getTime() <= time.getTime()
           } else {
-            return time.getTime() < Date.now() - 8.64e7// 8.64e7=1000*60*60*24一天
+            return time.getTime() < Date.now() - 8.64e7 // 8.64e7=1000*60*60*24一天
           }
         }
       }

@@ -39,7 +39,10 @@
         ></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
+            <el-button
+              size="mini"
+              @click="handleEdit(scope.$index, scope.row)"
+              :disabled="setButtonFlag(scope.row)"
               >修改</el-button
             >
           </template>
@@ -58,7 +61,7 @@
     <edit-form
       :show.sync="dialogFormVisible"
       :zid="tmpId"
-      @updateAgain="getAllInfo"
+      @updateAgain="getAllProjects"
       ref="edit"
     ></edit-form>
   </div>
@@ -78,24 +81,12 @@ export default {
   },
   data () {
     return {
-      // arr: [],
+      buttonFlag: false,
       select: '',
-      tmpId: -1,
-      // biu: {
-      //   biu2: [
-      //     {
-      //       id: '5',
-      //       name: '2'
-      //     },
-      //     {
-      //       id: '6',
-      //       name: '4'
-      //     }
-      //   ],
-      //   zz: '2'
-      // },
+      tmpId: '-1',
       dialogFormVisible: false,
       uid: 0,
+      career: -1,
       tableDataTmp: [],
       currentPage: 1,
       pagesize: 5,
@@ -123,13 +114,23 @@ export default {
         {
           id: '',
           name: '',
-          status: '',
+          'status': '',
           update_time: ''
         }
       ]
     }
   },
   methods: {
+    setButtonFlag (row) {
+      if (!this.projects[row.id]) {
+        return false
+      }
+      // eslint-disable-next-line eqeqeq
+      if (this.projects[row.id].status == 0) {
+        return true
+      }
+      return false
+    },
     getAllInfo () {
       let _this = this
       this.$axios
@@ -185,19 +186,20 @@ export default {
       this.$axios
         .get('/approval/project', {
           params: {
-            uid: _this.uid
+            uid: _this.uid,
+            career: _this.career
           }
         })
         .then(successResponse => {
           _this.projects = successResponse.data
           _this.tableDataTmp = successResponse.data
         })
-        .catch(failResponse => {
-        })
+        .catch(failResponse => {})
     }
   },
   created () {
     this.uid = this.$store.getters.uid
+    this.career = this.$store.getters.career
     this.getAllProjects()
   }
 }

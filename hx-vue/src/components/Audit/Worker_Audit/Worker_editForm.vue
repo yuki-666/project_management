@@ -8,7 +8,7 @@
     >
       <el-form :model="form">
         <el-form-item label="funcName" :label-width="formLabelWidth" prop="function_name">
-          <el-input v-model="form.function_name" autocomplete="off"></el-input>
+          <el-input v-model="form.function_name" autocomplete="off" disabled></el-input>
         </el-form-item>
         <el-form-item
           label="event_name"
@@ -60,8 +60,8 @@ export default {
       default: false
     },
     zid: {
-      type: Number,
-      default: -1
+      type: String,
+      default: ''
     }
   },
   data () {
@@ -75,7 +75,8 @@ export default {
         function_name: '',
         event_name: 'c',
         start_time: '',
-        end_time: ''
+        end_time: '',
+        status: ''
       },
       formLabelWidth: '100px'
     }

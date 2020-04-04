@@ -5,24 +5,19 @@
     </el-aside>
     <el-main>
         hello,Boss
-      <!-- <manager-r-audit v-show="this.$refs.sideMenu.cid == 0"></manager-r-audit>
-      <manager-r-audit v-show="this.$refs.sideMenu.cid == 1"></manager-r-audit> -->
-      <manager-r-audit v-show="this.flag == '0'"></manager-r-audit>
-      <!-- <manager-r-work-time v-show="this.flag == '1'"></manager-r-work-time> -->
+      <boss-r-audit v-if="this.flag == '0'"></boss-r-audit>
     </el-main>
   </el-container>
 </template>
 
 <script>
 import SideMenu from './Boss_SideMenu'
-import ManagerRAudit from './Boss_r_audit'
-// import ManagerRWorkTime from './Manager_r_workTime'
+import BossRAudit from './Boss_r_audit'
 export default {
-  name: 'ManagerIndex',
+  name: 'BossIndex',
   components: {
     'side-menu': SideMenu,
-    'manager-r-audit': ManagerRAudit
-    // 'manager-r-work-time': ManagerRWorkTime
+    'boss-r-audit': BossRAudit
   },
   data () {
     return {

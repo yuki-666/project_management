@@ -20,7 +20,7 @@ def get_info(project_id=None, uid=None, keyword=None, detail=False, include_reje
     if detail == False:
         sql = '''select id, name, status, update_time from project'''
     else:
-        sql = '''select project.id, project.name,project.project_superior_id, project.status, project.update_time, project.describe, project.scheduled_time, project.delivery_day, employee.name, project.major_milestones, project.adopting_technology, project.business_area, project.main_function from project join employee on employee.id = project.project_superior_id '''
+        sql = '''select project.id, project.name, project_superior_id, project.status, project.update_time, project.describe, project.scheduled_time, project.delivery_day, employee.name as project_superior_name, project.major_milestones, project.adopting_technology, project.business_area, project.main_function from project join employee on employee.id = project.project_superior_id '''
 
     if keyword is not None:
         like = '%'
@@ -61,6 +61,7 @@ def get_info(project_id=None, uid=None, keyword=None, detail=False, include_reje
         else:
             # project_id or uid
             sql += ' and status > 0;'
+
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     res = db.selectDB(sql)
     return [] if res == 'Empty' else res
@@ -81,13 +82,19 @@ def get_info_include_work_time(uid):
 
 def confirm(project_id, status):
     # check if project status is 1 (pending), return 'error' if not
+    sql = f'select status from project where id=\'{project_id}\';'
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    res = db.selectDB(sql)
+    if res[0]['status'] != 1:
+        return 'error'
+
     # modify project status, from 1 to 0/2 (rejection/established)
-    sql = '''update project set status = '%s' where id = '%s' and status =1;'''%(project_id,status)
+    sql = f'update project set status=\'{status}\' where id=\'{project_id}\';'
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     res = db.otherDB(sql)
     if res == 'ok':
         return 'ok'
-    else :
+    else:
         return 'error'
 
 def modify(project_id, project_name, describe, scheduled_time, delivery_day, project_superior_id, major_milestones, adopting_technology, business_area, main_function):
@@ -134,6 +141,12 @@ def create(name, describe, development_type, scheduled_time, delivery_day, proje
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     return db.otherDB(d.insertSql(p))
 
+def repush(project_id):
+    # TODO
+    # check status == 0 (rejection), return 'error' if not
+    # set status to 1 (pending)
+    return 'ok'
+
 def get_function(project_id):
     # get function list from project_id
     # worker_id and worker_name: list->str, split by ','
@@ -149,7 +162,6 @@ def get_function(project_id):
     
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     return db.selectDB(d.selectSql(p))
-    
 
 def get_children_function(project_id, parent_function_id):
     # get function list from project_id, whose parent function id == parent_function_id
@@ -369,8 +381,6 @@ def get_authority(project_id, uid=None):
         p['value'] = [' = '+project_id]
         db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     return db.selectDB(d.selectSql(p))
-        
-        
 
 def modify_authority(project_id, uid, git_authority, file_authority, mail_authority):
     # if can't find project_id uid in table, return 'error'

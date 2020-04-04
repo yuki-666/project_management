@@ -11,10 +11,19 @@ approval_access = Blueprint('approval_access', __name__)
 @approval_access.route('/project', methods=['GET'])
 def approval_project():
     request_data = get_value_dict()
-    if not check_dict(request_data, ['uid']):
+    if not check_dict(request_data, ['uid', 'career']):
         return json.dumps('PARAM ERROR')
-    
-    data = project.get_info(uid=request_data['uid'], include_reject=True)
+
+    if request_data['career'] == '0':
+        data = project.get_info()
+        data = [i for i in data if i['status'] == 1]
+    elif request_data['career'] == '1':
+        data = project.get_info(uid=request_data['uid'], include_reject=True)
+    else:
+        if request_data['career'] != '2' and request_data['career'] != '3':
+            return json.dumps('PARAM ERROR')
+        else:
+            data = project.get_info(uid=request_data['uid'])
 
     if has_error(data):
         return json.dumps('BACKEND ERROR')
@@ -27,8 +36,9 @@ def approval_project_show():
     if not check_dict(request_data, ['id']):
         return json.dumps('PARAM ERROR')
 
-    data_project = project.get_info(project_id=request_data['id'], detail=True)
-    
+    data_project = project.get_info(project_id=request_data['id'], detail=True, include_reject=True)[0]
+    data_project.pop('project_superior_name')
+
     data_project_superior = user.get_project_superior()
     for i in range(len(data_project_superior)):
         data_project_superior[i]['project_superior_id'] = data_project_superior[i]['id']
@@ -39,12 +49,9 @@ def approval_project_show():
     if has_error(data_project) or has_error(data_project_superior):
         return json.dumps('BACKEND ERROR')
     else:
-        ret = {}
-        ret = data_project[0]
-        ret['project_superior'] = data_project_superior
-        # TODO
-        ret['current_project_superior_id'] = 1
-        return json.dumps(ret)
+        data = data_project
+        data['project_superior'] = data_project_superior
+        return json.dumps(data)
 
 @approval_access.route('/project/modify', methods=['POST'])
 def approval_project_modify():
@@ -75,6 +82,19 @@ def approval_project_confirm():
     else:
         return json.dumps({'status': data})
 
+@approval_access.route('/project/repush', methods=['POST'])
+def approval_project_repush():
+    request_data = get_value_dict()
+    if not check_dict(request_data, ['id']):
+        return json.dumps('PARAM ERROR')
+
+    data = project.repush(request_data['id'])
+
+    if has_error(data):
+        return json.dumps('BACKEND ERROR')
+    else:
+        return json.dumps({'status': data})
+
 @approval_access.route('/work_time/initiative', methods=['GET'])
 def approval_work_time_initiative():
     request_data = get_value_dict()
@@ -82,6 +102,9 @@ def approval_work_time_initiative():
         return json.dumps('PARAM ERROR')
 
     data = work_time.get_info_by_uid(request_data['uid'], is_superior=True)
+    for i in range(len(data)):
+        data[i]['worker_name'] = data[i]['name']
+        data[i].pop('name')
 
     if has_error(data):
         return json.dumps('BACKEND ERROR')
@@ -130,10 +153,11 @@ def approval_work_time_passive():
 @approval_access.route('/work_time/passive/show', methods=['GET'])
 def approval_work_time_passive_show():
     request_data = get_value_dict()
+
     if not check_dict(request_data, ['id']):
         return json.dumps('PARAM ERROR')
     
-    data = work_time.get_info_by_work_time_id(request_data['id'])
+    data = work_time.get_info_by_work_time_id(request_data['id'])[0]
 
     if has_error(data):
         return json.dumps('BACKEND ERROR')
@@ -143,12 +167,11 @@ def approval_work_time_passive_show():
 @approval_access.route('/work_time/passive/modify', methods=['POST'])
 def approval_work_time_passive_modify():
     request_data = get_value_dict()
-    if not check_dict(request_data, ['id', 'worker_name', 'function_name', \
-        'event_name', 'start_time', 'end_time']):
+    print(request_data)
+    if not check_dict(request_data, ['id', 'event_name', 'start_time', 'end_time']):
         return json.dumps('PARAM ERROR')
 
-    data = work_time.modify(request_data['id'], request_data['worker_name'], request_data['function_name'], \
-            request_data['event_name'], request_data['start_time'], request_data['end_time'])
+    data = work_time.modify(request_data['id'], request_data['event_name'], request_data['start_time'], request_data['end_time'])
 
     if has_error(data):
         return json.dumps('BACKEND ERROR')
