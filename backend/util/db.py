@@ -45,7 +45,7 @@ class ConnectToMysql(object):
           self.db.close()
 
 def selectSql(p):
-    sql = '''select  ''' + p['select_key'][0]
+    sql = '''select distinct ''' + p['select_key'][0]
     for i in range(1,len(p['select_key'])):
         sql = sql + ''' ,  ''' + p['select_key'][i] 
     sql = sql + ''' from '''

@@ -1,14 +1,14 @@
 <template>
   <div>
     <el-dialog
-      title="项目审批"
+      title="修改工时"
       :visible.sync="dialogFormVisible"
       @close="$emit('update:show', false)"
       center
     >
       <el-form :model="form">
         <el-form-item
-          label="funcName"
+          label="项目名称"
           :label-width="formLabelWidth"
           prop="function_name"
         >
@@ -68,8 +68,8 @@ export default {
       default: false
     },
     zid: {
-      type: Number,
-      default: -1
+      type: String,
+      default: ''
     }
   },
   data () {
@@ -83,7 +83,8 @@ export default {
         function_name: '',
         event_name: 'c',
         start_time: '',
-        end_time: ''
+        end_time: '',
+        status: ''
       },
       formLabelWidth: '100px'
     }
@@ -91,13 +92,6 @@ export default {
   watch: {
     show () {
       this.dialogFormVisible = this.show
-    },
-    form: {
-      handler: function (val, oldVal) {
-        let bool = true
-        this.form = bool
-      },
-      deep: true
     }
   },
   methods: {

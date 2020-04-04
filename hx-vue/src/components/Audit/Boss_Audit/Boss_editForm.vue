@@ -112,8 +112,8 @@ export default {
       default: false
     },
     zid: {
-      type: Number,
-      default: -1
+      type: String,
+      default: ''
     }
   },
   data () {
@@ -212,7 +212,7 @@ export default {
       this.auditConfirm()
     },
     onSubmit () {
-      this.status = 1
+      this.status = 2
       this.auditConfirm()
     }
   },

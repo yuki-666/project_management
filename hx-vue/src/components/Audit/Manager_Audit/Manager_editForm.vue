@@ -48,7 +48,7 @@
           :label-width="formLabelWidth"
           prop="project_superior"
         >
-          <el-select v-model="form.current_project_superior_id" placeholder="请选择项目上级">
+          <el-select v-model="form.project_superior_id" placeholder="请选择项目上级">
             <el-option
               v-for="item in form.project_superior"
               :key="item.project_superior_id"
@@ -108,8 +108,8 @@ export default {
       default: false
     },
     zid: {
-      type: Number,
-      default: -1
+      type: String,
+      default: ''
     }
   },
   data () {
@@ -123,7 +123,7 @@ export default {
         describe: 'c',
         scheduled_time: '',
         delivery_day: '',
-        current_project_superior_id: '',
+        project_superior_id: '',
         project_superior: [
           {
             project_superior_id: '',
@@ -163,7 +163,7 @@ export default {
           describe: _this.form.describe,
           scheduled_time: _this.dateFormat(_this.form.scheduled_time),
           delivery_day: _this.dateFormat(_this.form.delivery_day),
-          project_superior_id: _this.form.current_project_superior_id,
+          project_superior_id: _this.form.project_superior_id,
           major_milestones: _this.form.major_milestones,
           adopting_technology: _this.form.adopting_technology,
           business_area: _this.form.business_area,
@@ -212,7 +212,7 @@ export default {
       this.$emit('update:show', false)
     }
   },
-  mounted () {
+  created () {
     // let _this = this
     // _this.getAllInfo()
   }

@@ -4,10 +4,8 @@
       <side-menu @indexSelect="listByCategory" ref="sideMenu"></side-menu>
     </el-aside>
     <el-main>
-      <!-- <manager-r-audit v-show="this.$refs.sideMenu.cid == 0"></manager-r-audit>
-      <manager-r-audit v-show="this.$refs.sideMenu.cid == 1"></manager-r-audit> -->
-      <manager-r-audit v-show="this.flag == '0'"></manager-r-audit>
-      <manager-r-work-time v-show="this.flag == '1'"></manager-r-work-time>
+      <manager-r-audit v-if="this.flag == '0'"></manager-r-audit>
+      <manager-r-work-time v-else-if="this.flag == '1'"></manager-r-work-time>
     </el-main>
   </el-container>
 </template>

@@ -300,7 +300,7 @@ DROP TABLE IF EXISTS `work_time`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `work_time` (
-  `id` int(11) NOT NULL COMMENT '工时ID',
+  `id` varchar(45) NOT NULL COMMENT '工时ID',
   `worker_id` varchar(45) DEFAULT NULL COMMENT '员工id',
   `project_id` varchar(45) DEFAULT NULL COMMENT '项目ID',
   `date` date DEFAULT NULL COMMENT '日期',

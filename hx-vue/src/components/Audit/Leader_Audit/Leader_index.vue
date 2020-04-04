@@ -4,10 +4,8 @@
       <side-menu @indexSelect="listByCategory" ref="sideMenu"></side-menu>
     </el-aside>
     <el-main>
-      <!-- <manager-r-audit v-show="this.$refs.sideMenu.cid == 0"></manager-r-audit>
-      <manager-r-audit v-show="this.$refs.sideMenu.cid == 1"></manager-r-audit> -->
-      <leader-r-work-time v-show="this.flag == '0'"></leader-r-work-time>
-      <leader-r-work-p-time v-show="this.flag == '1'"></leader-r-work-p-time>
+      <leader-r-work-time v-if="this.flag == '0'"></leader-r-work-time>
+      <leader-r-work-p-time v-else-if="this.flag == '1'"></leader-r-work-p-time>
     </el-main>
   </el-container>
 </template>
@@ -17,7 +15,7 @@ import SideMenu from './Leader_SideMenu'
 import LeaderRWorkTime from './Leader_r_workTime'
 import LeaderRWorkPTime from './Leader_r_workPTime'
 export default {
-  name: 'ManagerIndex',
+  name: 'LeaderIndex',
   components: {
     'side-menu': SideMenu,
     'leader-r-work-time': LeaderRWorkTime,
