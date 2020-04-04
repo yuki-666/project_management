@@ -48,47 +48,135 @@ def get_total_user(project_id=None):
     return res
 
 def get_normal_account():
-    # TODO
     # return username, name, career, department
-    pass
+    # login:id      | username  | password 
+    # employee:id   | name      | gender    | career|superior_id   | tele      | department| mailbox
+    sql = '''select login.username,employee.name,employee.career,employee.department
+             from login join employee
+             on login.id = employee.id;'''
+    
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    res = db.selectDB(sql)
+    
+    for record in res:
+        if record['career'] == None:
+            # leader or worker
+            sql = f'''select 2 from project_participant join login 
+                 on login.id = project_participant.leader_id
+                 where login.username = '{record['username']}';'''
+                 
+            db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+            if db.selectDB(sql) == 'Empty':
+                record['career'] = 'worker'
+            else:
+                record['career'] = 'leader'
+    return res
 
 def create_super_account(username, password):
-    # TODO
     # return 0/1 (ok, username already exist)
-    pass
+    sql = f'''select username from super_login where username = '{username}';'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    if db.selectDB(sql) != 'Empty':
+        return 1
+    sql = f'''insert into super_login(username,password) values('{username}','{password}');'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    db.otherDB(sql) 
+    return 0
 
 def create_normal_account(username, password, name, career, department):
-    # TODO
     # return 0/1 (ok, username already exist)
-    pass
+    sql = f'''select username from login where username = '{username}';'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    if db.selectDB(sql) != 'Empty':
+        return 1
+    
+    sql = f'''select max(id) from login;'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    uid = int(db.selectDB(sql)[0]['max(id)'])+1
+    
+    sql = f'''insert into login(id,username,password) values('{uid}','{username}','{password}');'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    db.otherDB(sql) 
+
+    sql = f'''insert into employee(id,`name`, career, department) values('{uid}','{name}','{career}','{department}');'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    db.otherDB(sql)
+    return 0
 
 def delete_normal_account(username):
-    # TODO
+    # return 'error' if username not exist
+    sql = f'''select id from login where username = '{username}';'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    res = db.selectDB(sql)
+    if res == 'Empty':
+        return 'error'
     # true delete, not set delete_label
     # 1. find uid
+    uid = res[0]['id']
     # 2. delete in authority
+    sql = f'''delete from authority where worker_id = '{uid}'; '''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    db.otherDB(sql)
     # 3. delete in employee
+    sql = f'''delete from employee where id = '{uid}'; '''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    db.otherDB(sql)
     # 4. delete in login
+    sql = f'''delete from login where id = '{uid}'; '''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    db.otherDB(sql)
     # 5. delete in work_time
+    sql = f'''delete from work_time where worker_id = '{uid}'; '''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    db.otherDB(sql)
     # 6. delete in project_participant
-    # 7. delete in function_participant
-    # return 'error' if username not exist
+    sql = f'''delete from project_participant where person_id = '{uid}'; '''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    db.otherDB(sql)
+    # 7. delete in function_partition
+    sql = f'''delete from function_partition where worker_id = '{uid}'; '''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    db.otherDB(sql)
+    
     return 'ok'
 
 def modify_normal_account(username, password, name, career, department):
-    # TODO
     # return 'error' if username not exist
+    sql = f'''select id from login where username = '{username}';'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    res = db.selectDB(sql)
+    if res == 'Empty':
+        return 'error'
+    
+    uid = res[0]['id']
+    sql = f'''update login set password = '{password}' where id = '{uid}'; '''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    db.otherDB(sql)
+    sql = f'''update employee 
+           set name = '{name}', career = '{career}', department = '{department}'
+           where id = '{uid}'; '''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    print(sql)
+    db.otherDB(sql)
     return 'ok'
 
 def import_normal_account(file_name):
     data = pd.read_csv(file_name, sep='\t')
     data = data.values.tolist()
 
-    # TODO
     # get max uid in db (uid = max(xxx))
+    sql = f'''select max(id) from employee;'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    uid = int(db.selectDB(sql)[0]['max(id)'])
     for username, password, name, career, department in data:
         uid = uid + 1
-        # TODO
         # add data to db
+        sql = f'''insert into login(id,username,password) values('{uid}','{username}','{password}');'''
+        db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+        db.otherDB(sql) 
+
+        sql = f'''insert into employee(id,`name`, career, department) values('{uid}','{name}','{career}','{department}');'''
+        db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+        db.otherDB(sql)
 
     return 'ok'

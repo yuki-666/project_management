@@ -77,5 +77,7 @@ if __name__ == '__main__':
     #b=[2]
     #c=list(set(a)-set(b))
     #print(c)
-    p.modify_function(project_id='02', function_id='002004', function_name='拼单gg', uid=['0016','0017'])
-    p.modify_worker(project_id, uid)
+    #p.modify_function(project_id='02', function_id='002004', function_name='拼单gg', uid=['0016','0017'])
+    #p.modify_worker(project_id, uid)
+    a='uu,ii'
+    print(a.split(','))
