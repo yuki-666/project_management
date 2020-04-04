@@ -141,6 +141,12 @@ def create(name, describe, development_type, scheduled_time, delivery_day, proje
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     return db.otherDB(d.insertSql(p))
 
+def repush(project_id):
+    # TODO
+    # check status == 0 (rejection), return 'error' if not
+    # set status to 1 (pending)
+    return 'ok'
+
 def get_function(project_id):
     # get function list from project_id
     # worker_id and worker_name: list->str, split by ','
@@ -156,7 +162,6 @@ def get_function(project_id):
     
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     return db.selectDB(d.selectSql(p))
-    
 
 def get_children_function(project_id, parent_function_id):
     # get function list from project_id, whose parent function id == parent_function_id
@@ -376,8 +381,6 @@ def get_authority(project_id, uid=None):
         p['value'] = [' = '+project_id]
         db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     return db.selectDB(d.selectSql(p))
-        
-        
 
 def modify_authority(project_id, uid, git_authority, file_authority, mail_authority):
     # if can't find project_id uid in table, return 'error'

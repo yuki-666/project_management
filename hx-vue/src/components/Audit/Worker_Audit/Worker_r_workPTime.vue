@@ -93,25 +93,18 @@ export default {
       select: '',
       dialogFormVisible: false,
       uid: 0,
-      tmpId: -1,
+      tmpId: '-1',
       tableDataTmp: [],
       currentPage: 1,
       pagesize: 5,
       total: 10,
-      FLOWS_STATUS: [
-        '驳回',
-        '已审批'
-      ],
       FlowStatusRules,
       filter_status: [
-        { text: 'pending', value: 0 },
-        { text: 'established', value: 1 },
-        { text: 'processing', value: 2 },
-        { text: 'paid', value: 3 },
-        { text: 'finished', value: 4 },
-        { text: 'archived', value: 5 },
-        { text: 'rejection', value: 6 }
+        { text: 'rejection', value: 0 },
+        { text: 'pending', value: 1 },
+        { text: 'approved', value: 2 }
       ],
+      FLOWS_STATUS: ['驳回', '审批中', '已审批'],
       projects: [
         {
           id: '',

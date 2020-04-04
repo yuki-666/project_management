@@ -120,7 +120,7 @@ export default {
     },
     auditYes () {
       // this.dialogFormVisible = false;
-      this.status = 1 // 同意
+      this.status = 2 // 同意
       this.auditConfirm()
     },
     auditConfirm () {

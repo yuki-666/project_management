@@ -12,6 +12,11 @@ id
 id, name, describe, 预定时间(scheduled_time), 交付日(delivery_day), project_superior_id, 项目上级project_superior(project_superior_id, project_superior_name),\
     主要里程碑(major_milestones), 采用技术(adopting_technology), 业务领域(business_area), 主要功能(main_function)
 
+重新提交(只有项目经理)
+/approval/project/repush (post)
+id
+status: "ok"
+
 修改按钮里的保存按钮
 /approval/project/modify (post)
 id, name, describe, scheduled_time, delivery_day, project_superior_id, major_milestones, adopting_technology, business_area, main_function
@@ -25,7 +30,7 @@ status: "ok"
 工时审批
 /approval/work_time/initiative (get)
 uid(审批人)
-id(工时), worker_name, 功能名称(function_name), 活动名称(event_name), start_time, end_time (工时已审批的不传)
+id(工时), worker_name, project_name(不能修改), 功能名称(function_name), 活动名称(event_name), start_time, end_time (工时已审批的不传)
 
 确认
 /approval/work_time/confirm (post)
@@ -35,21 +40,21 @@ status: "ok"
 查看按钮
 /approval/work_time/initiative/show (get) (预埋)
 id(工时)
-id(工时), worker_name, function_name, event_name, start_time, end_time
+id(工时), worker_name, project_name(不能修改), function_name, event_name, start_time, end_time
 
 被审批工时
 /approval/work_time/passive (get)
 uid
-id(工时), function_name, event_name, start_time, end_time, status
+id(工时), project_name(不能修改), function_name, event_name, start_time, end_time, status
 
 修改按钮
 /approval/work_time/passive/show (get)
 id(工时)
-id(工时), function_name, event_name, start_time, end_time
+id(工时), project_name(不能修改), function_name, event_name, start_time, end_time
 
 修改按钮里的保存按钮
 /approval/work_time/passive/modify (post)
-id(工时), function_name, event_name, start_time, end_time
+id(工时), project_name(不能修改), function_name(不能修改), event_name, start_time, end_time
 status: "ok"
 
 删除按钮

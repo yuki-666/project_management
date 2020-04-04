@@ -49,10 +49,9 @@ def approval_project_show():
     if has_error(data_project) or has_error(data_project_superior):
         return json.dumps('BACKEND ERROR')
     else:
-        ret = {}
-        ret = data_project
-        ret['project_superior'] = data_project_superior
-        return json.dumps(ret)
+        data = data_project
+        data['project_superior'] = data_project_superior
+        return json.dumps(data)
 
 @approval_access.route('/project/modify', methods=['POST'])
 def approval_project_modify():
@@ -83,6 +82,19 @@ def approval_project_confirm():
     else:
         return json.dumps({'status': data})
 
+@approval_access.route('/project/repush', methods=['POST'])
+def approval_project_repush():
+    request_data = get_value_dict()
+    if not check_dict(request_data, ['id']):
+        return json.dumps('PARAM ERROR')
+
+    data = project.repush(request_data['id'])
+
+    if has_error(data):
+        return json.dumps('BACKEND ERROR')
+    else:
+        return json.dumps({'status': data})
+
 @approval_access.route('/work_time/initiative', methods=['GET'])
 def approval_work_time_initiative():
     request_data = get_value_dict()
@@ -90,6 +102,9 @@ def approval_work_time_initiative():
         return json.dumps('PARAM ERROR')
 
     data = work_time.get_info_by_uid(request_data['uid'], is_superior=True)
+    for i in range(len(data)):
+        data[i]['worker_name'] = data[i]['name']
+        data[i].pop('name')
 
     if has_error(data):
         return json.dumps('BACKEND ERROR')
@@ -138,10 +153,11 @@ def approval_work_time_passive():
 @approval_access.route('/work_time/passive/show', methods=['GET'])
 def approval_work_time_passive_show():
     request_data = get_value_dict()
+
     if not check_dict(request_data, ['id']):
         return json.dumps('PARAM ERROR')
     
-    data = work_time.get_info_by_work_time_id(request_data['id'])
+    data = work_time.get_info_by_work_time_id(request_data['id'])[0]
 
     if has_error(data):
         return json.dumps('BACKEND ERROR')
@@ -151,12 +167,11 @@ def approval_work_time_passive_show():
 @approval_access.route('/work_time/passive/modify', methods=['POST'])
 def approval_work_time_passive_modify():
     request_data = get_value_dict()
-    if not check_dict(request_data, ['id', 'worker_name', 'function_name', \
-        'event_name', 'start_time', 'end_time']):
+    print(request_data)
+    if not check_dict(request_data, ['id', 'event_name', 'start_time', 'end_time']):
         return json.dumps('PARAM ERROR')
 
-    data = work_time.modify(request_data['id'], request_data['worker_name'], request_data['function_name'], \
-            request_data['event_name'], request_data['start_time'], request_data['end_time'])
+    data = work_time.modify(request_data['id'], request_data['event_name'], request_data['start_time'], request_data['end_time'])
 
     if has_error(data):
         return json.dumps('BACKEND ERROR')
