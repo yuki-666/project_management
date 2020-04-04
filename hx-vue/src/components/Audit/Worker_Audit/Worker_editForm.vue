@@ -8,7 +8,7 @@
     >
       <el-form :model="form">
         <el-form-item label="funcName" :label-width="formLabelWidth" prop="function_name">
-          <el-input v-model="form.function_name" autocomplete="off"></el-input>
+          <el-input v-model="form.function_name" autocomplete="off" disabled></el-input>
         </el-form-item>
         <el-form-item
           label="event_name"
