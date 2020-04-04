@@ -11,10 +11,19 @@ approval_access = Blueprint('approval_access', __name__)
 @approval_access.route('/project', methods=['GET'])
 def approval_project():
     request_data = get_value_dict()
-    if not check_dict(request_data, ['uid']):
+    if not check_dict(request_data, ['uid', 'career']):
         return json.dumps('PARAM ERROR')
-    
-    data = project.get_info(uid=request_data['uid'], include_reject=True)
+
+    if request_data['career'] == '0':
+        data = project.get_info()
+        data = [i for i in data if i['status'] == 1]
+    elif request_data['career'] == '1':
+        data = project.get_info(uid=request_data['uid'], include_reject=True)
+    else:
+        if request_data['career'] != '2' and request_data['career'] != '3':
+            return json.dumps('PARAM ERROR')
+        else:
+            data = project.get_info(uid=request_data['uid'])
 
     if has_error(data):
         return json.dumps('BACKEND ERROR')

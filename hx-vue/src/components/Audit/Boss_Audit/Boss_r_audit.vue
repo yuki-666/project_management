@@ -58,7 +58,7 @@
     <edit-form
       :show.sync="dialogFormVisible"
       :zid="tmpId"
-      @updateAgain="this.getAllInfo"
+      @updateAgain="this.getAllProjects"
       ref="edit"
     ></edit-form>
   </div>
@@ -70,7 +70,7 @@ import SideMenu from './Boss_SideMenu'
 import { FlowStatusRules } from '../../home/rule/data-config'
 import ZxTag from '../../tag'
 export default {
-  name: 'ManagerRAudit',
+  name: 'BossRAudit',
   components: {
     'side-menu': SideMenu,
     'zx-tag': ZxTag,
@@ -82,6 +82,7 @@ export default {
       select: '',
       dialogFormVisible: false,
       uid: 0,
+      career: -1,
       tmpId: -1,
       tableDataTmp: [],
       currentPage: 1,
@@ -89,22 +90,22 @@ export default {
       total: 10,
       FlowStatusRules,
       filter_status: [
-        { text: 'pending', value: 0 },
-        { text: 'established', value: 1 },
-        { text: 'processing', value: 2 },
-        { text: 'paid', value: 3 },
-        { text: 'finished', value: 4 },
-        { text: 'archived', value: 5 },
-        { text: 'rejection', value: 6 }
+        { text: 'rejection', value: 0 },
+        { text: 'pending', value: 1 },
+        { text: 'established', value: 2 },
+        { text: 'processing', value: 3 },
+        { text: 'paid', value: 4 },
+        { text: 'finished', value: 5 },
+        { text: 'archived', value: 6 }
       ],
       FLOWS_STATUS: [
+        'rejection',
         'pending',
         'established',
         'processing',
         'paid',
         'finished',
-        'archived',
-        'rejection'
+        'archived'
       ],
       projects: [
         {
@@ -173,7 +174,8 @@ export default {
       this.$axios
         .get('/approval/project', {
           params: {
-            uid: _this.uid
+            uid: _this.uid,
+            career: _this.career
           }
         })
         .then(successResponse => {
@@ -186,6 +188,7 @@ export default {
   },
   created () {
     this.uid = this.$store.getters.uid
+    this.career = this.$store.getters.career
     this.getAllProjects()
   }
 }

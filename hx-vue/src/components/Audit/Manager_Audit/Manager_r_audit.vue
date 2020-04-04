@@ -61,7 +61,7 @@
     <edit-form
       :show.sync="dialogFormVisible"
       :zid="tmpId"
-      @updateAgain="getAllInfo"
+      @updateAgain="getAllProjects"
       ref="edit"
     ></edit-form>
   </div>
@@ -100,6 +100,7 @@ export default {
       // },
       dialogFormVisible: false,
       uid: 0,
+      career: -1,
       tableDataTmp: [],
       currentPage: 1,
       pagesize: 5,
@@ -199,7 +200,8 @@ export default {
       this.$axios
         .get('/approval/project', {
           params: {
-            uid: _this.uid
+            uid: _this.uid,
+            career: _this.career
           }
         })
         .then(successResponse => {
@@ -211,6 +213,7 @@ export default {
   },
   created () {
     this.uid = this.$store.getters.uid
+    this.career = this.$store.getters.career
     this.getAllProjects()
   }
 }

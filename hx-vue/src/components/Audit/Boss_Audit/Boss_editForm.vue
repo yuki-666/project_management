@@ -212,7 +212,7 @@ export default {
       this.auditConfirm()
     },
     onSubmit () {
-      this.status = 1
+      this.status = 2
       this.auditConfirm()
     }
   },

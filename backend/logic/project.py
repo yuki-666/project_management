@@ -81,13 +81,19 @@ def get_info_include_work_time(uid):
 
 def confirm(project_id, status):
     # check if project status is 1 (pending), return 'error' if not
+    sql = f'select status from project where id=\'{project_id}\';'
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    res = db.selectDB(sql)
+    if res[0]['status'] != 1:
+        return 'error'
+
     # modify project status, from 1 to 0/2 (rejection/established)
-    sql = '''update project set status = '%s' where id = '%s' and status =1;'''%(project_id,status)
+    sql = f'update project set status=\'{status}\' where id=\'{project_id}\';'
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     res = db.otherDB(sql)
     if res == 'ok':
         return 'ok'
-    else :
+    else:
         return 'error'
 
 def modify(project_id, project_name, describe, scheduled_time, delivery_day, project_superior_id, major_milestones, adopting_technology, business_area, main_function):
