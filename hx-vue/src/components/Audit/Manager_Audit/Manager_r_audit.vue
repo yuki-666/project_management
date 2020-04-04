@@ -39,7 +39,10 @@
         ></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
+            <el-button
+              size="mini"
+              @click="handleEdit(scope.$index, scope.row)"
+              :disabled="setButtonFlag(scope.row)"
               >修改</el-button
             >
           </template>
@@ -79,6 +82,7 @@ export default {
   data () {
     return {
       // arr: [],
+      buttonFlag: false,
       select: '',
       tmpId: -1,
       // biu: {
@@ -123,13 +127,23 @@ export default {
         {
           id: '',
           name: '',
-          status: '',
+          'status': '',
           update_time: ''
         }
       ]
     }
   },
   methods: {
+    setButtonFlag (row) {
+      if (!this.projects[row.id]) {
+        return false
+      }
+      // eslint-disable-next-line eqeqeq
+      if (this.projects[row.id].status == 0) {
+        return true
+      }
+      return false
+    },
     getAllInfo () {
       let _this = this
       this.$axios
@@ -192,8 +206,7 @@ export default {
           _this.projects = successResponse.data
           _this.tableDataTmp = successResponse.data
         })
-        .catch(failResponse => {
-        })
+        .catch(failResponse => {})
     }
   },
   created () {
