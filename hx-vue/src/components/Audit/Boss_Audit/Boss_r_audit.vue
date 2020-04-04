@@ -78,12 +78,11 @@ export default {
   },
   data () {
     return {
-      // arr: [],
       select: '',
       dialogFormVisible: false,
       uid: 0,
       career: -1,
-      tmpId: -1,
+      tmpId: '-1',
       tableDataTmp: [],
       currentPage: 1,
       pagesize: 5,

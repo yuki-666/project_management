@@ -112,8 +112,8 @@ export default {
       default: false
     },
     zid: {
-      type: Number,
-      default: -1
+      type: String,
+      default: ''
     }
   },
   data () {

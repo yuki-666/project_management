@@ -81,23 +81,9 @@ export default {
   },
   data () {
     return {
-      // arr: [],
       buttonFlag: false,
       select: '',
-      tmpId: -1,
-      // biu: {
-      //   biu2: [
-      //     {
-      //       id: '5',
-      //       name: '2'
-      //     },
-      //     {
-      //       id: '6',
-      //       name: '4'
-      //     }
-      //   ],
-      //   zz: '2'
-      // },
+      tmpId: '-1',
       dialogFormVisible: false,
       uid: 0,
       career: -1,

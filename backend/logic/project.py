@@ -20,7 +20,7 @@ def get_info(project_id=None, uid=None, keyword=None, detail=False, include_reje
     if detail == False:
         sql = '''select id, name, status, update_time from project'''
     else:
-        sql = '''select project.id, project.name,project.project_superior_id, project.status, project.update_time, project.describe, project.scheduled_time, project.delivery_day, employee.name, project.major_milestones, project.adopting_technology, project.business_area, project.main_function from project join employee on employee.id = project.project_superior_id '''
+        sql = '''select project.id, project.name, project_superior_id, project.status, project.update_time, project.describe, project.scheduled_time, project.delivery_day, employee.name as project_superior_name, project.major_milestones, project.adopting_technology, project.business_area, project.main_function from project join employee on employee.id = project.project_superior_id '''
 
     if keyword is not None:
         like = '%'
@@ -61,6 +61,7 @@ def get_info(project_id=None, uid=None, keyword=None, detail=False, include_reje
         else:
             # project_id or uid
             sql += ' and status > 0;'
+
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     res = db.selectDB(sql)
     return [] if res == 'Empty' else res
