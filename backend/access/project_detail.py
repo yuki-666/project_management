@@ -132,7 +132,7 @@ def project_detail_function_modify():
         return json.dumps({'status': data})
 
 @project_detail_access.route('/project_worker', methods=['GET'])
-def project_detail_function_modify():
+def project_detail_project_worker():
     request_data = get_value_dict()
     if not check_dict(request_data, ['id']):
         return json.dumps('PARAM ERROR')
@@ -147,7 +147,7 @@ def project_detail_function_modify():
         return json.dumps(data)
 
 @project_detail_access.route('/project_worker/modify_worker', methods=['GET'])
-def project_detail_function_modify():
+def project_detail_project_worker_modify_worker():
     request_data = get_value_dict()
     if not check_dict(request_data, ['id']):
         return json.dumps('PARAM ERROR')
@@ -160,7 +160,7 @@ def project_detail_function_modify():
         return json.dumps(data)
         
 @project_detail_access.route('/project_worker/modify_worker/save', methods=['GET'])
-def project_detail_function_modify_save():
+def project_detail_project_worker_modify_worker_save():
     request_data = get_value_dict()
     if not check_dict(request_data, ['id', 'uid']):
         return json.dumps('PARAM ERROR')
