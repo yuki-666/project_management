@@ -13,18 +13,20 @@ def get_info_by_uid(uid, is_superior=False, include_finished=False):
 
     if is_superior:
         sql = f'''
-               select distinct work_time.id, employee.name, project_function.function_name, work_time.event_name, work_time.start_time, work_time.end_time
+               select distinct work_time.id, employee.name, project_function.function_name, work_time.event_name, work_time.start_time, work_time.end_time,project.name
                from work_time
                join employee on work_time.worker_id=employee.id
                join project_function on work_time.function_id=project_function.id
-               join project_participant on project_participant.person_id=work_time.worker_id
+               join project_participant on project_participant.worker_id=work_time.worker_id
+               join project on project.id = work_time.project_id
                where work_time.delete_label=0 and project_participant.leader_id=\'{uid}\';'''
     else:
         sql = f'''
-               select distinct work_time.id, employee.name, project_function.function_name, work_time.event_name, work_time.start_time, work_time.end_time, status
+               select distinct work_time.id, employee.name, project_function.function_name, work_time.event_name, work_time.start_time, work_time.end_time, status,project.name
                from work_time
                join employee on work_time.worker_id=employee.id
                join project_function on work_time.function_id=project_function.id
+               join project on project.id = work_time.project_id 
                where work_time.delete_label=0 and work_time.worker_id=\'{uid}\';'''
 
     if not include_finished:
@@ -36,15 +38,15 @@ def get_info_by_uid(uid, is_superior=False, include_finished=False):
 
 def get_info_by_work_time_id(work_time_id):
     para_dict = {}
-    para_dict['select_key'] = ['work_time.id', 'employee.name', 'project_function.function_name', 'work_time.event_name', 'work_time.start_time', 'work_time.end_time','work_time.delete_label']
+    para_dict['select_key'] = ['work_time.id', 'employee.name', 'project_function.function_name', 'work_time.event_name', 'work_time.start_time', 'work_time.end_time','work_time.delete_label','project.name']
     para_dict['select_value'] = []
     para_dict['tablename'] = 'work_time'
     para_dict['key'] = ['work_time.id','work_time.delete_label']
     work_time_id = '=' + work_time_id
     para_dict['value'] = [work_time_id,'!=1']
-    para_dict['join_tablename'] = ['employee','project_function']
-    para_dict['on_key'] = ['employee.id','project_function.id']
-    para_dict['on_value'] = ['work_time.worker_id','work_time.function_id']
+    para_dict['join_tablename'] = ['employee','project_function','project']
+    para_dict['on_key'] = ['employee.id','project_function.id','work_time.project_id']
+    para_dict['on_value'] = ['work_time.worker_id','work_time.function_id','project.id']
 
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     res = db.selectDB(d.selectSql(para_dict))
