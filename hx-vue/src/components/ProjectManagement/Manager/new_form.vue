@@ -26,7 +26,7 @@
           :label-width="formLabelWidth"
           prop="custom"
         >
-          <el-select v-model="form.custom_id" placeholder="请选择项目上级">
+          <el-select v-model="form.custom_id" placeholder="请选择项目客户">
             <el-option
               v-for="item in form.custom"
               :key="item.custom_id"
@@ -45,14 +45,21 @@
         >
           <el-input v-model="form.describe" autocomplete="off"></el-input>
         </el-form-item>
+
                <el-form-item
           label="development_type"
           :label-width="formLabelWidth"
           prop="development_type"
         >
-          <el-input v-model="form.development_type" autocomplete="off"></el-input>
+          <el-select v-model="form.development_type" placeholder="请选择研发类型">
+            <el-option
+              v-for="item in development_type_dict"
+              :key="item.key"
+              :label="item.value"
+              :value="item.key"
+            ></el-option>
+          </el-select>
         </el-form-item>
-
         <el-form-item
           label="预定时间"
           :label-width="formLabelWidth"
@@ -136,7 +143,9 @@ export default {
       startDatePicker: this.beginDate(),
       endDatePicker: this.endDate(),
       form: {
-        // project_superior_id: '',
+        project_superior_id: '',
+        custom_id: '',
+        development_type: '',
         project_superior: [
           {
             project_superior_id: '',
@@ -151,7 +160,6 @@ export default {
         ],
         name: '',
         describe: 'c',
-        development_type: '',
         scheduled_time: '',
         delivery_day: '',
         major_milestones: '',
@@ -159,6 +167,19 @@ export default {
         business_area: '',
         main_function: ''
       },
+      development_type_dict: [{
+          key: 'D',
+          value: '开发'
+        }, {
+          key: 'M',
+          value: '维护'
+        }, {
+          key: 'S',
+          value: '服务'
+        }, {
+          key: 'O',
+          value: '其他'
+        }],
       formLabelWidth: '100px'
     }
   },
@@ -181,7 +202,7 @@ export default {
     onSubmit () {
       let _this = this
       this.$axios
-        .post('/project/modify/save', {
+        .post('/project/create/save', {
           name: _this.form.name,
           describe: _this.form.describe,
           development_type: _this.form.development_type,

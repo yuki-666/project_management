@@ -67,18 +67,23 @@ def get_info(project_id=None, uid=None, keyword=None, detail=False, include_reje
     return [] if res == 'Empty' else res
 
 def get_info_include_work_time(uid):
+    # TODO:
+    # remain_work_time: remain largest work_time_id for same project_id
+
     # not include reject project
     # return (id, name, status, update_time, remain_work_time)
     p={}
-    p['select_key'] = ['project.id','project.name','project.status','project.update_time','work_time.remain']
+    p['select_key'] = ['project.id','project.name','project.status','project.update_time','work_time.remain as remain_work_time']
     p['tablename'] = 'project'
     p['join_tablename'] = ['work_time']
     p['on_key'] = ['work_time.project_id']
     p['on_value'] = ['project.id']
     p['key'] = ['work_time.worker_id']
     p['value'] = [' = ' + uid]
+    
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-    return db.selectDB(d.selectSql(p))
+    res = db.selectDB(d.selectSql(p))
+    return [] if res == 'Empty' else res
 
 def confirm(project_id, status):
     # check if project status is 1 (pending), return 'error' if not
@@ -122,6 +127,9 @@ def create(name, describe, development_type, scheduled_time, delivery_day, proje
     # 若是1位数前面添0, 若一个都没搜出来从1开始计数
     
     # id 由“四位年份-四位客户代码-研发类型 1 位（开发：D，维护：M，服务：S，其他：O）-顺序号 2 位”构成，且从外部系统导入，是一个选择项，不可更改。
+
+    # TODO:
+    # add (project_id, person_id, 0000, 0) in project_participant
     id = str(datetime.now().year) + '-' + str(custom_id) + '-' + development_type + '-' 
     p = {}
     p['select_key'] = ['max(id)']
@@ -136,8 +144,8 @@ def create(name, describe, development_type, scheduled_time, delivery_day, proje
  
     p.clear()
     p['tablename'] = 'project'
-    p['column'] = ['id','`name`','`describe`', 'scheduled_time', 'delivery_day', 'project_superior_id', 'customer_id','major_milestones', 'adopting_technology', 'business_area', 'main_function']
-    p['values'] = [id + sequence_number,name,describe, scheduled_time, delivery_day, project_superior_id, custom_id, major_milestones, adopting_technology, business_area, main_function]
+    p['column'] = ['id','`name`','`describe`', 'scheduled_time', 'delivery_day', 'project_superior_id', 'customer_id','major_milestones', 'adopting_technology', 'business_area', 'main_function', 'delete_label']
+    p['values'] = [id + sequence_number,name,describe, scheduled_time, delivery_day, project_superior_id, custom_id, major_milestones, adopting_technology, business_area, main_function, 0]
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     return db.otherDB(d.insertSql(p))
 

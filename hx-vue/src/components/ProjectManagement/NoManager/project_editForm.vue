@@ -16,8 +16,8 @@
         <el-form-item label="功能名称" :label-width="formLabelWidth" prop="function_name">
           <el-input v-model="form.function_name" autocomplete="off" disabled></el-input>
         </el-form-item>
-        <el-form-item label="活动名称" :label-width="formLabelWidth" prop="activity_name">
-          <el-input v-model="form.activity_name" autocomplete="off" disabled></el-input>
+        <el-form-item label="活动名称" :label-width="formLabelWidth" prop="event_name">
+          <el-input v-model="form.event_name" autocomplete="off" disabled></el-input>
         </el-form-item>
         <el-form-item label="开始时间" :label-width="formLabelWidth" prop="start_time">
           <el-input v-model="form.start_time" autocomplete="off" disabled></el-input>
@@ -73,7 +73,7 @@ export default {
         work_time_id: '',
         project_name: '',
         function_name: '',
-        activity_name: '',
+        event_name: '',
         start_time: '',
         end_time: '',
         date: '',

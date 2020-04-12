@@ -15,7 +15,7 @@ def project_mine():
     if not check_dict(request_data, ['uid', 'career']):
         return json.dumps('PARAM ERROR')
 
-    if request_data['career'] == config.career_project_manager:
+    if int(request_data['career']) == config.career_project_manager:
         data = project.get_info(uid=request_data['uid'], include_reject=True)
     else:
         data = project.get_info_include_work_time(request_data['uid'])
@@ -28,15 +28,16 @@ def project_mine():
 @project_access.route('/modify/show', methods=['GET'])
 def project_modify_show():
     request_data = get_value_dict()
-    if not check_dict(request_data, ['id']):
+    if not check_dict(request_data, ['project_id']):
         return json.dumps('PARAM ERROR')
 
-    data = project.get_info(project_id=request_data['id'], detail=True)
-    # TODO: drop status and update_time
+    data = project.get_info(project_id=request_data['project_id'], detail=True, include_reject=True)[0]
+    data_project_superior = user.get_project_superior()
 
     if has_error(data):
         return json.dumps('BACKEND ERROR')
     else:
+        data['project_superior'] = data_project_superior
         return json.dumps(data)
 
 @project_access.route('/modify/save', methods=['POST'])
@@ -88,7 +89,7 @@ def project_create_save():
     if has_error(data):
         return json.dumps('BACKEND ERROR')
     else:
-        return json.dumps(data)
+        return json.dumps({'status': data})
 
 @project_access.route('/work_time', methods=['GET'])
 def project_work_time():
@@ -96,7 +97,7 @@ def project_work_time():
     if not check_dict(request_data, ['uid', 'project_id']):
         return json.dumps('PARAM ERROR')
 
-    data = work_time.get_work_time_by_uid_project_id(request_data['uid'], request_data['project_id'])
+    data = work_time.get_info_by_uid_project_id(request_data['uid'], request_data['project_id'])
 
     if has_error(data):
         return json.dumps('BACKEND ERROR')

@@ -4,11 +4,16 @@ uid, career
 project_manager: id, name, status, update_time (default update_time)
 not_project_manager: id, name, status, update_time, remain_work_time (default update_time)
 
-修改项目(reject的不能修改)
+修改项目
 /project/modify/show (get)
 id(项目id)
 id, name, describe, 预定时间(scheduled_time), 交付日(delivery_day), 项目上级project_superior(project_superior_id, project_superior_name),\
     主要里程碑(major_milestones), 采用技术(adopting_technology), 业务领域(business_area), 主要功能(main_function)
+
+重新提交(只有项目经理)
+/approval/project/repush (post)
+id
+status: "ok"
 
 修改按钮里的保存按钮
 /project/modify/save (post)
@@ -27,5 +32,5 @@ status: "ok"
 工时页面
 /project/work_time (get)
 uid, project_id
-work_time_id, project_name, 功能名称(function_name), 活动名称(activity_name), 开始时间(start_time), 结束时间(end_time), \
+work_time_id, project_name, 功能名称(function_name), 活动名称(event_name), 开始时间(start_time), 结束时间(end_time), \
     date, work_time, remain, status, describe

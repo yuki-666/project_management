@@ -29,7 +29,6 @@ def project_detail_modify_show():
         return json.dumps('PARAM ERROR')
 
     data = project.get_info(project_id=request_data['id'], detail=True)
-    # TODO: drop status and update_time
 
     if has_error(data):
         return json.dumps('BACKEND ERROR')
@@ -138,8 +137,6 @@ def project_detail_project_worker():
         return json.dumps('PARAM ERROR')
     
     data = project.get_project_member(request_data['id'])
-    # TODO
-    # drop id, only get name
 
     if has_error(data):
         return json.dumps('BACKEND ERROR')
