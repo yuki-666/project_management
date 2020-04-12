@@ -82,7 +82,14 @@
           :label-width="formLabelWidth"
           prop="business_area"
         >
-          <el-input v-model="form.business_area" autocomplete="off"></el-input>
+          <el-select v-model="form.business_area" placeholder="请选择业务领域">
+            <el-option
+              v-for="item in form.business"
+              :key="item.business_id"
+              :label="item.business_name"
+              :value="item.business_id"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item
           label="主要功能"
@@ -123,11 +130,16 @@ export default {
         describe: 'c',
         scheduled_time: '',
         delivery_day: '',
-        // project_superior_id: '',
         project_superior: [
           {
             project_superior_id: '',
             project_superior_name: ''
+          }
+        ],
+        business: [
+          {
+            business_id: '',
+            business_name: ''
           }
         ],
         major_milestones: '',

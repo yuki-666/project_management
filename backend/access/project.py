@@ -33,11 +33,13 @@ def project_modify_show():
 
     data = project.get_info(project_id=request_data['project_id'], detail=True, include_reject=True)[0]
     data_project_superior = user.get_project_superior()
+    data_business = project.get_business_area()
 
     if has_error(data):
         return json.dumps('BACKEND ERROR')
     else:
         data['project_superior'] = data_project_superior
+        data['business'] = data_business
         return json.dumps(data)
 
 @project_access.route('/modify/save', methods=['POST'])
@@ -65,6 +67,7 @@ def project_create_show():
 
     data_project_superior = user.get_project_superior()
     data_custom = user.get_custom()
+    data_business = project.get_business_area()
 
     if has_error(data_project_superior) or has_error(data_custom):
         return json.dumps('BACKEND ERROR')
@@ -72,6 +75,7 @@ def project_create_show():
         data = {}
         data['project_superior'] = data_project_superior
         data['custom'] = data_custom
+        data['business'] = data_business
         return json.dumps(data)
 
 @project_access.route('/create/save', methods=['POST'])
