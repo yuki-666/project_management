@@ -14,6 +14,11 @@
         @filter-change="filterTagTable"
       >
         <el-table-column label="工时id" prop="id" sortable></el-table-column>
+         <el-table-column
+          label="项目名称"
+          prop="project_name"
+          sortable
+        ></el-table-column>
         <el-table-column
           label="worker_name"
           prop="worker_name"
@@ -102,6 +107,7 @@ export default {
       projects: [
         {
           id: '',
+          project_name: '',
           worker_name: '',
           function_name: '',
           event_name: '',
@@ -133,6 +139,7 @@ export default {
           let status = successResponse.data.status
           if (status === 'ok') {
             _this.dialogFormVisible = false
+            this.getAllProjects()
             this.$message.success('已经更新')
           }
         })

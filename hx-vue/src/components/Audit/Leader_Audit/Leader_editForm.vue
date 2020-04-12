@@ -7,8 +7,19 @@
       center
     >
       <el-form :model="form">
-        <el-form-item
+         <el-form-item
           label="项目名称"
+          :label-width="formLabelWidth"
+          prop="project_name"
+        >
+          <el-input
+            v-model="form.project_name"
+            autocomplete="off"
+            disabled
+          ></el-input>
+        </el-form-item>
+        <el-form-item
+          label="function_name"
           :label-width="formLabelWidth"
           prop="function_name"
         >
@@ -80,6 +91,7 @@ export default {
       endDatePicker: this.endDate(),
       form: {
         id: '',
+        project_name: '',
         function_name: '',
         event_name: 'c',
         start_time: '',
@@ -112,6 +124,7 @@ export default {
       this.$axios
         .post('/approval/work_time/passive/modify', {
           id: _this.zid,
+          project_name: _this.form.project_name,
           function_name: _this.form.function_name,
           event_name: _this.form.event_name,
           start_time: _this.dateFormat(_this.form.start_time),
