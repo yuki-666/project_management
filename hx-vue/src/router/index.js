@@ -9,6 +9,8 @@ import MyIndex from '../components/home/MyIndex'
 import MyAuidt from '../components/Audit/Audit_Index'
 import ManagerRAuidt from '../components/Audit/Manager_Audit/Manager_r_audit.vue'
 import ManagerRWorkTime from '../components/Audit/Manager_Audit/Manager_r_workTime.vue'
+import ProDetail from '../components/Project_Details/ProDetail_Index.vue'
+// import ProDetailINFO from '../components/Project_Details/ProDetail_Info.vue'
 
 Vue.use(Router)
 
@@ -58,6 +60,14 @@ export default new Router({
           path: '/my_audit',
           name: 'MyAuidt',
           component: MyAuidt,
+          meta: {
+            requireAuth: true
+          }
+        },
+        {
+          path: '/project_Detail',
+          name: 'ProDetail',
+          component: ProDetail,
           meta: {
             requireAuth: true
           }
