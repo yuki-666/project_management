@@ -70,7 +70,7 @@ export default new Router({
           name: 'ProDetail',
           component: ProDetail
         },
-        {  
+        {
           path: '/project_management',
           name: 'ProjectManagement',
           component: ProjectManagement,
