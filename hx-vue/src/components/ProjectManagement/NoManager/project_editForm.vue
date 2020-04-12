@@ -9,16 +9,16 @@
     >
       <div class="project_table">
         <el-table :data="form" style="width:100%" stripe>
-          <el-table-column label="项目id" prop="id"></el-table-column>
+          <el-table-column label="项目id" prop="project_id"></el-table-column>
           <el-table-column
             label="work_time_id"
             :label-width="formLabelWidth"
-            prop="name"
+            prop="work_time_id"
           ></el-table-column>
           <el-table-column
             label="project_name"
             :label-width="formLabelWidth"
-            prop="name"
+            prop="project_name"
           ></el-table-column>
           <el-table-column
             label="功能名称"
@@ -28,7 +28,7 @@
           <el-table-column
             label="活动名称"
             :label-width="formLabelWidth"
-            prop="activity_name"
+            prop="event_name"
           ></el-table-column>
           <el-table-column
             label="开始时间"
@@ -56,7 +56,7 @@
             prop="remain"
           ></el-table-column>
           <el-table-column
-            label="项目状态"
+            label="审批状态"
             prop="status"
             column-key="status"
           >
@@ -73,121 +73,6 @@
           ></el-table-column>
         </el-table>
       </div>
-      <!-- <el-form :model="form">
-        <el-form-item
-          label="work_time_id"
-          :label-width="formLabelWidth"
-          prop="work_time_id"
-        >
-          <el-input
-            v-model="form.work_time_id"
-            autocomplete="off"
-            disabled
-          ></el-input>
-        </el-form-item>
-        <el-form-item
-          label="project_name"
-          :label-width="formLabelWidth"
-          prop="project_name"
-        >
-          <el-input
-            v-model="form.project_name"
-            autocomplete="off"
-            disabled
-          ></el-input>
-        </el-form-item>
-        <el-form-item
-          label="功能名称"
-          :label-width="formLabelWidth"
-          prop="function_name"
-        >
-          <el-input
-            v-model="form.function_name"
-            autocomplete="off"
-            disabled
-          ></el-input>
-        </el-form-item>
-        <el-form-item
-          label="活动名称"
-          :label-width="formLabelWidth"
-          prop="activity_name"
-        >
-          <el-input
-            v-model="form.activity_name"
-            autocomplete="off"
-            disabled
-          ></el-input>
-        </el-form-item>
-        <el-form-item
-          label="开始时间"
-          :label-width="formLabelWidth"
-          prop="start_time"
-        >
-          <el-input
-            v-model="form.start_time"
-            autocomplete="off"
-            disabled
-          ></el-input>
-        </el-form-item>
-        <el-form-item
-          label="结束时间"
-          :label-width="formLabelWidth"
-          prop="end_time"
-        >
-          <el-input
-            v-model="form.end_time"
-            autocomplete="off"
-            disabled
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="date" :label-width="formLabelWidth" prop="date">
-          <el-input v-model="form.date" autocomplete="off" disabled></el-input>
-        </el-form-item>
-        <el-form-item
-          label="work_time"
-          :label-width="formLabelWidth"
-          prop="work_time"
-        >
-          <el-input
-            v-model="form.work_time"
-            autocomplete="off"
-            disabled
-          ></el-input>
-        </el-form-item>
-        <el-form-item
-          label="remain"
-          :label-width="formLabelWidth"
-          prop="remain"
-        >
-          <el-input
-            v-model="form.remain"
-            autocomplete="off"
-            disabled
-          ></el-input>
-        </el-form-item>
-        <el-form-item
-          label="status"
-          :label-width="formLabelWidth"
-          prop="status"
-        >
-          <el-input
-            v-model="form.status"
-            autocomplete="off"
-            disabled
-          ></el-input>
-        </el-form-item>
-        <el-form-item
-          label="describe"
-          :label-width="formLabelWidth"
-          prop="describe"
-        >
-          <el-input
-            v-model="form.describe"
-            autocomplete="off"
-            disabled
-          ></el-input>
-        </el-form-item>
-      </el-form> -->
       <div slot="footer" class="dialog-footer">
         <el-button @click="closeDialog">取 消</el-button>
       </div>
@@ -221,23 +106,16 @@ export default {
       filter_status: [
         { text: 'rejection', value: 0 },
         { text: 'pending', value: 1 },
-        { text: 'established', value: 2 },
-        { text: 'processing', value: 3 },
-        { text: 'paid', value: 4 },
-        { text: 'finished', value: 5 },
-        { text: 'archived', value: 6 }
+        { text: 'approved', value: 2 }
       ],
       FLOWS_STATUS: [
         'rejection',
         'pending',
-        'established',
-        'processing',
-        'paid',
-        'finished',
-        'archived'
+        'approved'
       ],
       form: [
         {
+          project_id: '',
           work_time_id: '',
           project_name: '',
           function_name: '',
