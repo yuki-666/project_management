@@ -107,3 +107,32 @@ def project_work_time():
         return json.dumps('BACKEND ERROR')
     else:
         return json.dumps(data)
+
+@project_access.route('/work_time/create/show', methods=['GET'])
+def project_work_time_create_show():
+    request_data = get_value_dict()
+    if not check_dict(request_data, ['uid', 'project_id']):
+        return json.dumps('PARAM ERROR')
+
+    data = project.get_function(request_data['project_id'], worker_id=request_data['uid'])
+
+    if has_error(data):
+        return json.dumps('BACKEND ERROR')
+    else:
+        return json.dumps(data)
+
+@project_access.route('/work_time/create/save', methods=['POST'])
+def project_work_time_create_save():
+    request_data = get_value_dict()
+    if not check_dict(request_data, ['uid', 'project_id', 'date', 'function_id', 'event_name', \
+                                     'start_time', 'end_time', 'remain', 'describe']):
+        return json.dumps('PARAM ERROR')
+
+    data = work_time.create(request_data['uid'], request_data['project_id'], request_data['date'], \
+        request_data['function_id'], request_data['event_name'], request_data['start_time'], request_data['end_time'], \
+        request_data['remain'], request_data['describe'])
+
+    if has_error(data):
+        return json.dumps('BACKEND ERROR')
+    else:
+        return json.dumps({'status': data})
