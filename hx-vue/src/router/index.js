@@ -7,6 +7,7 @@ import Home from '../components/Home'
 import LibraryIndex from '../components/library/LibraryIndex'
 import MyIndex from '../components/home/MyIndex'
 import MyAuidt from '../components/Audit/Audit_Index'
+import ProjectManagement from '../components/ProjectManagement/project_index'
 import ManagerRAuidt from '../components/Audit/Manager_Audit/Manager_r_audit.vue'
 import ManagerRWorkTime from '../components/Audit/Manager_Audit/Manager_r_workTime.vue'
 import ProDetail from '../components/Project_Details/ProDetail_Index.vue'
@@ -67,7 +68,12 @@ export default new Router({
         {
           path: '/project_Detail',
           name: 'ProDetail',
-          component: ProDetail,
+          component: ProDetail
+        },
+        {  
+          path: '/project_management',
+          name: 'ProjectManagement',
+          component: ProjectManagement,
           meta: {
             requireAuth: true
           }

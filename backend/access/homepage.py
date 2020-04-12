@@ -23,7 +23,11 @@ def homepage_login():
             return json.dumps({'status': data})
         else:
             status, ret = data
+
             ret['status'] = status
+            ret['uid'] = ret['id']
+            ret.pop('id')
+
             return json.dumps(ret)
 
 @homepage_access.route('/search', methods=['POST'])
@@ -33,7 +37,7 @@ def homepage_search():
         return json.dumps('PARAM ERROR')
 
     data = project.get_info(keyword=request_data['keyword'])
-    data = [i['id'] for i in data]
+    data = [{'id': i['id']} for i in data]
 
     if has_error(data):
         return json.dumps('BACKEND ERROR')

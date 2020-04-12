@@ -4,10 +4,8 @@
       <side-menu @indexSelect="listByCategory" ref="sideMenu"></side-menu>
     </el-aside>
     <el-main>
-      <!-- <manager-r-audit v-show="this.$refs.sideMenu.cid == 0"></manager-r-audit>
-      <manager-r-audit v-show="this.$refs.sideMenu.cid == 1"></manager-r-audit> -->
-      <manager-r-audit v-show="this.flag == '0'"></manager-r-audit>
-      <manager-r-work-time v-show="this.flag == '1'"></manager-r-work-time>
+      <manager-r-audit v-if="this.flag == '0'"></manager-r-audit>
+      <manager-r-work-time v-else-if="this.flag == '1'"></manager-r-work-time>
     </el-main>
   </el-container>
 </template>
@@ -30,8 +28,6 @@ export default {
   },
   methods: {
     listByCategory () {
-      console.log('hhhh')
-      console.log(this.$refs.sideMenu.cid)
       this.flag = '0'
       // eslint-disable-next-line eqeqeq
       if (this.$refs.sideMenu.cid == '0') {
@@ -39,9 +35,6 @@ export default {
       } else {
         this.flag = '1'
       }
-      // if(this.$refs.sideMenu.cid==0){
-
-      // }
     }
   }
 }
