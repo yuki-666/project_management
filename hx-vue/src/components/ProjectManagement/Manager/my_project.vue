@@ -43,8 +43,13 @@
             <el-button
               size="mini"
               @click="handleEdit(scope.$index, scope.row)"
-              :disabled="setButtonFlag(scope.row)"
               >修改</el-button
+            >
+             <el-button
+              size="mini"
+              @click="handleEdit2(scope.$index, scope.row)"
+              :disabled="setButtonFlag(scope.row)"
+              >重新提交</el-button
             >
           </template>
         </el-table-column>
@@ -119,7 +124,7 @@ export default {
         {
           id: '',
           name: '',
-          status: '',
+          'status': '',
           update_time: ''
         }
       ]
@@ -130,39 +135,52 @@ export default {
       this.getNewInfo()
       this.newFormVisible = true
     },
-    getNewInfo () {
-      let _this = this
-      this.$axios
-        .get('/project/create/show', {
-          params: {
-            uid: _this.uid
-          }
-        })
-        .then(successResponse => {
-          _this.$refs.edit_new.form = successResponse.data
-        })
-    },
     setButtonFlag (row) {
       if (!this.projects[row.id]) {
         return false
       }
       // eslint-disable-next-line eqeqeq
       if (this.projects[row.id].status == 0) {
-        return true
+        return false
       }
-      return false
+      return true
     },
     getAllInfo () {
       let _this = this
       this.$axios
         .get('/project/modify/show', {
           params: {
-            uid: _this.uid,
-            project_id: _this.tmpId
+            id: _this.tmpId
           }
         })
         .then(successResponse => {
           _this.$refs.edit.form = successResponse.data
+        })
+    },
+    handleEdit2 (index, row) {
+      let _this = this
+      this.$refs.edit.form = {
+        id: row.id
+      }
+      this.tmpId = row.id
+      this.$refs.edit.form.id = row.id
+      this.$confirm('此操作将重新提交, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          this.$axios.post('/approval/project/repush', { id: _this.tmpId }).then(resp => {
+            if (resp.status === 'ok') {
+              this.getAllProjects()
+            }
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
         })
     },
     handleEdit (index, row) {
@@ -250,9 +268,5 @@ export default {
 }
 .pag {
   margin: 5px 70%;
-}
-.newProject{
-    margin-bottom:10px;
-    margin-left:60%;
 }
 </style>
