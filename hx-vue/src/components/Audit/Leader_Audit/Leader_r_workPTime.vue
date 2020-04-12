@@ -14,6 +14,11 @@
       >
         <el-table-column label="工时id" prop="id" sortable></el-table-column>
         <el-table-column
+          label="项目名称"
+          prop="project_name"
+          sortable
+        ></el-table-column>
+        <el-table-column
           label="function_name"
           prop="function_name"
           sortable
@@ -108,6 +113,7 @@ export default {
       projects: [
         {
           id: '',
+          project_name: '',
           function_name: '',
           event_name: '',
           start_time: '',
@@ -138,6 +144,7 @@ export default {
             .post('/approval/work_time/passive/delete', { id: _this.tmpId })
             .then(resp => {
               if (resp.data.status === 'ok') {
+                this.getAllProjects()
                 this.$message.success('已经删除')
               }
             })

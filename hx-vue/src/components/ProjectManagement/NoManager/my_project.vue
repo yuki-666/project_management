@@ -12,51 +12,44 @@
         stripe
         @filter-change="filterTagTable"
       >
-        <el-table-column label="工时id" prop="id" sortable></el-table-column>
+        <el-table-column label="项目id" prop="id" sortable></el-table-column>
         <el-table-column
           label="项目名称"
-          prop="project_name"
+          prop="name"
           sortable
         ></el-table-column>
         <el-table-column
-          label="function_name"
-          prop="function_name"
-          sortable
-        ></el-table-column>
-        <el-table-column
-          label="event_name"
-          prop="event_name"
-          sortable
-        ></el-table-column>
-        <el-table-column
-          label="start_time"
-          prop="start_time"
-          :sortable="true"
-          :sort-method="sortByDate"
-        ></el-table-column>
-        <el-table-column
-          label="end_time"
-          prop="end_time"
-          :sortable="true"
-          :sort-method="sortByDate2"
-        ></el-table-column>
-        <el-table-column label="status" prop="status"
-          ><template slot-scope="props">
+          label="项目状态"
+          prop="status"
+          column-key="status"
+          :filters="filter_status"
+          filter-placement="bottom-end"
+        >
+          <template slot-scope="props">
             <zx-tag :type="FlowStatusRules[props.row.status]">
               {{ FLOWS_STATUS[props.row.status] }}
             </zx-tag>
           </template>
         </el-table-column>
+        <el-table-column
+          label="更新时间"
+          prop="update_time"
+          :sortable="true"
+          :sort-method="sortByDate"
+        ></el-table-column>
+        <el-table-column
+          label="remain时间"
+          prop="remain_work_time"
+          :sortable="true"
+          :sort-method="sortByDate"
+        ></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
-              >修改</el-button
-            >
             <el-button
               size="mini"
-              type="danger"
-              @click="handleDelete(scope.$index, scope.row)"
-              >删除</el-button
+              @click="handleEdit(scope.$index, scope.row)"
+              :disabled="setButtonFlag(scope.row)"
+              >查看工时</el-button
             >
           </template>
         </el-table-column>
@@ -74,15 +67,15 @@
     <edit-form
       :show.sync="dialogFormVisible"
       :zid="tmpId"
-      @updateAgain="this.getAllInfo"
+      @updateAgain="getAllProjects"
       ref="edit"
     ></edit-form>
   </div>
 </template>
 
 <script>
-import EditForm from './Worker_editForm'
-import SideMenu from './Worker_SideMenu'
+import EditForm from './project_editForm'
+import SideMenu from './NoManger_SideMenu'
 import { FlowStatusRules } from '../../home/rule/data-config'
 import ZxTag from '../../tag'
 export default {
@@ -94,11 +87,12 @@ export default {
   },
   data () {
     return {
-      // arr: [],
+      buttonFlag: false,
       select: '',
+      tmpId: '-1',
       dialogFormVisible: false,
       uid: 0,
-      tmpId: '-1',
+      career: -1,
       tableDataTmp: [],
       currentPage: 1,
       pagesize: 5,
@@ -107,65 +101,55 @@ export default {
       filter_status: [
         { text: 'rejection', value: 0 },
         { text: 'pending', value: 1 },
-        { text: 'approved', value: 2 }
+        { text: 'established', value: 2 },
+        { text: 'processing', value: 3 },
+        { text: 'paid', value: 4 },
+        { text: 'finished', value: 5 },
+        { text: 'archived', value: 6 }
       ],
-      FLOWS_STATUS: ['驳回', '审批中', '已审批'],
+      FLOWS_STATUS: [
+        'rejection',
+        'pending',
+        'established',
+        'processing',
+        'paid',
+        'finished',
+        'archived'
+      ],
       projects: [
         {
           id: '',
-          project_name: '',
-          function_name: '',
-          event_name: '',
-          start_time: '',
-          end_time: '',
-          status: ''
+          name: '',
+          'status': '',
+          update_time: '',
+          remain_work_time: ''
         }
       ]
     }
   },
   methods: {
-    handleDelete (index, row) {
-      let _this = this
-      this.$confirm('此操作将永久删除该书籍, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(() => {
-          // 前端删除 仅供测试
-          let tmp = { id: row.id }
-          let tmpArr = [tmp]
-          _this.projects = _this.projects.filter(item =>
-            tmpArr.every(ele => ele.id !== item.id)
-          )
-          _this.tmpId = row.id
-          // 后端删除
-          this.$axios
-            .post('/approval/work_time/passive/delete', { id: _this.tmpId })
-            .then(resp => {
-              if (resp.data.status === 'ok') {
-                this.getAllProjects()
-                this.$message.success('已经删除')
-              }
-            })
-        })
-        .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
-        })
+    setButtonFlag (row) {
+      if (!this.projects[row.id]) {
+        return false
+      }
+      // eslint-disable-next-line eqeqeq
+      if (this.projects[row.id].status == 0) {
+        return true
+      }
+      return false
     },
     getAllInfo () {
       let _this = this
       this.$axios
-        .get('/approval/work_time/passive/show', {
+        .get('/project/work_time', {
           params: {
-            id: _this.tmpId
+            uid: _this.uid,
+            project_id: _this.tmpId
           }
         })
         .then(successResponse => {
           _this.$refs.edit.form = successResponse.data
+          _this.$refs.edit.form.status = _this.FLOWS_STATUS[successResponse.data.status]
         })
     },
     handleEdit (index, row) {
@@ -197,17 +181,8 @@ export default {
       this.currentPage = currentPage
     },
     sortByDate (obj1, obj2, column) {
-      var a = Date.parse(obj1.start_time)
-      var b = Date.parse(obj2.start_time)
-      if (a > b) {
-        return -1
-      } else {
-        return 1
-      }
-    },
-    sortByDate2 (obj1, obj2, column) {
-      var a = Date.parse(obj1.end_time)
-      var b = Date.parse(obj2.end_time)
+      var a = Date.parse(obj1.update_time)
+      var b = Date.parse(obj2.update_time)
       if (a > b) {
         return -1
       } else {
@@ -218,21 +193,22 @@ export default {
     getAllProjects () {
       var _this = this
       this.$axios
-        .get('/approval/work_time/passive', {
+        .get('/project/mine', {
           params: {
-            uid: _this.uid
+            uid: _this.uid,
+            career: _this.career
           }
         })
         .then(successResponse => {
           _this.projects = successResponse.data
           _this.tableDataTmp = successResponse.data
         })
-        .catch(failResponse => {
-        })
+        .catch(failResponse => {})
     }
   },
   created () {
     this.uid = this.$store.getters.uid
+    this.career = this.$store.getters.career
     this.getAllProjects()
   }
 }
