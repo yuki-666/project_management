@@ -149,7 +149,7 @@ export default {
         })
         .then(successResponse => {
           _this.$refs.edit.form = successResponse.data
-          _this.$refs.edit.form.status = _this.FLOWS_STATUS[successResponse.data.status]
+          // _this.$refs.edit.form.status = _this.FLOWS_STATUS[successResponse.data.status]
         })
     },
     handleEdit (index, row) {
