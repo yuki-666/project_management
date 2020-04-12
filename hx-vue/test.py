@@ -20,6 +20,7 @@ def get_value_dict():
 @app.route(base_route + '/homepage/login', methods=['POST'])
 def homepage_login():
     request_data = get_value_dict()
+    print(request_data)
     
     ret = {}
     ret['status'], ret['uid'], ret['career'] = 0, 123, 0
