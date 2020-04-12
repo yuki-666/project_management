@@ -142,10 +142,11 @@ def create(name, describe, development_type, scheduled_time, delivery_day, proje
     return db.otherDB(d.insertSql(p))
 
 def repush(project_id):
-    # TODO
     # check status == 0 (rejection), return 'error' if not
     # set status to 1 (pending)
-    return 'ok'
+    sql = f'''update project set status=1 where status = 0 and id = '{project_id}';'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    return 'error' if db.otherDB(sql) == 'none' else 'ok'
 
 def get_function(project_id):
     # get function list from project_id
