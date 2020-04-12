@@ -128,14 +128,10 @@ export default {
   },
   methods: {
     setButtonFlag2 (row) {
-      if (!this.projects[row.id]) {
+      if (row.status === 0) {
         return false
       }
-      // eslint-disable-next-line eqeqeq
-      if (this.projects[row.id].status == 0) {
-        return true
-      }
-      return false
+      return true
     },
     setButtonFlag (row) {
       if (!this.projects[row.id]) {
@@ -173,7 +169,7 @@ export default {
       })
         .then(() => {
           this.$axios.post('/approval/project/repush', { id: _this.tmpId }).then(resp => {
-            if (resp.status === 'ok') {
+            if (resp.data.status === 'ok') {
               this.getAllProjects()
             }
           })
@@ -181,7 +177,7 @@ export default {
         .catch(() => {
           this.$message({
             type: 'info',
-            message: '已取消删除'
+            message: '已取消提交'
           })
         })
     },
