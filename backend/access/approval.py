@@ -102,9 +102,6 @@ def approval_work_time_initiative():
         return json.dumps('PARAM ERROR')
 
     data = work_time.get_info_by_uid(request_data['uid'], is_superior=True)
-    for i in range(len(data)):
-        data[i]['worker_name'] = data[i]['name']
-        data[i].pop('name')
 
     if has_error(data):
         return json.dumps('BACKEND ERROR')
@@ -153,7 +150,6 @@ def approval_work_time_passive():
 @approval_access.route('/work_time/passive/show', methods=['GET'])
 def approval_work_time_passive_show():
     request_data = get_value_dict()
-
     if not check_dict(request_data, ['id']):
         return json.dumps('PARAM ERROR')
     
@@ -167,7 +163,6 @@ def approval_work_time_passive_show():
 @approval_access.route('/work_time/passive/modify', methods=['POST'])
 def approval_work_time_passive_modify():
     request_data = get_value_dict()
-    print(request_data)
     if not check_dict(request_data, ['id', 'event_name', 'start_time', 'end_time']):
         return json.dumps('PARAM ERROR')
 
