@@ -29,3 +29,7 @@ status: "ok"
 /back/show_normal_account (get)
 username
 username, name, career, department
+
+/back/show_super_account (get)
+username
+username, password

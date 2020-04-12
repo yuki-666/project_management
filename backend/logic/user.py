@@ -9,7 +9,6 @@ import util.db as d
 def get_project_superior():
     sql = 'select id as project_superior_id, name as project_superior_name from employee where career = 0'
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-    res = db.selectDB(sql)
     return res
 
 def get_custom():
@@ -70,6 +69,11 @@ def get_normal_account():
                 record['career'] = 'worker'
             else:
                 record['career'] = 'leader'
+    return res
+
+def get_super_account():
+    sql = 'select username, password from super_login;'
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     return res
 
 def create_super_account(username, password):

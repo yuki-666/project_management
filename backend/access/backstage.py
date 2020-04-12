@@ -86,6 +86,19 @@ def back_show_normal_account():
     else:
         return json.dumps(data)
 
+@backstage_access.route('/show_super_account', methods=['GET'])
+def back_show_super_account():
+    request_data = get_value_dict()
+    if not check_dict(request_data, ['username']):
+        return json.dumps('PARAM ERROR')
+
+    data = user.get_super_account()
+
+    if has_error(data):
+        return json.dumps('BACKEND ERROR')
+    else:
+        return json.dumps(data)
+
 @backstage_access.route('/export_normal_account_sample', methods=['GET'])
 def back_export_normal_account_sample():
     request_data = get_value_dict()
