@@ -7,11 +7,11 @@ id, name, status, update_time, describe, scheduled_time, delivery_day, project_s
 /project_detail/modify/show (get)
 id(项目id)
 id, name, describe, 预定时间(scheduled_time), 交付日(delivery_day), 项目上级(project_superior_name),\
-    主要里程碑(major_milestones), 采用技术(adopting_technology), 业务领域(business_area), 主要功能(main_function)
+    主要里程碑(major_milestones), 采用技术(adopting_technology), business(business_id, business_name), 主要功能(main_function)
 
 修改按钮里的保存按钮
 /project_detail/modify/save (post)
-id, name, describe, scheduled_time, delivery_day, project_superior_name, major_milestones, adopting_technology, business_area, main_function
+id, name, describe, scheduled_time, delivery_day, project_superior_name, major_milestones, adopting_technology, business_area(id), main_function
 status: "ok"
 
 任务分配

@@ -144,8 +144,8 @@ def create(name, describe, development_type, scheduled_time, delivery_day, proje
  
     p.clear()
     p['tablename'] = 'project'
-    p['column'] = ['id','`name`','`describe`', 'scheduled_time', 'delivery_day', 'project_superior_id', 'customer_id','major_milestones', 'adopting_technology', 'business_area', 'main_function', 'delete_label']
-    p['values'] = [id + sequence_number,name,describe, scheduled_time, delivery_day, project_superior_id, custom_id, major_milestones, adopting_technology, business_area, main_function, 0]
+    p['column'] = ['id','`name`', '`status`', '`describe`', 'scheduled_time', 'delivery_day', 'project_superior_id', 'customer_id','major_milestones', 'adopting_technology', 'business_area', 'main_function', 'delete_label']
+    p['values'] = [id + sequence_number,name, 1, describe, scheduled_time, delivery_day, project_superior_id, custom_id, major_milestones, adopting_technology, business_area, main_function, 0]
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     return db.otherDB(d.insertSql(p))
 
@@ -404,6 +404,11 @@ def modify_authority(project_id, uid, git_authority, file_authority, mail_author
     if db.otherDB(d.updateSql(p)) == 'ok':
         return 'ok'
     return 'error'
+
+def get_business_area():
+    sql = 'select id as business_id, name as business_name from business_area where delete_label=0;'
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    return db.selectDB(sql)
 
 if __name__ == '__main__':
     print(get_info(keyword='系统', include_reject=True))

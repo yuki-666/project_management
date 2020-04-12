@@ -17,16 +17,16 @@ status: "ok"
 
 修改按钮里的保存按钮
 /project/modify/save (post)
-id, name, describe, scheduled_time, delivery_day, project_superior_id, major_milestones, adopting_technology, business_area, main_function
+id, name, describe, scheduled_time, delivery_day, project_superior_id, major_milestones, adopting_technology, business_area(id), main_function
 status: "ok"
 
 新建项目
 /project/create/show (get)
 uid
-项目上级project_superior(project_superior_id, project_superior_name), 客户cumtom(custom_id, company_name)
+项目上级project_superior(project_superior_id, project_superior_name), 客户cumtom(custom_id, company_name), business(business_id, business_name)
 
 /project/create/save (post)
-name, describe, development_type, scheduled_time, delivery_day, project_superior_id, custom_id, major_milestones, adopting_technology, business_area, main_function
+name, describe, development_type, scheduled_time, delivery_day, project_superior_id, custom_id, major_milestones, adopting_technology, business_area(id), main_function
 status: "ok"
 
 工时页面

@@ -58,7 +58,7 @@ def get_info_by_work_time_id(work_time_id):
     
 def get_info_by_uid_project_id(uid, project_id):
     sql = f'''
-           select distinct work_time.id as work_time_id, project.name as project_name, project_function.function_name, work_time.event_name, work_time.start_time, work_time.end_time, work_time.date, timestampdiff(minute,work_time.start_time,work_time.end_time) as work_time, work_time.remain, work_time.status, work_time.describe
+           select distinct work_time.id as work_time_id, project.id as project_id, project.name as project_name, project_function.function_name, work_time.event_name, work_time.start_time, work_time.end_time, work_time.date, timestampdiff(minute,work_time.start_time,work_time.end_time) as work_time, work_time.remain, work_time.status, work_time.describe
            from achieveit.work_time
            join achieveit.project on project.id=work_time.project_id
            join achieveit.project_function on project_function.id=work_time.function_id

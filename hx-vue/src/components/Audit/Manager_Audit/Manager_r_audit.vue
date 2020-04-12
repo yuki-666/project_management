@@ -45,6 +45,12 @@
               :disabled="setButtonFlag(scope.row)"
               >修改</el-button
             >
+             <el-button
+              size="mini"
+              @click="handleEdit2(scope.$index, scope.row)"
+              :disabled="setButtonFlag2(scope.row)"
+              >重新提交</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -121,6 +127,12 @@ export default {
     }
   },
   methods: {
+    setButtonFlag2 (row) {
+      if (row.status === 0) {
+        return false
+      }
+      return true
+    },
     setButtonFlag (row) {
       if (!this.projects[row.id]) {
         return false
@@ -141,6 +153,32 @@ export default {
         })
         .then(successResponse => {
           _this.$refs.edit.form = successResponse.data
+        })
+    },
+    handleEdit2 (index, row) {
+      let _this = this
+      this.$refs.edit.form = {
+        id: row.id
+      }
+      this.tmpId = row.id
+      this.$refs.edit.form.id = row.id
+      this.$confirm('此操作将重新提交, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          this.$axios.post('/approval/project/repush', { id: _this.tmpId }).then(resp => {
+            if (resp.data.status === 'ok') {
+              this.getAllProjects()
+            }
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消提交'
+          })
         })
     },
     handleEdit (index, row) {

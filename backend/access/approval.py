@@ -39,6 +39,7 @@ def approval_project_show():
 
     data_project = project.get_info(project_id=request_data['id'], detail=True, include_reject=True)[0]
     data_project_superior = user.get_project_superior()
+    data_business = project.get_business_area()
     data_project.pop('project_superior_name')
 
     if has_error(data_project) or has_error(data_project_superior):
@@ -46,6 +47,7 @@ def approval_project_show():
     else:
         data = data_project
         data['project_superior'] = data_project_superior
+        data['business'] = data_business
         return json.dumps(data)
 
 @approval_access.route('/project/modify', methods=['POST'])
