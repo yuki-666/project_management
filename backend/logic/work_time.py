@@ -13,16 +13,16 @@ def get_info_by_uid(uid, is_superior=False, include_finished=False):
 
     if is_superior:
         sql = f'''
-               select distinct work_time.id, employee.name, project_function.function_name, work_time.event_name, work_time.start_time, work_time.end_time,project.name
+               select distinct work_time.id, employee.name as worker_name, project_function.function_name, work_time.event_name, work_time.start_time, work_time.end_time, project.name as project_name
                from work_time
                join employee on work_time.worker_id=employee.id
                join project_function on work_time.function_id=project_function.id
-               join project_participant on project_participant.worker_id=work_time.worker_id
+               join project_participant on project_participant.person_id=work_time.worker_id
                join project on project.id = work_time.project_id
                where work_time.delete_label=0 and project_participant.leader_id=\'{uid}\';'''
     else:
         sql = f'''
-               select distinct work_time.id, employee.name, project_function.function_name, work_time.event_name, work_time.start_time, work_time.end_time, status,project.name
+               select distinct work_time.id, employee.name as worker_name, project_function.function_name, work_time.event_name, work_time.start_time, work_time.end_time, work_time.status, project.name as project_name
                from work_time
                join employee on work_time.worker_id=employee.id
                join project_function on work_time.function_id=project_function.id
@@ -38,7 +38,7 @@ def get_info_by_uid(uid, is_superior=False, include_finished=False):
 
 def get_info_by_work_time_id(work_time_id):
     para_dict = {}
-    para_dict['select_key'] = ['work_time.id', 'employee.name', 'project_function.function_name', 'work_time.event_name', 'work_time.start_time', 'work_time.end_time','work_time.delete_label','project.name']
+    para_dict['select_key'] = ['work_time.id', 'employee.name', 'project_function.function_name', 'work_time.event_name', 'work_time.start_time', 'work_time.end_time','work_time.delete_label','project.name as project_name']
     para_dict['select_value'] = []
     para_dict['tablename'] = 'work_time'
     para_dict['key'] = ['work_time.id','work_time.delete_label']
@@ -57,22 +57,18 @@ def get_info_by_work_time_id(work_time_id):
     # check if work_time_id exist, return 'error' if not
     
 def get_info_by_uid_project_id(uid, project_id):
-    para_dict = {}
-    para_dict['select_key'] = ['work_time.id', 'project.name', 'project_function.function_name', 'work_time.event_name',\
-     'work_time.start_time', 'work_time.end_time','work_time.date','timestampdiff(minute,work_time.start_time,work_time.end_time) as workTime','work_time.remain','work_time.status','work_time.describe']
-    para_dict['tablename'] = 'work_time'
-    para_dict['join_tablename'] = ['project','project_function']
-    para_dict['on_key'] = ['project.id','project_function.id']
-    para_dict['on_value'] = ['work_time.project_id','work_time.function_id']
-    para_dict['key'] = ['work_time.worker_id','work_time.project_id']
-    para_dict['value'] = [' = '+uid,' = '+project_id]
-    
+    sql = f'''
+           select distinct work_time.id as work_time_id, project.name as project_name, project_function.function_name, work_time.event_name, work_time.start_time, work_time.end_time, work_time.date, timestampdiff(minute,work_time.start_time,work_time.end_time) as work_time, work_time.remain, work_time.status, work_time.describe
+           from achieveit.work_time
+           join achieveit.project on project.id=work_time.project_id
+           join achieveit.project_function on project_function.id=work_time.function_id
+           where work_time.worker_id={uid} and work_time.project_id={project_id} and work_time.delete_label=0;'''
+
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-    res = db.selectDB(d.selectSql(para_dict))
+    res = db.selectDB(sql)
     for record in res:
-        record['workTime'] = record['workTime']/60
-    return res
-    # return (work_time_id, project_name, function_name, activity_name, start_time, end_time, date, workTime, remain, status, describe)
+        record['work_time'] = record['work_time'] / 60
+    return res if res != 'Empty' else []
 
 def confirm(work_time_id, status):
     # return 'error' if work_time_id not found

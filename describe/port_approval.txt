@@ -8,7 +8,7 @@ id, name, status(include reject), update_time
 
 修改按钮(项目上级叫查看, 项目经理叫修改)
 /approval/project/show (get)
-id
+project_id
 id, name, describe, 预定时间(scheduled_time), 交付日(delivery_day), project_superior_id, 项目上级project_superior(project_superior_id, project_superior_name),\
     主要里程碑(major_milestones), 采用技术(adopting_technology), 业务领域(business_area), 主要功能(main_function)
 
