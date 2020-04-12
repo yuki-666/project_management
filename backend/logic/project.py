@@ -156,18 +156,25 @@ def repush(project_id):
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     return 'error' if db.otherDB(sql) == 'none' else 'ok'
 
-def get_function(project_id):
+def get_function(project_id, worker_id=None):
     # get function list from project_id
     # worker_id and worker_name: list->str, split by ','
-    # return function_id, function_name, worker_id, worker_name, parent_function_id
-    p = {}
-    p['select_key'] = ['f.id','f.function_name','fp.worker_id','e.name','f.parent_function_id','rank() over(order by f.id)']
-    p['tablename'] = 'project_function as f'
-    p['join_tablename'] = ['function_partition as fp','employee as e']
-    p['on_key'] = ['f.id','fp.worker_id']
-    p['on_value'] = ['fp.function_id','e.id']
-    p['key'] = ['f.project_id']
-    p['value'] = [' = '+project_id]
+
+    if worker_id is None:
+        # return function_id, function_name, worker_id, worker_name, parent_function_id
+        p = {}
+        p['select_key'] = ['f.id','f.function_name','fp.worker_id','e.name','f.parent_function_id','rank() over(order by f.id)']
+        p['tablename'] = 'project_function as f'
+        p['join_tablename'] = ['function_partition as fp','employee as e']
+        p['on_key'] = ['f.id','fp.worker_id']
+        p['on_value'] = ['fp.function_id','e.id']
+        p['key'] = ['f.project_id']
+        p['value'] = [' = '+project_id]
+    else:
+        # TODO
+        # select with worker_id
+        # return function_id, function_name
+        pass
     
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     return db.selectDB(d.selectSql(p))

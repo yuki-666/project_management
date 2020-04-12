@@ -109,3 +109,12 @@ def delete(work_time_id):
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     res = db.otherDB(sql)
     return res
+
+def create(uid, project_id, date, function_id, event_name, start_time, end_time, remain, describe):
+    # TODO:
+    # status: "ok"/"fail_x" (fail_1: work_time > 24h, fail_2: start_time < end_time, fail_3: remain < 0)
+    # 1. check fail_1, fail_2, fail_3
+    # 2. get max id
+    # 3. insert (status=1, delete_label=0)
+    return 'ok'
+    

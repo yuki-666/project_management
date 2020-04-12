@@ -34,3 +34,12 @@ status: "ok"
 uid, project_id
 work_time_id, project_name, 功能名称(function_name), 活动名称(event_name), 开始时间(start_time), 结束时间(end_time), \
     date, work_time, remain, status, describe
+
+新增工时
+/project/work_time/create/show (get)
+uid, project_id
+function(function_id, function_name)
+
+/project/work_time/create/save (post)
+uid, project_id, date, function_id, event_name, start_time, end_time, remain, describe
+status: "ok"/"fail_x" (fail_1: work_time > 24h, fail_2: start_time < end_time, fail_3: remain < 0)
