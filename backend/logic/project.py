@@ -2,9 +2,10 @@ import os
 import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__) , '..'))
+from datetime import datetime
+from util.backend import change_time_format
 import config
 import util.db as d
-from datetime import datetime
 
 def get_info(project_id=None, uid=None, keyword=None, detail=False, include_reject=False):
     # id | name      | status | customer_id | main_function
@@ -64,7 +65,12 @@ def get_info(project_id=None, uid=None, keyword=None, detail=False, include_reje
 
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     res = db.selectDB(sql)
-    return [] if res == 'Empty' else res
+
+    if res == 'Empty':
+        return []
+    else:
+        res = change_time_format(res, 'update_time')
+        return res
 
 def get_info_include_work_time(uid):
     # not include reject project
@@ -79,9 +85,12 @@ def get_info_include_work_time(uid):
     p['sentence'] = f' where work_time.id in (select max(id) from work_time where worker_id = {uid} group by project_id)'
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     res = db.selectDB(d.selectSql(p))
-    for i in range(0,len(res)):
-          res[i]['update_time'] = res[i]['update_time'].strftime('%Y-%m-%d %H:%M:%S')
-    return [] if res == 'Empty' else res
+
+    if res == 'Empty':
+        return []
+    else:
+        res = change_time_format(res, 'update_time')
+        return res
 
 def confirm(project_id, status):
     # check if project status is 1 (pending), return 'error' if not
