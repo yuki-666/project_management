@@ -70,15 +70,18 @@ def get_info_include_work_time(uid):
     # not include reject project
     # return (id, name, status, update_time, remain_work_time)
     p={}
-    p['select_key'] = ['project.id','project.name','project.status','project.update_time','work_time.remain']
+    p['select_key'] = ['project.id','project.name','project.status','project.update_time','work_time.remain as remain_work_time']
     p['tablename'] = 'project'
     p['join_tablename'] = ['work_time']
     p['on_key'] = ['work_time.project_id']
     p['on_value'] = ['project.id']
-    p['key'] = ['work_time.worker_id']
-    p['value'] = [' = ' + uid]
+    # remain_work_time: remain largest work_time_id for same project_id
+    p['sentence'] = f' where work_time.id in (select max(id) from work_time where worker_id = {uid} group by project_id)'
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-    return db.selectDB(d.selectSql(p))
+    res = db.selectDB(d.selectSql(p))
+    for i in range(0,len(res)):
+          res[i]['update_time'] = res[i]['update_time'].strftime('%Y-%m-%d %H:%M:%S')
+    return [] if res == 'Empty' else res
 
 def confirm(project_id, status):
     # check if project status is 1 (pending), return 'error' if not
@@ -111,7 +114,7 @@ def modify(project_id, project_name, describe, scheduled_time, delivery_day, pro
     res = db.otherDB(sql)
     return res
 
-def create(name, describe, development_type, scheduled_time, delivery_day, project_superior_id, custom_id, major_milestones, adopting_technology, business_area, main_function):
+def create(uid,name, describe, development_type, scheduled_time, delivery_day, project_superior_id, custom_id, major_milestones, adopting_technology, business_area, main_function):
     # id:
     # '2020-1111-D-01'
     # 'date-customid-development_type-sequence_number'
@@ -122,6 +125,7 @@ def create(name, describe, development_type, scheduled_time, delivery_day, proje
     # 若是1位数前面添0, 若一个都没搜出来从1开始计数
     
     # id 由“四位年份-四位客户代码-研发类型 1 位（开发：D，维护：M，服务：S，其他：O）-顺序号 2 位”构成，且从外部系统导入，是一个选择项，不可更改。
+
     id = str(datetime.now().year) + '-' + str(custom_id) + '-' + development_type + '-' 
     p = {}
     p['select_key'] = ['max(id)']
@@ -136,10 +140,18 @@ def create(name, describe, development_type, scheduled_time, delivery_day, proje
  
     p.clear()
     p['tablename'] = 'project'
-    p['column'] = ['id','`name`','`describe`', 'scheduled_time', 'delivery_day', 'project_superior_id', 'customer_id','major_milestones', 'adopting_technology', 'business_area', 'main_function']
-    p['values'] = [id + sequence_number,name,describe, scheduled_time, delivery_day, project_superior_id, custom_id, major_milestones, adopting_technology, business_area, main_function]
+    p['column'] = ['id','`name`', '`status`', '`describe`', 'scheduled_time', 'delivery_day', 'project_superior_id', 'customer_id','major_milestones', 'adopting_technology', 'business_area', 'main_function', 'delete_label']
+    p['values'] = [id + sequence_number,name, 1, describe, scheduled_time, delivery_day, project_superior_id, custom_id, major_milestones, adopting_technology, business_area, main_function, 0]
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-    return db.otherDB(d.insertSql(p))
+    # add (project_id, person_id, 0000, 0) in project_participant
+    if db.otherDB(d.insertSql(p)) == 'ok':
+        p.clear()
+        p['tablename'] = 'project_participant'
+        #p['column'] = ['id','`name`', '`status`', '`describe`', 'scheduled_time', 'delivery_day', 'project_superior_id', 'customer_id','major_milestones', 'adopting_technology', 'business_area', 'main_function', 'delete_label']
+        p['values'] = [id + sequence_number, uid, '0000', '0']
+        db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+        return db.otherDB(d.insertSql(p))
+    return 'error'
 
 def repush(project_id):
     # check status == 0 (rejection), return 'error' if not
@@ -148,18 +160,29 @@ def repush(project_id):
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     return 'error' if db.otherDB(sql) == 'none' else 'ok'
 
-def get_function(project_id):
+def get_function(project_id, worker_id=None):
     # get function list from project_id
     # worker_id and worker_name: list->str, split by ','
-    # return function_id, function_name, worker_id, worker_name, parent_function_id
     p = {}
-    p['select_key'] = ['f.id','f.function_name','fp.worker_id','e.name','f.parent_function_id','rank() over(order by f.id)']
-    p['tablename'] = 'project_function as f'
-    p['join_tablename'] = ['function_partition as fp','employee as e']
-    p['on_key'] = ['f.id','fp.worker_id']
-    p['on_value'] = ['fp.function_id','e.id']
-    p['key'] = ['f.project_id']
-    p['value'] = [' = '+project_id]
+    if worker_id is None:
+        # return function_id, function_name, worker_id, worker_name, parent_function_id
+        p['select_key'] = ['f.id','f.function_name','fp.worker_id','e.name','f.parent_function_id','rank() over(order by f.id)']
+        p['tablename'] = 'project_function as f'
+        p['join_tablename'] = ['function_partition as fp','employee as e']
+        p['on_key'] = ['f.id','fp.worker_id']
+        p['on_value'] = ['fp.function_id','e.id']
+        p['key'] = ['f.project_id']
+        p['value'] = [' = '+project_id]
+    else:
+        # select with worker_id
+        # return function_id, function_name
+        p['select_key'] = ['f.id','f.function_name']
+        p['tablename'] = 'project_function as f'
+        p['join_tablename'] = ['function_partition as fp']
+        p['on_key'] = ['f.id']
+        p['on_value'] = ['fp.function_id']
+        p['key'] = ['fp.worker_id']
+        p['value'] = [' = '+worker_id]
     
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     return db.selectDB(d.selectSql(p))
@@ -396,6 +419,11 @@ def modify_authority(project_id, uid, git_authority, file_authority, mail_author
     if db.otherDB(d.updateSql(p)) == 'ok':
         return 'ok'
     return 'error'
+
+def get_business_area():
+    sql = 'select id as business_id, name as business_name from business_area where delete_label=0;'
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    return db.selectDB(sql)
 
 if __name__ == '__main__':
     print(get_info(keyword='系统', include_reject=True))
