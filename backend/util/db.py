@@ -62,8 +62,10 @@ def selectSql(p):
         sql = sql + ''' where ''' + p['key'][0] + p['value'][0]
         for i in range(1, len(p['key'])):
             sql = sql + ''' and ''' + p['key'][i] + p['value'][i]
+    if 'sentence' in p:
+        sql = sql + p['sentence']
     sql = sql + ''';'''
-    # print(sql)#结项再删
+    print(sql)#结项再删
     return sql
 
 def updateSql(p):
@@ -90,7 +92,7 @@ def insertSql(p):
     for i in range(1,len(p['values'])):
         sql = sql + ''' ,'%s'   ''' % p['values'][i]
     sql = sql + ' ); '
-    # print(sql)#结项再删
+    print(sql)#结项再删
     return sql
 
 def deleteSql(p):
