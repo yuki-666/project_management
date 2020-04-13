@@ -67,9 +67,6 @@ def get_info(project_id=None, uid=None, keyword=None, detail=False, include_reje
     return [] if res == 'Empty' else res
 
 def get_info_include_work_time(uid):
-    # TODO:
-    # remain_work_time: remain largest work_time_id for same project_id
-
     # not include reject project
     # return (id, name, status, update_time, remain_work_time)
     p={}
@@ -179,7 +176,7 @@ def get_function(project_id, worker_id=None):
     else:
         # select with worker_id
         # return function_id, function_name
-        p['select_key'] = ['f.id','f.function_name']
+        p['select_key'] = ['f.id as function_id','f.function_name']
         p['tablename'] = 'project_function as f'
         p['join_tablename'] = ['function_partition as fp']
         p['on_key'] = ['f.id']

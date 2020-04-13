@@ -119,7 +119,7 @@ def project_work_time_create_show():
     if has_error(data):
         return json.dumps('BACKEND ERROR')
     else:
-        return json.dumps(data)
+        return json.dumps({'function': data})
 
 @project_access.route('/work_time/create/save', methods=['POST'])
 def project_work_time_create_save():

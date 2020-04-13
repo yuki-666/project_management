@@ -121,4 +121,3 @@ def create(uid, project_id, date, function_id, event_name, start_time, end_time,
     # 2. get max id
     # 3. insert (status=1, delete_label=0)
     return 'ok'
-    
