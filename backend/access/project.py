@@ -81,12 +81,12 @@ def project_create_show():
 @project_access.route('/create/save', methods=['POST'])
 def project_create_save():
     request_data = get_value_dict()
-    if not check_dict(request_data, ['name', 'describe', 'development_type', 'scheduled_time', 'delivery_day', \
+    if not check_dict(request_data, ['uid', 'name', 'describe', 'development_type', 'scheduled_time', 'delivery_day', \
                                      'project_superior_id', 'custom_id', 'major_milestones', 'adopting_technology', \
                                      'business_area', 'main_function']):
         return json.dumps('PARAM ERROR')
 
-    data = project.create(request_data['name'], request_data['describe'], request_data['development_type'], \
+    data = project.create(request_data['uid'], request_data['name'], request_data['describe'], request_data['development_type'], \
         request_data['scheduled_time'], request_data['delivery_day'], request_data['project_superior_id'], request_data['custom_id'], \
         request_data['major_milestones'], request_data['adopting_technology'], request_data['business_area'], request_data['main_function'])
 

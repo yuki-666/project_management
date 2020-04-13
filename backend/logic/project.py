@@ -117,7 +117,7 @@ def modify(project_id, project_name, describe, scheduled_time, delivery_day, pro
     res = db.otherDB(sql)
     return res
 
-def create(uid,name, describe, development_type, scheduled_time, delivery_day, project_superior_id, custom_id, major_milestones, adopting_technology, business_area, main_function):
+def create(uid, name, describe, development_type, scheduled_time, delivery_day, project_superior_id, custom_id, major_milestones, adopting_technology, business_area, main_function):
     # id:
     # '2020-1111-D-01'
     # 'date-customid-development_type-sequence_number'
