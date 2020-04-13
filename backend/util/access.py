@@ -12,6 +12,11 @@ def get_value_dict():
             ret = dict(request.args)
         elif request.method == 'POST':
             ret = dict(request.form)
+
+    for key, value in ret.items():
+        if isinstance(value, list):
+            ret[key] = value[0]
+
     return ret
 
 def check_dict(data, keys):

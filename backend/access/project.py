@@ -28,10 +28,10 @@ def project_mine():
 @project_access.route('/modify/show', methods=['GET'])
 def project_modify_show():
     request_data = get_value_dict()
-    if not check_dict(request_data, ['project_id']):
+    if not check_dict(request_data, ['id']):
         return json.dumps('PARAM ERROR')
 
-    data = project.get_info(project_id=request_data['project_id'], detail=True, include_reject=True)[0]
+    data = project.get_info(project_id=request_data['id'], detail=True, include_reject=True)[0]
     data_project_superior = user.get_project_superior()
     data_business = project.get_business_area()
 
