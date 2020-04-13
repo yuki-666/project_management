@@ -8,15 +8,18 @@
     >
       <el-form :model="form">
         <el-form-item
-          label="function_id"
+          label="功能名称"
           :label-width="formLabelWidth"
           prop="function_id"
         >
-          <el-input
-            v-model="form.function_id"
-            autocomplete="off"
-            disabled
-          ></el-input>
+          <el-select v-model="form.function_id" placeholder="请选择功能名称">
+            <el-option
+              v-for="item in form.function"
+              :key="item.function_id"
+              :label="item.function_name"
+              :value="item.function_id"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item
           label="event_name"
@@ -24,6 +27,19 @@
           prop="event_name"
         >
           <el-input v-model="form.event_name" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item
+          label="date"
+          :label-width="formLabelWidth"
+          prop="date"
+        >
+          <el-date-picker
+            v-model="form.date"
+            type="datetime"
+            placeholder="开始日期"
+            :picker-options="startDatePicker"
+          >
+          </el-date-picker>
         </el-form-item>
         <el-form-item
           label="start_time"
@@ -93,6 +109,7 @@ export default {
       startDatePicker: this.beginDate(),
       endDatePicker: this.endDate(),
       form: {
+        function_id: '',
         function: [
           {
             function_id: '',
@@ -131,13 +148,13 @@ export default {
         .post('/project/work_time/create/save', {
           uid: _this.$store.getters.uid,
           project_id: _this.zid,
-          date: _this.date,
-          function_id: _this.function_id,
-          event_name: _this.event_name,
-          start_time: _this.start_time,
-          end_time: _this.end_time,
-          remain: _this.remain,
-          describe: _this.describe
+          date: _this.form.date,
+          function_id: _this.form.function_id,
+          event_name: _this.form.event_name,
+          start_time: _this.form.start_time,
+          end_time: _this.form.end_time,
+          remain: _this.form.remain,
+          describe: _this.form.describe
         })
         .then(successResponse => {
           let status = successResponse.data.status
