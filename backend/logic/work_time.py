@@ -2,6 +2,7 @@ import os
 import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__) , '..'))
+from util.backend import change_time_format
 import config
 import util.db as d
 import config
@@ -34,7 +35,13 @@ def get_info_by_uid(uid, is_superior=False, include_finished=False):
 
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     res = db.selectDB(sql)
-    return res if res != 'Empty' else []
+
+    if res == 'Empty':
+        return []
+    else:
+        res = change_time_format(res, 'start_time')
+        res = change_time_format(res, 'end_time')
+        return res
 
 def get_info_by_work_time_id(work_time_id):
     para_dict = {}
@@ -69,10 +76,11 @@ def get_info_by_uid_project_id(uid, project_id):
 
     if res == 'Empty':
         return []
-
-    for record in res:
-        record['work_time'] = record['work_time'] / 60
-    return res
+    else:
+        res = change_time_format(res, 'date')
+        for record in res:
+            record['work_time'] = record['work_time'] / 60
+        return res
 
 def confirm(work_time_id, status):
     # return 'error' if work_time_id not found
