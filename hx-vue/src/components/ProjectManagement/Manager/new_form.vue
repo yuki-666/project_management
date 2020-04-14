@@ -216,6 +216,7 @@ export default {
       let _this = this
       this.$axios
         .post('/project/create/save', {
+          uid: _this.$store.getters.uid,
           name: _this.form.name,
           describe: _this.form.describe,
           development_type: _this.form.development_type,

@@ -89,22 +89,22 @@ export default {
       total: 10,
       FlowStatusRules,
       filter_status: [
-        { text: 'rejection', value: 0 },
-        { text: 'pending', value: 1 },
-        { text: 'established', value: 2 },
-        { text: 'processing', value: 3 },
-        { text: 'paid', value: 4 },
-        { text: 'finished', value: 5 },
-        { text: 'archived', value: 6 }
+        { text: '驳回', value: 0 },
+        { text: '审批中', value: 1 },
+        { text: '已立项', value: 2 },
+        { text: '进行中', value: 3 },
+        { text: '已交付', value: 4 },
+        { text: '已结束', value: 5 },
+        { text: '已归档', value: 6 }
       ],
       FLOWS_STATUS: [
-        'rejection',
-        'pending',
-        'established',
-        'processing',
-        'paid',
-        'finished',
-        'archived'
+        '驳回',
+        '审批中',
+        '已立项',
+        '进行中',
+        '已交付',
+        '已结束',
+        '已归档'
       ],
       projects: [
         {

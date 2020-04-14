@@ -9,7 +9,7 @@ import util.db as d
 def get_project_superior():
     sql = 'select id as project_superior_id, name as project_superior_name from employee where career = 0'
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-    return res
+    return db.selectDB(sql)
 
 def get_custom():
     # return all custom

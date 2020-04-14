@@ -28,10 +28,10 @@ def project_mine():
 @project_access.route('/modify/show', methods=['GET'])
 def project_modify_show():
     request_data = get_value_dict()
-    if not check_dict(request_data, ['project_id']):
+    if not check_dict(request_data, ['id']):
         return json.dumps('PARAM ERROR')
 
-    data = project.get_info(project_id=request_data['project_id'], detail=True, include_reject=True)[0]
+    data = project.get_info(project_id=request_data['id'], detail=True, include_reject=True)[0]
     data_project_superior = user.get_project_superior()
     data_business = project.get_business_area()
 
@@ -81,12 +81,12 @@ def project_create_show():
 @project_access.route('/create/save', methods=['POST'])
 def project_create_save():
     request_data = get_value_dict()
-    if not check_dict(request_data, ['name', 'describe', 'development_type', 'scheduled_time', 'delivery_day', \
+    if not check_dict(request_data, ['uid', 'name', 'describe', 'development_type', 'scheduled_time', 'delivery_day', \
                                      'project_superior_id', 'custom_id', 'major_milestones', 'adopting_technology', \
                                      'business_area', 'main_function']):
         return json.dumps('PARAM ERROR')
 
-    data = project.create(request_data['name'], request_data['describe'], request_data['development_type'], \
+    data = project.create(request_data['uid'], request_data['name'], request_data['describe'], request_data['development_type'], \
         request_data['scheduled_time'], request_data['delivery_day'], request_data['project_superior_id'], request_data['custom_id'], \
         request_data['major_milestones'], request_data['adopting_technology'], request_data['business_area'], request_data['main_function'])
 
@@ -119,7 +119,7 @@ def project_work_time_create_show():
     if has_error(data):
         return json.dumps('BACKEND ERROR')
     else:
-        return json.dumps(data)
+        return json.dumps({'function': data})
 
 @project_access.route('/work_time/create/save', methods=['POST'])
 def project_work_time_create_save():

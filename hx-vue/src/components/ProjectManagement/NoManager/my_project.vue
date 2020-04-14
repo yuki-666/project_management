@@ -45,11 +45,11 @@
         ></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button
-              size="mini"
-              @click="handleEdit(scope.$index, scope.row)"
-              :disabled="setButtonFlag(scope.row)"
+            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
               >查看工时</el-button
+            >
+            <el-button size="mini" @click="handleEdit2(scope.$index, scope.row)"
+              >新增工时</el-button
             >
           </template>
         </el-table-column>
@@ -70,10 +70,17 @@
       @updateAgain="getAllProjects"
       ref="edit"
     ></edit-form>
+    <work-time-form
+      :show.sync="dialogFormVisible2"
+      :zid="tmpId"
+      @updateAgain="getAllProjects"
+      ref="edit2"
+    ></work-time-form>
   </div>
 </template>
 
 <script>
+import WorkTimeForm from './new_workTimeForm'
 import EditForm from './project_editForm'
 import SideMenu from './NoManger_SideMenu'
 import { FlowStatusRules } from '../../home/rule/data-config'
@@ -83,7 +90,8 @@ export default {
   components: {
     'side-menu': SideMenu,
     'zx-tag': ZxTag,
-    'edit-form': EditForm
+    'edit-form': EditForm,
+    'work-time-form': WorkTimeForm
   },
   data () {
     return {
@@ -91,6 +99,7 @@ export default {
       select: '',
       tmpId: '-1',
       dialogFormVisible: false,
+      dialogFormVisible2: false,
       uid: 0,
       career: -1,
       tableDataTmp: [],
@@ -99,28 +108,28 @@ export default {
       total: 10,
       FlowStatusRules,
       filter_status: [
-        { text: 'rejection', value: 0 },
-        { text: 'pending', value: 1 },
-        { text: 'established', value: 2 },
-        { text: 'processing', value: 3 },
-        { text: 'paid', value: 4 },
-        { text: 'finished', value: 5 },
-        { text: 'archived', value: 6 }
+        { text: '驳回', value: 0 },
+        { text: '审批中', value: 1 },
+        { text: '已立项', value: 2 },
+        { text: '进行中', value: 3 },
+        { text: '已交付', value: 4 },
+        { text: '已结束', value: 5 },
+        { text: '已归档', value: 6 }
       ],
       FLOWS_STATUS: [
-        'rejection',
-        'pending',
-        'established',
-        'processing',
-        'paid',
-        'finished',
-        'archived'
+        '驳回',
+        '审批中',
+        '已立项',
+        '进行中',
+        '已交付',
+        '已结束',
+        '已归档'
       ],
       projects: [
         {
           id: '',
           name: '',
-          'status': '',
+          status: '',
           update_time: '',
           remain_work_time: ''
         }
@@ -151,6 +160,29 @@ export default {
           _this.$refs.edit.form = successResponse.data
           // _this.$refs.edit.form.status = _this.FLOWS_STATUS[successResponse.data.status]
         })
+    },
+    getAllInfo2 () {
+      let _this = this
+      this.$axios
+        .get('/project/work_time/create/show', {
+          params: {
+            uid: _this.uid,
+            project_id: _this.tmpId
+          }
+        })
+        .then(successResponse => {
+          _this.$refs.edit2.form = successResponse.data
+          // _this.$refs.edit.form.status = _this.FLOWS_STATUS[successResponse.data.status]
+        })
+    },
+    handleEdit2 (index, row) {
+      this.$refs.edit2.form = {
+        id: row.id
+      }
+      this.tmpId = row.id
+      this.$refs.edit2.form.id = row.id
+      this.getAllInfo2()
+      this.dialogFormVisible2 = true
     },
     handleEdit (index, row) {
       this.$refs.edit.form = {
