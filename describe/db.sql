@@ -300,14 +300,14 @@ DROP TABLE IF EXISTS `work_time`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `work_time` (
-  `id` varchar(45) NOT NULL COMMENT '工时ID',
+  `id` int(20) NOT NULL COMMENT '工时ID',
   `worker_id` varchar(45) DEFAULT NULL COMMENT '员工id',
   `project_id` varchar(45) DEFAULT NULL COMMENT '项目ID',
-  `date` date DEFAULT NULL COMMENT '日期',
+  `date` datetime DEFAULT NULL COMMENT '日期',
   `function_id` varchar(45) DEFAULT NULL COMMENT '功能id',
   `event_name` varchar(45) DEFAULT NULL COMMENT '活动名称',
-  `start_time` timestamp NULL DEFAULT NULL COMMENT '开始时间',
-  `end_time` timestamp NULL DEFAULT NULL COMMENT '结束时间',
+  `start_time` int(11) NULL DEFAULT NULL COMMENT '开始时间',
+  `end_time` int(11) NULL DEFAULT NULL COMMENT '结束时间',
   `remain` varchar(45) DEFAULT NULL COMMENT '剩余工时',
   `status` varchar(45) DEFAULT NULL COMMENT '审批状态',
   `remarks` varchar(45) DEFAULT NULL COMMENT '备注',
@@ -329,7 +329,7 @@ CREATE TABLE `work_time` (
 
 LOCK TABLES `work_time` WRITE;
 /*!40000 ALTER TABLE `work_time` DISABLE KEYS */;
-INSERT INTO `work_time` VALUES (1,'0012','01','2020-03-14','01','图书馆','2020-01-02 04:00:00','2020-01-03 02:00:00','5','0',NULL,'emm',1),(2,'0012','01','2020-03-15','01','图书馆代码','2020-02-10 02:00:00','2000-02-11 02:00:00','8','1',NULL,'emm',0),(3,'0013','01','2020-03-16','02','图书馆代码实现','2020-03-10 02:00:00','2020-03-11 02:00:00','9','1',NULL,'emm',0),(4,'0013','01','2020-03-14','02','图书馆代码实现','2020-03-10 02:00:00','2020-03-11 02:00:00','10','0',NULL,'emm',1),(5,'0014','02','2020-03-15','03','拼单','2020-03-10 02:00:00','2020-03-11 02:00:00','3','1',NULL,'emm',0),(6,'0015','02','2020-03-13','03','外卖系统','2020-03-10 02:00:00','2020-03-11 02:00:00','4','1',NULL,'emm',1),(7,'0014','01','2020-03-15','04','图书馆页面','2020-03-10 02:00:00','2020-03-11 02:00:00','6','0',NULL,'emm',0),(8,'0016','02','2020-03-16','04','测试','2020-03-10 02:00:00','2020-03-11 02:00:00','9','0',NULL,'emm',1),(9,'0017','01','2020-03-15','05','测试','2020-03-10 02:00:00','2020-03-11 02:00:00','7','1',NULL,'emm',0),(10,'0011','02','2020-03-16','05','代码设计','2020-03-10 02:00:00','2020-03-11 02:00:00','0','0',NULL,'emm',0);
+INSERT INTO `work_time` VALUES (1,'0012','01','2020-03-14','01','图书馆','4','6','5','0',NULL,'emm',1),(2,'0012','01','2020-03-15','01','图书馆代码','2','8','8','1',NULL,'emm',0),(3,'0013','01','2020-03-16','02','图书馆代码实现','4','8','9','1',NULL,'emm',0),(4,'0012','01','2020-03-14','02','图书馆代码实现','1','4','10','0',NULL,'emm',1),(5,'0014','02','2020-03-15','03','拼单','5','16','3','1',NULL,'emm',0),(6,'0015','02','2020-03-13','03','外卖系统','10','17','4','1',NULL,'emm',1),(7,'0014','01','2020-03-15','04','图书馆页面','8','20','6','0',NULL,'emm',0),(8,'0016','02','2020-03-16','04','测试','9','18','9','0',NULL,'emm',1),(9,'0017','01','2020-03-15','05','测试','8','18','7','1',NULL,'emm',0),(10,'0011','02','2020-03-16','05','代码设计','9','23','0','0',NULL,'emm',0);
 /*!40000 ALTER TABLE `work_time` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
