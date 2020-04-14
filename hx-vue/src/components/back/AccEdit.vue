@@ -75,12 +75,14 @@ export default {
           username: _this.form.username,
           password: _this.form.password
         })
-        .then(resp => {
-          if (resp && resp.status === 200) {
+        .then(successResponse => {
+          if (successResponse.data.status === 0) {
             this.dialogFormVisible = false
             this.$emit('onSubmit')
-            _this.dialogFormVisible = false
             this.$message.success('新建成功')
+          }
+          if (successResponse.data.status === 1) {
+            this.$message.error('用户已存在')
           }
         })
     },

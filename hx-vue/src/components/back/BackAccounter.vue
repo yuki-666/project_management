@@ -42,7 +42,7 @@ export default {
   methods: {
     newClick () {
       this.dialogFormVisible = true
-      this.clear()
+      // this.clear()
     },
     getAllProjects () {
       var _this = this

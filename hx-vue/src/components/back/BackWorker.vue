@@ -13,11 +13,6 @@
       width="180">
     </el-table-column>
     <el-table-column
-      prop="password"
-      label="登录密码"
-      width="180">
-    </el-table-column>
-    <el-table-column
       prop="name"
       label="姓名"
       width="180">
@@ -74,7 +69,6 @@ export default {
       dialogForm2: false,
       tableData: [{
         username: '',
-        password: '',
         name: '',
         career: '',
         department: ''
@@ -103,7 +97,6 @@ export default {
     editData (index, row) {
       this.$refs.edit.form = {
         username: row.username,
-        password: row.password,
         name: row.name,
         career: row.career,
         department: row.department

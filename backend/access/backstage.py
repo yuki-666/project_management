@@ -41,7 +41,7 @@ def back_create_normal_account():
         return json.dumps('PARAM ERROR')
 
     data = user.create_normal_account(request_data['username'], request_data['password'], request_data['name'], request_data['career'], request_data['department'])
-
+    
     if has_error(data):
         return json.dumps('BACKEND ERROR')
     else:
@@ -66,6 +66,12 @@ def back_modify_normal_account():
     if not check_dict(request_data, ['username', 'password', 'name', 'career', 'department']):
         return json.dumps('PARAM ERROR')
 
+    if request_data['career'] == '项目上级':
+        request_data['career'] = '0'
+    elif request_data['career'] == '项目经理':
+        request_data['career'] = '1'
+    elif request_data['career'] == '普通工人':
+        request_data['career'] = '2'
     data = user.modify_normal_account(request_data['username'], request_data['password'], request_data['name'], request_data['career'], request_data['department'])
 
     if has_error(data):
@@ -101,9 +107,6 @@ def back_show_super_account():
 
 @backstage_access.route('/export_normal_account_sample', methods=['GET'])
 def back_export_normal_account_sample():
-    request_data = get_value_dict()
-    if not check_dict(request_data, ['username']):
-        return json.dumps('PARAM ERROR')
     return send_from_directory('../data', 'sample_file.xlsx', as_attachment=True)
 
 @backstage_access.route('/import_normal_account', methods=['POST'])
@@ -120,4 +123,4 @@ def back_import_normal_account():
     f.save(file_name)
     user.import_normal_account(file_name)
 
-    return json.dumps({'status': 'ok'})
+    return json.dumps({'status': 0})
