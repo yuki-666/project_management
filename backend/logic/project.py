@@ -66,15 +66,12 @@ def get_info(project_id=None, uid=None, keyword=None, detail=False, include_reje
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     res = db.selectDB(sql)
 
-<<<<<<< HEAD
-=======
     if res == 'Empty':
         return []
     else:
         res = change_time_format(res, 'update_time')
         return res
 
->>>>>>> de82c4ddd6822eede5bbe497ab49ad33a664b292
 def get_info_include_work_time(uid):
     # not include reject project
     # return (id, name, status, update_time, remain_work_time)
@@ -88,18 +85,12 @@ def get_info_include_work_time(uid):
     p['sentence'] = f' where work_time.id in (select max(id) from work_time where worker_id = {uid} group by project_id)'
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     res = db.selectDB(d.selectSql(p))
-<<<<<<< HEAD
-    for i in range(0,len(res)):
-          res[i]['update_time'] = res[i]['update_time'].strftime('%Y-%m-%d %H:%M:%S')
-    return [] if res == 'Empty' else res
-=======
 
     if res == 'Empty':
         return []
     else:
         res = change_time_format(res, 'update_time')
         return res
->>>>>>> de82c4ddd6822eede5bbe497ab49ad33a664b292
 
 def confirm(project_id, status):
     # check if project status is 1 (pending), return 'error' if not
@@ -132,11 +123,7 @@ def modify(project_id, project_name, describe, scheduled_time, delivery_day, pro
     res = db.otherDB(sql)
     return res
 
-<<<<<<< HEAD
-def create(uid,name, describe, development_type, scheduled_time, delivery_day, project_superior_id, custom_id, major_milestones, adopting_technology, business_area, main_function):
-=======
 def create(uid, name, describe, development_type, scheduled_time, delivery_day, project_superior_id, custom_id, major_milestones, adopting_technology, business_area, main_function):
->>>>>>> de82c4ddd6822eede5bbe497ab49ad33a664b292
     # id:
     # '2020-1111-D-01'
     # 'date-customid-development_type-sequence_number'
@@ -198,11 +185,7 @@ def get_function(project_id, worker_id=None):
     else:
         # select with worker_id
         # return function_id, function_name
-<<<<<<< HEAD
-        p['select_key'] = ['f.id','f.function_name']
-=======
         p['select_key'] = ['f.id as function_id','f.function_name']
->>>>>>> de82c4ddd6822eede5bbe497ab49ad33a664b292
         p['tablename'] = 'project_function as f'
         p['join_tablename'] = ['function_partition as fp']
         p['on_key'] = ['f.id']
