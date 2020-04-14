@@ -6,7 +6,8 @@ import logic.login
 import logic.project as p
 import logic.user as u
 import logic.work_time as w
-
+import datetime
+from decimal import Decimal
 if __name__ == '__main__':
     
     #print(logic.login('卡桑','000111'))  
@@ -39,7 +40,7 @@ if __name__ == '__main__':
     #print(logic.modify_word_time('1', 'fun2', 'e2', '2020-2-15-12:9:21', '2020-2-15-12:9:21'))
 
     ########project.py
-    #p.create('n1', 'describe', 'M', '2020-03-14', '2020-03-15', '0000', '001', 'first', 'vue', '金融', '打字')
+    #print(p.create('0011','n1', 'describe', 'M', '2020-03-14', '2020-03-15', '0000', '001', 'first', 'vue', '金融', '打字'))
     #print(p.create('n2', 'describe', 'D', '2020-03-14', '2020-03-15', '0000', '001', 'second', 'vue', 'financial', 'lent'))
     #p='02'
     #print(int(p[-2]+p[-1]))
@@ -79,8 +80,8 @@ if __name__ == '__main__':
     #print(c)
     #p.modify_function(project_id='02', function_id='002004', function_name='拼单gg', uid=['0016','0017'])
     #p.modify_worker(project_id, uid)
-    a='uu,ii'
-    print(a.split(','))
+    #a='uu,ii'
+    #print(a.split(','))
     #print(u.get_normal_account())
     #print(u.create_super_account(username='超级管理员', password='000111'))
     #print(u.create_super_account(username='超级管理员2', password='100111'))
@@ -88,5 +89,12 @@ if __name__ == '__main__':
     #print(u.create_normal_account(username='ha', password='99999', name='谁', career='1', department='null'))
     #print(u.delete_normal_account(username='费费'))
     #print(u.modify_normal_account(username='小黄', password='7982r98', name='小黄黄', career='0', department='d'))
-    print(p.repush('01'))
-    print(p.repush('2020-0000-D-01'))
+    #print(p.get_info_include_work_time(uid='0014'))
+    #print(p.get_function(project_id=2, worker_id='0012'))
+    #print(p.repush('01'))
+    #print(p.repush('2020-0000-D-01'))
+    #w.create('0012','01','2020-03-14','01','图书馆','4','6','5','emm')
+    #a = [{'sum(end_time-start_time)': Decimal('5')}]
+    #b=a[0]['sum(end_time-start_time)']
+    #print(b+2<24)
+    print(w.create('0012','01','2020-03-14','01','图书馆',0,20,'5','emm'))
