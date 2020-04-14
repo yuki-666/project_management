@@ -2,6 +2,7 @@ import os
 import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__) , '..'))
+from util.backend import change_time_format
 import config
 import util.db as d
 import config
@@ -34,7 +35,13 @@ def get_info_by_uid(uid, is_superior=False, include_finished=False):
 
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     res = db.selectDB(sql)
-    return res if res != 'Empty' else []
+
+    if res == 'Empty':
+        return []
+    else:
+        res = change_time_format(res, 'start_time')
+        res = change_time_format(res, 'end_time')
+        return res
 
 def get_info_by_work_time_id(work_time_id):
     para_dict = {}
@@ -59,16 +66,21 @@ def get_info_by_work_time_id(work_time_id):
 def get_info_by_uid_project_id(uid, project_id):
     sql = f'''
            select distinct work_time.id as work_time_id, project.id as project_id, project.name as project_name, project_function.function_name, work_time.event_name, work_time.start_time, work_time.end_time, work_time.date, timestampdiff(minute,work_time.start_time,work_time.end_time) as work_time, work_time.remain, work_time.status, work_time.describe
-           from achieveit.work_time
-           join achieveit.project on project.id=work_time.project_id
-           join achieveit.project_function on project_function.id=work_time.function_id
+           from work_time
+           join project on project.id=work_time.project_id
+           join project_function on project_function.id=work_time.function_id
            where work_time.worker_id={uid} and work_time.project_id={project_id} and work_time.delete_label=0;'''
 
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     res = db.selectDB(sql)
-    for record in res:
-        record['work_time'] = record['work_time'] / 60
-    return res if res != 'Empty' else []
+
+    if res == 'Empty':
+        return []
+    else:
+        res = change_time_format(res, 'date')
+        for record in res:
+            record['work_time'] = record['work_time'] / 60
+        return res
 
 def confirm(work_time_id, status):
     # return 'error' if work_time_id not found
@@ -117,4 +129,3 @@ def create(uid, project_id, date, function_id, event_name, start_time, end_time,
     # 2. get max id
     # 3. insert (status=1, delete_label=0)
     return 'ok'
-    

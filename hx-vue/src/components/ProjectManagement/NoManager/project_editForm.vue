@@ -30,7 +30,7 @@
             :label-width="formLabelWidth"
             prop="event_name"
           ></el-table-column>
-          <el-table-column
+          <!-- <el-table-column
             label="开始时间"
             :label-width="formLabelWidth"
             prop="start_time"
@@ -39,7 +39,33 @@
             label="结束时间"
             :label-width="formLabelWidth"
             prop="end_time"
-          ></el-table-column>
+          ></el-table-column> -->
+          <el-form-item
+            label="start_time"
+            :label-width="formLabelWidth"
+            prop="start_time"
+          >
+            <el-date-picker
+              v-model="form.start_time"
+              type="datetime"
+              placeholder="开始日期"
+              :picker-options="startDatePicker"
+            >
+            </el-date-picker>
+          </el-form-item>
+          <el-form-item
+            label="end_time"
+            :label-width="formLabelWidth"
+            prop="end_time"
+          >
+            <el-date-picker
+              v-model="form.end_time"
+              type="datetime"
+              placeholder="结束日期"
+              :picker-options="endDatePicker"
+            >
+            </el-date-picker>
+          </el-form-item>
           <el-table-column
             label="date"
             :label-width="formLabelWidth"
@@ -55,11 +81,7 @@
             :label-width="formLabelWidth"
             prop="remain"
           ></el-table-column>
-          <el-table-column
-            label="审批状态"
-            prop="status"
-            column-key="status"
-          >
+          <el-table-column label="审批状态" prop="status" column-key="status">
             <template slot-scope="props">
               <zx-tag :type="FlowStatusRules[props.row.status]">
                 {{ FLOWS_STATUS[props.row.status] }}
@@ -104,15 +126,11 @@ export default {
       endDatePicker: this.endDate(),
       FlowStatusRules,
       filter_status: [
-        { text: 'rejection', value: 0 },
-        { text: 'pending', value: 1 },
-        { text: 'approved', value: 2 }
+        { text: '驳回', value: 0 },
+        { text: '审批中', value: 1 },
+        { text: '已审批', value: 2 }
       ],
-      FLOWS_STATUS: [
-        'rejection',
-        'pending',
-        'approved'
-      ],
+      FLOWS_STATUS: ['驳回', '审批中', '已审批'],
       form: [
         {
           project_id: '',
@@ -148,28 +166,26 @@ export default {
       var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
       return year + '-' + month + '-' + day
     },
-    beginDate () {
-      let _this = this
-      return {
-        disabledDate (time) {
-          if (_this.form.delivery_day) {
-            return new Date(_this.form.delivery_day).getTime() < time.getTime()
-          } else {
-            return time.getTime() > Date.now()
-          }
-        }
-      }
-    },
     endDate () {
       let _this = this
       return {
         disabledDate (time) {
-          if (_this.form.scheduled_time) {
-            return (
-              new Date(_this.form.scheduled_time).getTime() > time.getTime()
-            )
+          if (_this.form.start_time) {
+            return new Date(_this.form.start_time).getTime() >= time.getTime()
           } else {
-            return time.getTime() > Date.now()
+            return time.getTime() < Date.now() - 8.64e7 // 8.64e7=1000*60*60*24一天
+          }
+        }
+      }
+    },
+    beginDate () {
+      let _this = this
+      return {
+        disabledDate (time) {
+          if (_this.form.end_time) {
+            return new Date(_this.form.end_time).getTime() <= time.getTime()
+          } else {
+            return time.getTime() < Date.now() - 8.64e7 // 8.64e7=1000*60*60*24一天
           }
         }
       }

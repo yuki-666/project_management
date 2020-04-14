@@ -42,13 +42,13 @@
             <el-button
               size="mini"
               @click="handleEdit(scope.$index, scope.row)"
-              :disabled="setButtonFlag(scope.row)"
+              :disabled="setButtonFlag2(scope.row)"
               >修改</el-button
             >
              <el-button
               size="mini"
               @click="handleEdit2(scope.$index, scope.row)"
-              :disabled="setButtonFlag2(scope.row)"
+              :disabled="setButtonFlag(scope.row)"
               >重新提交</el-button
             >
           </template>
@@ -99,22 +99,22 @@ export default {
       total: 10,
       FlowStatusRules,
       filter_status: [
-        { text: 'rejection', value: 0 },
-        { text: 'pending', value: 1 },
-        { text: 'established', value: 2 },
-        { text: 'processing', value: 3 },
-        { text: 'paid', value: 4 },
-        { text: 'finished', value: 5 },
-        { text: 'archived', value: 6 }
+        { text: '驳回', value: 0 },
+        { text: '审批中', value: 1 },
+        { text: '已立项', value: 2 },
+        { text: '进行中', value: 3 },
+        { text: '已交付', value: 4 },
+        { text: '已结束', value: 5 },
+        { text: '已归档', value: 6 }
       ],
       FLOWS_STATUS: [
-        'rejection',
-        'pending',
-        'established',
-        'processing',
-        'paid',
-        'finished',
-        'archived'
+        '驳回',
+        '审批中',
+        '已立项',
+        '进行中',
+        '已交付',
+        '已结束',
+        '已归档'
       ],
       projects: [
         {
@@ -127,18 +127,14 @@ export default {
     }
   },
   methods: {
-    setButtonFlag2 (row) {
+    setButtonFlag (row) {
       if (row.status === 0) {
         return false
       }
       return true
     },
-    setButtonFlag (row) {
-      if (!this.projects[row.id]) {
-        return false
-      }
-      // eslint-disable-next-line eqeqeq
-      if (this.projects[row.id].status == 0) {
+    setButtonFlag2 (row) {
+      if (row.status === 6) {
         return true
       }
       return false

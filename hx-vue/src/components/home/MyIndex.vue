@@ -63,27 +63,28 @@ export default {
   name: 'AppIndex',
   data () {
     return {
+      uid: 0,
       tableDataTmp: [],
       currentPage: 1,
       pagesize: 5,
       total: 10,
-      uid: 0,
       FlowStatusRules,
       filter_status: [
-        { text: 'pending', value: 1 },
-        { text: 'established', value: 2 },
-        { text: 'processing', value: 3 },
-        { text: 'paid', value: 4 },
-        { text: 'finished', value: 5 },
-        { text: 'archived', value: 6 }
+        { text: '审批中', value: 1 },
+        { text: '已立项', value: 2 },
+        { text: '进行中', value: 3 },
+        { text: '已交付', value: 4 },
+        { text: '已结束', value: 5 },
+        { text: '已归档', value: 6 }
       ],
       FLOWS_STATUS: [
-        'pending',
-        'established',
-        'processing',
-        'paid',
-        'finished',
-        'archived'
+        '0',
+        '审批中',
+        '已立项',
+        '进行中',
+        '已交付',
+        '已结束',
+        '已归档'
       ],
       projects: [
         {

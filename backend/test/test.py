@@ -88,5 +88,10 @@ if __name__ == '__main__':
     #print(u.create_normal_account(username='ha', password='99999', name='谁', career='1', department='null'))
     #print(u.delete_normal_account(username='费费'))
     #print(u.modify_normal_account(username='小黄', password='7982r98', name='小黄黄', career='0', department='d'))
+<<<<<<< HEAD
     #print(p.get_info_include_work_time(uid='0014'))
     #print(p.get_function(project_id=2, worker_id='0012'))
+=======
+    print(p.repush('01'))
+    print(p.repush('2020-0000-D-01'))
+>>>>>>> de82c4ddd6822eede5bbe497ab49ad33a664b292

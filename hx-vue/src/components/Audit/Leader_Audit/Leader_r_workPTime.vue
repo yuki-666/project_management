@@ -105,9 +105,9 @@ export default {
       total: 10,
       FlowStatusRules,
       filter_status: [
-        { text: 'rejection', value: 0 },
-        { text: 'pending', value: 1 },
-        { text: 'approved', value: 2 }
+        { text: '驳回', value: 0 },
+        { text: '审批中', value: 1 },
+        { text: '已审批', value: 2 }
       ],
       FLOWS_STATUS: ['驳回', '审批中', '已审批'],
       projects: [
