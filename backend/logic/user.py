@@ -58,23 +58,24 @@ def get_normal_account():
     res = db.selectDB(sql)
     
     for record in res:
-        if record['career'] == None:
-            # leader or worker
-            sql = f'''select 2 from project_participant join login 
-                 on login.id = project_participant.leader_id
-                 where login.username = '{record['username']}';'''
-                 
-            db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-            if db.selectDB(sql) == 'Empty':
-                record['career'] = 'worker'
-            else:
-                record['career'] = 'leader'
+        if record['career'] == '0':
+            record['career'] = '项目上级'
+
+        elif record['career'] == '1':
+            record['career'] = '项目经理'
+        
+        elif record['career'] == '2':
+            record['career'] = '普通工人'
+
+        else:
+            return 'error'
+
     return res
 
 def get_super_account():
     sql = 'select username, password from super_login;'
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-    return res
+    return db.selectDB(sql)
 
 def create_super_account(username, password):
     # return 0/1 (ok, username already exist)
@@ -96,13 +97,15 @@ def create_normal_account(username, password, name, career, department):
     
     sql = f'''select max(id) from login;'''
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-    uid = int(db.selectDB(sql)[0]['max(id)'])+1
-    
-    sql = f'''insert into login(id,username,password) values('{uid}','{username}','{password}');'''
-    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-    db.otherDB(sql) 
+    uid = str(int(db.selectDB(sql)[0]['max(id)']) + 1)
+    while len(uid) < 4:
+        uid = '0' + uid
 
-    sql = f'''insert into employee(id,`name`, career, department) values('{uid}','{name}','{career}','{department}');'''
+    sql = f'''insert into employee(`id`, `name`, career, department, delete_label) values('{uid}','{name}',{career},'{department}', 0);'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    db.otherDB(sql)
+
+    sql = f'''insert into login(`id`, `username`, `password`, delete_label) values('{uid}','{username}','{password}', 0);'''
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     db.otherDB(sql)
     return 0
@@ -160,7 +163,6 @@ def modify_normal_account(username, password, name, career, department):
            set name = '{name}', career = '{career}', department = '{department}'
            where id = '{uid}'; '''
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-    print(sql)
     db.otherDB(sql)
     return 'ok'
 
@@ -172,15 +174,21 @@ def import_normal_account(file_name):
     sql = f'''select max(id) from employee;'''
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     uid = int(db.selectDB(sql)[0]['max(id)'])
-    for username, password, name, career, department in data:
-        uid = uid + 1
-        # add data to db
-        sql = f'''insert into login(id,username,password) values('{uid}','{username}','{password}');'''
-        db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-        db.otherDB(sql) 
 
-        sql = f'''insert into employee(id,`name`, career, department) values('{uid}','{name}','{career}','{department}');'''
+    for username, password, name, career, department in data:
+        # get uid
+        uid = uid + 1
+        uid_str = str(uid)
+        while len(uid_str) < 4:
+            uid_str = '0' + uid_str
+
+        # add data to db
+        sql = f'''insert into employee(id,`name`, career, department) values('{uid_str}','{name}','{career}','{department}');'''
         db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
         db.otherDB(sql)
+
+        sql = f'''insert into login(id,username,password) values('{uid_str}','{username}','{password}');'''
+        db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+        db.otherDB(sql) 
 
     return 'ok'

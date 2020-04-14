@@ -29,11 +29,14 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="职位" :label-width="formLabelWidth" prop="career">
-          <el-input
-            v-model="form.career"
-            autocomplete="off"
-            placeholder="请输入职位"
-          ></el-input>
+          <el-select v-model="form.career" placeholder="请选择职位">
+            <el-option
+              v-for="item in career_dict"
+              :key="item.key"
+              :label="item.value"
+              :value="item.key"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="部门" :label-width="formLabelWidth" prop="department">
           <el-input
@@ -70,6 +73,16 @@ export default {
         career: '',
         department: ''
       },
+      career_dict: [{
+        key: '0',
+        value: '项目上级'
+      }, {
+        key: '1',
+        value: '项目经理'
+      }, {
+        key: '2',
+        value: '普通工人'
+      }],
       formLabelWidth: '120px'
     }
   },
@@ -98,12 +111,15 @@ export default {
           career: _this.form.career,
           department: _this.form.department
         })
-        .then(resp => {
-          if (resp && resp.status === 200) {
+        .then(successResponse => {
+          if (successResponse.data.status === 0) {
             this.dialogFormVisible = false
-            this.$emit('update:show', false)
+            this.$emit('onSubmit')
             _this.dialogFormVisible = false
             this.$message.success('新建成功')
+          }
+          if (successResponse.data.status === 1) {
+            this.$message.error('用户已存在')
           }
         })
     },

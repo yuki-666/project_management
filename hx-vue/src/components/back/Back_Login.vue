@@ -95,10 +95,7 @@ export default {
             })
           }
           if (successResponse.data.status === 1) {
-            this.$message.error('用户不存在')
-          }
-          if (successResponse.data.status === 2) {
-            this.$message.error('密码错误')
+            this.$message.error('登陆失败')
           }
         })
         .catch(failResponse => {
