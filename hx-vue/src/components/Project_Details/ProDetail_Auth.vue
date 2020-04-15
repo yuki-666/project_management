@@ -2,8 +2,6 @@
   <div>
     <div class="project_table">
   <el-table :data="tableData" style="width: 100%">
-    <el-table-column label="用户ID" prop="uid"></el-table-column>
-    <el-table-column label="项目ID" prop="project_id"></el-table-column>
     <el-table-column label="Git权限" prop="git_authority"></el-table-column>
     <el-table-column label="文件权限" prop="file_authority"></el-table-column>
     <el-table-column label="Mail权限" prop="mail_authority"></el-table-column>
@@ -27,11 +25,9 @@ export default {
       //   dialogFormVisible: this.show,
       tableData: [
         {
-          uid: '1',
-          project_id: '2',
-          git_authority: '3',
-          file_authority: '4',
-          mail_authority: '5'
+          git_authority: '',
+          file_authority: '',
+          mail_authority: ''
         }
       ]
     }
@@ -48,37 +44,17 @@ export default {
       this.$axios
         .get('/project_detail/authority', {
           params: {
-            uid: _this.uid,
-            project_id: _this.project_id,
-            git_authority: _this.git_authority,
-            file_authority: _this.file_authority,
-            mail_authority: _this.mail_authority
+            uid: '0012',
+            project_id: '2020-0000-D-01'
           }
         })
         .then(successResponse => {
-          _this.$refs.edit.form = successResponse.data
-          _this.$refs.edit.form.status = _this.FLOWS_STATUS[successResponse.data.status]
+          _this.tableData = successResponse.data
         })
-    },
-    // 获取全部项目
-    getAllProjects () {
-      var _this = this
-      this.$axios
-        .get('/project/mine', {
-          params: {
-            uid: _this.uid,
-            project_id: _this.project_id
-          }
-        })
-        .then(successResponse => {
-          _this.projects = successResponse.data
-          _this.tableDataTmp = successResponse.data
-        })
-        .catch(failResponse => {})
     }
   },
   created () {
-    this.getAllProjects()
+    this.getAllInfo()
   }
 }
 </script>

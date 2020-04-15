@@ -13,11 +13,9 @@
         stripe
         @filter-change="filterTagTable"
       >
-        <el-table-column label="项目id" prop="project_id"></el-table-column>
         <el-table-column label="功能ID" prop="function_id"></el-table-column>
         <el-table-column label="功能名称" prop="function_name" sortable></el-table-column>
         <el-table-column label="员工姓名" prop="worker_name"></el-table-column>
-        <el-table-column label="父功能ID" prop="parent_function_id"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button type="text" @click="handleAdd(scope.$index, scope.row)"
@@ -70,7 +68,6 @@ export default {
   },
   data () {
     return {
-      // arr: [],
       select: '',
       dialogVisible2: false,
       dialogVisible3: false,
@@ -81,12 +78,10 @@ export default {
       total: 10,
       projects: [
         {
-          project_id: '1',
-          function_id: '2',
-          function_name: '3',
-          worker_id: '124,13523,23523463',
-          worker_name: '4 asdn asdgkn asdlgh asodhgn',
-          parent_function_id: '7'
+          function_id: '',
+          function_name: '',
+          worker_id: '',
+          worker_name: '',
         }
       ]
     }
@@ -100,18 +95,11 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          // 前端删除 仅供测试
-          let tmp = { id: row.id }
-          let tmpArr = [tmp]
-          _this.projects = _this.projects.filter(item =>
-            tmpArr.every(ele => ele.id !== item.id)
-          )
-          _this.tmpId = row.id
-          // 后端删除
+          _this.tmpId = row.function_id
           this.$axios
             .post('/project_detail/function/delete', {
-              project_id: _this.tmpId,
-              function_id: '-1'
+              project_id: '2020-0000-D-01',
+              function_id: _this.tmpId
             })
             .then(resp => {
               if (resp.data.status === 'ok') {
@@ -150,11 +138,11 @@ export default {
     },
     handleAdd (index, row) {
       this.$refs.edit.form = {
-        id: row.id
+        parent_function_id: row.function_id
       }
-      this.tmpId = row.id
-      this.$refs.edit.form.id = row.id
-      this.getAllInfo()
+      // this.tmpId = row.id
+      // this.$refs.edit.form.id = row.id
+      // this.getAllInfo()
       this.dialogVisible3 = true
     },
     handleCurrentChange (currentPage) {
@@ -166,7 +154,7 @@ export default {
       this.$axios
         .get('/project_detail/function', {
           params: {
-            id: _this.id
+            id: '2020-0000-D-01'
           }
         })
         .then(successResponse => {

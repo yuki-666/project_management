@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="project_table">
-  <el-table :data="tableData" style="width: 100%">
+    <el-table :data="tableData" style="width:100%" header-row-style="height:50px" stripe @filter-change="filterTagTable">
     <el-table-column type="expand">
       <template slot-scope="props">
         <el-form label-position="left" inline class="demo-table-expand">
@@ -112,11 +112,11 @@ export default {
       ],
       tableData: [
         {
-          id: '1',
-          name: '2',
-          status: 'success',
-          update_time: '3',
-          describe: '4',
+          id: '',
+          name: '',
+          status: '',
+          update_time: '',
+          describe: '',
           scheduled_time: '',
           delivery_day: '',
           project_superior_name: '',
@@ -165,13 +165,11 @@ export default {
       this.$axios
         .get('/project_detail/info', {
           params: {
-            uid: _this.uid,
-            career: _this.career
+            id: '2020-0000-D-01'
           }
         })
         .then(successResponse => {
-          _this.projects = successResponse.data
-          _this.tableDataTmp = successResponse.data
+          _this.tableData = successResponse.data
         })
         .catch(failResponse => {})
     }
@@ -182,17 +180,25 @@ export default {
 }
 </script>
 
-<style>
-  .demo-table-expand {
-    font-size: 0;
-  }
-  .demo-table-expand label {
-    width: 90px;
-    color: #99a9bf;
-  }
-  .demo-table-expand .el-form-item {
-    margin-right: 0;
-    margin-bottom: 0;
-    width: 50%;
-  }
+<style lang="scss" scoped>
+.project_table {
+  padding-top: 0;
+  margin: 10px 15%;
+  position: relative;
+}
+.demo-table-expand {
+  font-size: 0;
+}
+.demo-table-expand label {
+  width: 90px;
+  color: #99a9bf;
+}
+.demo-table-expand .el-form-item {
+  margin-right: 0;
+  margin-bottom: 0;
+  width: 50%;
+}
+.pag {
+  margin: 5px 70%;
+}
 </style>

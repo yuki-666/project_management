@@ -26,3 +26,7 @@ approval_status(work_time):
 file upload:
 0: ok
 1: format error
+
+function_status:
+0: pending
+1: finished

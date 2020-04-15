@@ -4,11 +4,11 @@
       <side-menu @indexSelect="listByCategory" ref="sideMenu"></side-menu>
     </el-aside>
     <el-main>
-      <proDetail-info v-show="this.flag == '0'"></proDetail-info>
-      <proDetail-function v-show="this.flag == '1'"></proDetail-function>
-      <proDetail-person v-show="this.flag == '2'"></proDetail-person>
-      <proDetail-auth v-show="this.flag == '3'"></proDetail-auth>
-      <proDetail-auManage v-show="this.flag == '4'"></proDetail-auManage>
+      <proDetail-info v-if="this.flag == '0'"></proDetail-info>
+      <proDetail-function v-else-if="this.flag == '1'"></proDetail-function>
+      <proDetail-person v-else-if="this.flag == '2'"></proDetail-person>
+      <proDetail-auth v-else-if="this.flag == '3'"></proDetail-auth>
+      <proDetail-auManage v-else-if="this.flag == '4'"></proDetail-auManage>
     </el-main>
   </el-container>
 </template>
