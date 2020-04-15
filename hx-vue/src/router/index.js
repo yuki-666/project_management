@@ -67,6 +67,19 @@ export default new Router({
           }
         },
         {
+          path: '/project_Detail',
+          name: 'ProDetail',
+          component: ProDetail
+        },
+        {
+          path: '/project_management',
+          name: 'ProjectManagement',
+          component: ProjectManagement,
+          meta: {
+            requireAuth: true
+          }
+        },
+        {
           path: '/MyIndex',
           name: 'MyIndex',
           component: MyIndex,
