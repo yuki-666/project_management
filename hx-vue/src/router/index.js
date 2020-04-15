@@ -13,6 +13,8 @@ import BackLogin from '../components/back/Back_Login'
 import BackHome from '../components/back/BackHome'
 import BackAccounter from '../components/back/BackAccounter'
 import BackWorker from '../components/back/BackWorker.vue'
+import ProDetail from '../components/Project_Details/ProDetail_Index.vue'
+import ProjectManagement from '../components/ProjectManagement/project_index'
 
 Vue.use(Router)
 
@@ -62,6 +64,19 @@ export default new Router({
           path: '/my_audit',
           name: 'MyAuidt',
           component: MyAuidt,
+          meta: {
+            requireAuth: true
+          }
+        },
+        {
+          path: '/project_Detail',
+          name: 'ProDetail',
+          component: ProDetail
+        },
+        {
+          path: '/project_management',
+          name: 'ProjectManagement',
+          component: ProjectManagement,
           meta: {
             requireAuth: true
           }
