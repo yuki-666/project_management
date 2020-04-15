@@ -11,15 +11,19 @@
     </el-menu-item>
     <el-menu-item index="1">
       <i class="el-icon-menu"></i>
-      <span slot="title">项目人员分配</span>
+      <span slot="title">项目功能</span>
     </el-menu-item>
     <el-menu-item index="2">
       <i class="el-icon-menu"></i>
-      <span slot="title">功能</span>
+      <span slot="title">项目人员</span>
     </el-menu-item>
     <el-menu-item index="3">
       <i class="el-icon-menu"></i>
-      <span slot="title">权限</span>
+      <span slot="title">我的权限</span>
+    </el-menu-item>
+    <el-menu-item index="4">
+      <i class="el-icon-menu"></i>
+      <span slot="title">权限管理</span>
     </el-menu-item>
   </el-menu>
 </template>

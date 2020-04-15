@@ -1,15 +1,15 @@
-项目信息
+√项目信息
 /project_detail/info (get)
 id(项目id)
 id, name, status, update_time, describe, scheduled_time, delivery_day, project_superior_name, major_milestones, adopting_technology, business_area, main_function
 
-修改项目
+√修改项目
 /project_detail/modify/show (get)
 id(项目id)
 id, name, describe, 预定时间(scheduled_time), 交付日(delivery_day), 项目上级(project_superior_name),\
     主要里程碑(major_milestones), 采用技术(adopting_technology), 业务领域(business_area), 主要功能(main_function)
 
-修改按钮里的保存按钮
+√修改按钮里的保存按钮
 /project_detail/modify/save (post)
 id, name, describe, scheduled_time, delivery_day, project_superior_name, major_milestones, adopting_technology, business_area, main_function
 status: "ok"
@@ -17,31 +17,33 @@ status: "ok"
 任务分配
 /project_detail/function (get)
 id(项目id)
-function_id, function_name, worker_id(list->str, split by ','), worker_name(list->str, split by ','), parent_function_id
+function_id, function_name, worker_name(list->str, split by ','), parent_function_id
 
 /project_detail/function/get_children (前端暂时可以不用)
 id(项目id), parent_function_id
 function_id, function_name, worker_id(list->str, split by ','), worker_name(list->str, split by ','), parent_function_id
 
-任务分配/添加功能
+√任务分配/添加功能
 /project_detail/function/add (post)
 id(项目id), parent_function_id(-1 if not exist parent), function_name
 status: "ok"
 
-任务分配/删除功能
+√任务分配/删除功能
 /project_detail/function/delete (post)
 id(项目id), function_id(-1 if not exist parent)
 status: "ok"
 
-任务分配/修改
+任务分配/修改(分配功能人员)
 /project_detail/function/show (get)
 id(项目id), function_id
-参加项目的所有人员(uid, name, status) status:是否已经在这个功能
+参加项目的所有人员(uid, name, status) status:是否已经在这个功能（默认打勾）
 
 任务分配/修改/修改功能
 /project_detail/function/modify (post)
 id(项目id), function_id, function_name, uid(list->str, split by ',') 参加项目的人员
 status: "ok"
+
+
 
 分配人员
 /project_detail/project_worker (get)
@@ -57,16 +59,16 @@ uid, name, status (全公司的人) status:是否已经在这个项目
 id(项目id), uid(list->str, split by ',')
 status: "ok"
 
-我的权限
+√我的权限
 /project_detail/authority (get)
 uid, project_id
 git_authority, file_authority, mail_authority
 
-权限管理
+√权限管理
 /project_detail/authority_manage (get)
 project_id
 uid, name, git_authority, file_authority, mail_authority
 
-/project_detail/authority_manage/modify (post)
+√/project_detail/authority_manage/modify (post)
 project_id, uid, git_authority, file_authority, mail_authority
 status: "ok"

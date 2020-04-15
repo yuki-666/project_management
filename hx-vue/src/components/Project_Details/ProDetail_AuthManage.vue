@@ -2,29 +2,40 @@
   <div>
     <div class="project_table">
   <el-table :data="tableData" style="width: 100%">
-    <el-table-column label="用户ID" prop="uid"></el-table-column>
-    <el-table-column label="项目ID" prop="project_id"></el-table-column>
-    <el-table-column label="Git权限" prop="git_authority"></el-table-column>
-    <el-table-column label="文件权限" prop="file_authority"></el-table-column>
-    <el-table-column label="Mail权限" prop="mail_authority"></el-table-column>
+      <el-table-column label="项目ID" prop="project_id"></el-table-column>
+      <el-table-column
+          label="用户ID"
+          prop="uid"
+          sortable
+        ></el-table-column>
+      <el-table-column label="Git权限" prop="git_authority"></el-table-column>
+      <el-table-column label="文件权限" prop="file_authority"></el-table-column>
+      <el-table-column label="Mail权限" prop="mail_authority"></el-table-column>
+      <el-table-column label="操作">
+        <el-button type="primary" round @click="newClick2">修改权限</el-button>
+      </el-table-column>
     </el-table>
     </div>
+    <edit-form
+      :show.sync="dialogVisible"
+      ref="edit"
+    ></edit-form>
   </div>
 </template>
 
 <script>
-// import { FlowStatusRules } from "./rule/data-config";
 import SideMenu from './ProDetail_SideMenu'
+import AuthEdit from './ProDetail_AuthEdit'
 export default {
-  name: 'ProDetailAUTH',
+  name: 'ProDetailAuManage',
   components: {
-    'side-menu': SideMenu
-    //    'edit-form': PDEdit
+    'side-menu': SideMenu,
+    'edit-form': AuthEdit
   },
   data () {
     return {
       //   buttonFlag: false,
-      //   dialogFormVisible: this.show,
+      dialogVisible: this.show,
       tableData: [
         {
           uid: '1',
@@ -37,16 +48,13 @@ export default {
     }
   },
   methods: {
-    // newClick () {
-    //   this.dialogFormVisible = true
-    // },
-    // handleEdit (index, row) {
-    //   console.log(index, row)
-    // },
+    newClick2 () {
+      this.dialogVisible = true
+    },
     getAllInfo () {
       let _this = this
       this.$axios
-        .get('/project_detail/authority', {
+        .get('/project_detail/authority_manage', {
           params: {
             uid: _this.uid,
             project_id: _this.project_id,
@@ -66,7 +74,6 @@ export default {
       this.$axios
         .get('/project/mine', {
           params: {
-            uid: _this.uid,
             project_id: _this.project_id
           }
         })

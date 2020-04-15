@@ -4,12 +4,11 @@
       <side-menu @indexSelect="listByCategory" ref="sideMenu"></side-menu>
     </el-aside>
     <el-main>
-      <!-- <manager-r-audit v-show="this.$refs.sideMenu.cid == 0"></manager-r-audit>
-      <manager-r-audit v-show="this.$refs.sideMenu.cid == 1"></manager-r-audit> -->
       <proDetail-info v-show="this.flag == '0'"></proDetail-info>
-      <proDetail-person v-show="this.flag == '1'"></proDetail-person>
-      <proDetail-function v-show="this.flag == '2'"></proDetail-function>
+      <proDetail-function v-show="this.flag == '1'"></proDetail-function>
+      <proDetail-person v-show="this.flag == '2'"></proDetail-person>
       <proDetail-auth v-show="this.flag == '3'"></proDetail-auth>
+      <proDetail-auManage v-show="this.flag == '4'"></proDetail-auManage>
     </el-main>
   </el-container>
 </template>
@@ -20,14 +19,16 @@ import ProDetailINFO from './ProDetail_Info'
 import ProDetailPERSON from './ProDetail_Person'
 import ProDetailFUNCTION from './ProDetail_Function'
 import ProDetailAUTH from './ProDetail_Auth'
+import ProDetailAuManage from './ProDetail_AuthManage'
 export default {
   name: 'ProDetail',
   components: {
     'side-menu': SideMenu,
     'proDetail-info': ProDetailINFO,
-    'proDetail-person': ProDetailPERSON,
     'proDetail-function': ProDetailFUNCTION,
-    'proDetail-auth': ProDetailAUTH
+    'proDetail-person': ProDetailPERSON,
+    'proDetail-auth': ProDetailAUTH,
+    'proDetail-auManage': ProDetailAuManage
   },
   data () {
     return {
@@ -42,12 +43,15 @@ export default {
       // eslint-disable-next-line eqeqeq
       if (this.$refs.sideMenu.cid == '0') {
         this.flag = '0'
-      } else {
+      } else if (this.$refs.sideMenu.cid === '1') {
         this.flag = '1'
+      } else if (this.$refs.sideMenu.cid === '2') {
+        this.flag = '2'
+      } else if (this.$refs.sideMenu.cid === '3') {
+        this.flag = '3'
+      } else {
+        this.flag = '4'
       }
-      // if(this.$refs.sideMenu.cid==0){
-
-      // }
     }
   }
 }
