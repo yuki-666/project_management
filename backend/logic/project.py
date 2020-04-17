@@ -234,32 +234,29 @@ def get_children_function(project_id, parent_function_id):
     return db.selectDB(d.selectSql(p))
 
 def get_project_member(project_id, function_id=None):
-    p={}
-    p['select_key'] = ['employee.id','employee.name']
-    p['tablename'] = 'employee'
-    p['join_tablename'] = ['project_participant']
-    p['on_key'] = ['employee.id']
-    p['on_value'] = ['project_participant.person_id']
-    p['key'] = ['project_participant.project_id']
-    p['value'] = [' = ' + project_id]
+    sql = f'''select distinct employee.id as project_id, employee.name as worker_name
+              from employee
+              join project_participant on employee.id=project_participant.person_id
+              where project_participant.project_id=\'{project_id}\';'''
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-    res = db.selectDB(d.selectSql(p))
-    if function_id is not None:
-        p.clear()
-        p['select_key'] = ['worker_id']
-        p['tablename'] = 'function_partition'
-        p['key'] = ['id','project_id']
-        p['value'] = [' = '+function_id,' = '+project_id]
-        db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-        worker_in = db.selectDB(d.selectSql(p))
-        worker_list = []
-        for i in worker_in:
-            worker_list.append(i['worker_id'])
-        for i in res:
-            if i['id'] in worker_list:
-                i['status'] = 1
-            else:
-                i['status'] = 0     
+    res = db.selectDB(sql)
+    return res if res != 'Empty' else []
+
+    p={}
+    p['select_key'] = ['worker_id']
+    p['tablename'] = 'function_partition'
+    p['key'] = ['id','project_id']
+    p['value'] = [' = '+function_id,' = '+project_id]
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    worker_in = db.selectDB(d.selectSql(p))
+    worker_list = []
+    for i in worker_in:
+        worker_list.append(i['worker_id'])
+    for i in res:
+        if i['id'] in worker_list:
+            i['status'] = 1
+        else:
+            i['status'] = 0     
     return res
 
 def add(a,index):

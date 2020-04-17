@@ -17,7 +17,6 @@
         stripe
         @filter-change="filterTagTable"
       >
-        <el-table-column label="项目名称" prop="project_name"></el-table-column>
         <el-table-column label="员工姓名" prop="worker_name"></el-table-column>
         <el-table-column label="操作">
         <el-button type="primary" style="float: right" round @click="handleAdd"
@@ -67,7 +66,7 @@ export default {
       total: 10,
       projects: [
         {
-          project_id: '',
+          // project_id: '',
           worker_name: ''
         }
       ]
@@ -138,6 +137,7 @@ export default {
         })
         .then(successResponse => {
           _this.projects = successResponse.data
+          console.log(_this.projects)
           // _this.tableDataTmp = successResponse.data
         })
         .catch(failResponse => {
