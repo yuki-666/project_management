@@ -76,10 +76,10 @@
 </template>
 
 <script>
-import SideMenu from './ProDetail_SideMenu'
+import SideMenu from '../ProDetail_SideMenu'
 import InfoEdit from './ProDetail_InfoEdit'
-import { FlowStatusRules } from '../home/rule/data-config'
-import ZxTag from '../tag/src/tag'
+import { FlowStatusRules } from '../../home/rule/data-config'
+import ZxTag from '../../tag/src/tag'
 export default {
   name: 'ProDetailINFO',
   components: {
@@ -183,7 +183,7 @@ export default {
 <style lang="scss" scoped>
 .project_table {
   padding-top: 0;
-  margin: 10px 15%;
+  margin: 20px 10%;
   position: relative;
 }
 .demo-table-expand {

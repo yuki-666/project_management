@@ -1,7 +1,8 @@
 <template>
   <div>
     <div class="project_table">
-  <el-table :data="tableData" style="width: 100%">
+  <el-table :data="tableData" style="width:100%"
+        header-row-style="height:50px">
     <el-table-column label="Git权限" prop="git_authority"></el-table-column>
     <el-table-column label="文件权限" prop="file_authority"></el-table-column>
     <el-table-column label="Mail权限" prop="mail_authority"></el-table-column>
@@ -12,7 +13,7 @@
 
 <script>
 // import { FlowStatusRules } from "./rule/data-config";
-import SideMenu from './ProDetail_SideMenu'
+import SideMenu from '../ProDetail_SideMenu'
 export default {
   name: 'ProDetailAUTH',
   components: {
@@ -62,7 +63,7 @@ export default {
 <style lang="scss" scoped>
 .project_table {
   padding-top: 0;
-  margin: 10px 15%;
+  margin: 20px 10%;
   position: relative;
 }
 .demo-table-expand {

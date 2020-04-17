@@ -1,5 +1,9 @@
 <template>
   <div>
+    <!-- <div> -->
+       <!-- <template slot-scope="scope"> -->
+          <!-- </template> -->
+    <!-- </div> -->
     <div class="project_table">
       <el-table
         :data="
@@ -13,16 +17,13 @@
         stripe
         @filter-change="filterTagTable"
       >
-        <el-table-column label="项目id" prop="project_id"></el-table-column>
-        <el-table-column label="员工姓名" prop="name"></el-table-column>
-        <el-table-column label="是否已在项目中" prop="status"></el-table-column>
+        <el-table-column label="项目名称" prop="project_name"></el-table-column>
+        <el-table-column label="员工姓名" prop="worker_name"></el-table-column>
         <el-table-column label="操作">
-          <template slot-scope="scope">
-            <el-button type="primary" round @click="handleAdd(scope.$index, scope.row)"
-              >添加人员</el-button>
-          </template>
-          <!-- </el-button-group> -->
+        <el-button type="primary" style="float: right" round @click="handleAdd"
+            >添加人员</el-button>
         </el-table-column>
+        <!-- <el-table-column label="是否已在项目中" prop="status"></el-table-column> -->
       </el-table>
       <el-row class="pag">
         <el-pagination
@@ -34,14 +35,8 @@
         </el-pagination>
       </el-row>
     </div>
-    <editfunc-form
-      :show.sync="dialogVisible2"
-      :zid="tmpId"
-      @updateAgain="this.getAllInfo"
-      ref="edit"
-    ></editfunc-form>
     <add-form
-      :show.sync="dialogVisible3"
+      :show.sync="dialogVisible4"
       :zid="tmpId"
       @updateAgain="this.getAllInfo"
       ref="edit"
@@ -50,22 +45,21 @@
 </template>
 
 <script>
-import SideMenu from './ProDetail_SideMenu'
-// import FuncAdd from './ProDetail_FuncAdd'
+import SideMenu from '../ProDetail_SideMenu'
+import PerAdd from './ProDetail_PerAdd'
 // import { FlowStatusRules } from '../../home/rule/data-config'
 // import ZxTag from '../../tag'
 export default {
   name: 'ProDetailFUNCTION',
   components: {
-    'side-menu': SideMenu
-    // 'add-form': FuncAdd
+    'side-menu': SideMenu,
+    'add-form': PerAdd
   },
   data () {
     return {
       // arr: [],
       select: '',
-      dialogVisible2: false,
-      dialogVisible3: false,
+      dialogVisible4: false,
       tmpId: '-1',
       tableDataTmp: [],
       currentPage: 1,
@@ -73,12 +67,8 @@ export default {
       total: 10,
       projects: [
         {
-          project_id: '1',
-          function_id: '2',
-          function_name: '3',
-          worker_id: '124,13523,23523463',
-          worker_name: '4 asdn asdgkn asdlgh asodhgn',
-          parent_function_id: '7'
+          project_id: '',
+          worker_name: ''
         }
       ]
     }
@@ -131,23 +121,8 @@ export default {
           _this.$refs.edit.form = successResponse.data
         })
     },
-    handleEdit (index, row) {
-      this.$refs.edit.form = {
-        id: row.id
-      }
-      this.tmpId = row.id
-      this.$refs.edit.form.id = row.id
-      this.getAllInfo()
-      this.dialogVisible2 = true
-    },
-    handleAdd (index, row) {
-      this.$refs.edit.form = {
-        id: row.id
-      }
-      this.tmpId = row.id
-      this.$refs.edit.form.id = row.id
-      this.getAllInfo()
-      this.dialogVisible3 = true
+    handleAdd () {
+      this.dialogVisible4 = true
     },
     handleCurrentChange (currentPage) {
       this.currentPage = currentPage
@@ -156,21 +131,21 @@ export default {
     getAllProjects () {
       var _this = this
       this.$axios
-        .get('/project_detail/function', {
+        .get('/project_detail/project_worker', {
           params: {
-            id: _this.id
+            id: '2020-0000-D-01'
           }
         })
         .then(successResponse => {
           _this.projects = successResponse.data
-          _this.tableDataTmp = successResponse.data
+          // _this.tableDataTmp = successResponse.data
         })
         .catch(failResponse => {
         })
     }
   },
   created () {
-    this.uid = this.$store.getters.uid
+    // this.uid = this.$store.getters.uid
     this.getAllProjects()
   }
 }
@@ -179,7 +154,7 @@ export default {
 <style lang="scss" scoped>
 .project_table {
   padding-top: 0;
-  margin: 20px 100px;
+  margin: 20px 10%;
   position: relative;
   // margin-left: auto;
   // margin-right: auto;
@@ -188,7 +163,7 @@ export default {
   font-size: 0;
 }
 .demo-table-expand label {
-  width: 20px;
+  width: 90px;
   color: #99a9bf;
 }
 .demo-table-expand .el-form-item {
@@ -198,6 +173,6 @@ export default {
   color: red;
 }
 .pag {
-  margin: 10px 70%;
+  margin: 5px 70%;
 }
 </style>

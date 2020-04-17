@@ -14,14 +14,14 @@ id, name, describe, 预定时间(scheduled_time), 交付日(delivery_day), 项�
 id, name, describe, scheduled_time, delivery_day, project_superior_name, major_milestones, adopting_technology, business_area(id), main_function
 status: "ok"
 
-任务分配
+√任务分配
 /project_detail/function (get)
 id(项目id)
 function_id, function_name, worker_name(list->str, split by ','), parent_function_id
 
-/project_detail/function/get_children (前端暂时可以不用)
-id(项目id), parent_function_id
-function_id, function_name, worker_id(list->str, split by ','), worker_name(list->str, split by ','), parent_function_id
+// /project_detail/function/get_children (前端暂时可以不用)
+// id(项目id), parent_function_id
+// function_id, function_name, worker_id(list->str, split by ','), worker_name(list->str, split by ','), parent_function_id
 
 √任务分配/添加功能
 /project_detail/function/add (post)
@@ -45,7 +45,7 @@ status: "ok"
 
 
 
-分配人员
+分配人员（进项目）
 /project_detail/project_worker (get)
 id(项目id)
 name
@@ -72,3 +72,15 @@ uid, name, git_authority, file_authority, mail_authority
 √/project_detail/authority_manage/modify (post)
 project_id, uid, git_authority, file_authority, mail_authority
 status: "ok"
+
+项目风险 新建按钮
+
+风险内容、风险优先级、是否解决
+
+缺陷跟踪 新建按钮
+
+缺陷内容 缺陷优先级 缺陷跟进人 是否解决
+
+设备管理 删除按钮 新建按钮
+
+设备名称  设备租借时间+到期时间

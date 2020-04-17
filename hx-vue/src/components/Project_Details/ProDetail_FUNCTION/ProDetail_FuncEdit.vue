@@ -59,7 +59,7 @@ export default {
     onSubmit () {
       let _this = this
       this.$axios
-        .post('/project_detail/authority_manage/modify', {
+        .post('/project_detail/function/modify', {
           uid: _this.form.uid,
           project_id: _this.form.project_id,
           git_authority: _this.form.git_authority,

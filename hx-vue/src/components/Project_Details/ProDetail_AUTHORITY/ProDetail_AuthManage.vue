@@ -8,7 +8,7 @@
       <el-table-column label="Mail权限" prop="mail_authority"></el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button type="primary" plain @click="newClick2(scope.$index, scope.row)" >修改权限</el-button>
+          <el-button type="primary" round @click="newClick2(scope.$index, scope.row)" >修改权限</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import SideMenu from './ProDetail_SideMenu'
+import SideMenu from '../ProDetail_SideMenu'
 import AuthEdit from './ProDetail_AuthEdit'
 export default {
   name: 'ProDetailAuManage',
@@ -76,7 +76,7 @@ export default {
 <style lang="scss" scoped>
 .project_table {
   padding-top: 0;
-  margin: 10px 15%;
+  margin: 20px 10%;
   position: relative;
 }
 .demo-table-expand {
