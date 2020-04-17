@@ -147,7 +147,8 @@ export default {
       this.$axios
         .get('/project_detail/modify/show', {
           params: {
-            id: _this.id,
+            id: _this.$route.query.id,
+            // id: _this.id,
             name: _this.name,
             status: _this.status,
             update_time: _this.update_time,
@@ -181,7 +182,7 @@ export default {
       this.$axios
         .get('/project_detail/info', {
           params: {
-            id: '2020-0000-D-01'
+            id: this.$route.query.id
           }
         })
         .then(successResponse => {
@@ -191,6 +192,11 @@ export default {
     }
   },
   created () {
+    // console.log(this.$route.query.id)
+    localStorage.setItem('zprojectname', this.$route.query.id)
+    this.$store.commit('handleProjectname', this.$route.query.id)
+    console.log('124235262')
+    console.log(this.$store.getters.projectname)
     this.getAllProjects()
   }
 }

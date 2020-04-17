@@ -74,41 +74,41 @@ export default {
     }
   },
   methods: {
-    // handleDelete (index, row) {
-    //   let _this = this
-    //   this.$confirm('此操作将永久删除此功能, 是否继续?', '提示', {
-    //     confirmButtonText: '确定',
-    //     cancelButtonText: '取消',
-    //     type: 'warning'
-    //   })
-    //     .then(() => {
-    //       // 前端删除 仅供测试
-    //       let tmp = { id: row.id }
-    //       let tmpArr = [tmp]
-    //       _this.projects = _this.projects.filter(item =>
-    //         tmpArr.every(ele => ele.id !== item.id)
-    //       )
-    //       _this.tmpId = row.id
-    //       // 后端删除
-    //       this.$axios
-    //         .post('/project_detail/function/delete', {
-    //           project_id: _this.tmpId,
-    //           function_id: '-1'
-    //         })
-    //         .then(resp => {
-    //           if (resp.data.status === 'ok') {
-    //             this.getAllProjects()
-    //             this.$message.success('已经删除')
-    //           }
-    //         })
-    //     })
-    //     .catch(() => {
-    //       this.$message({
-    //         type: 'info',
-    //         message: '已取消删除'
-    //       })
-    //     })
-    // },
+    handleDelete (index, row) {
+      let _this = this
+      this.$confirm('此操作将永久删除此功能, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          // 前端删除 仅供测试
+          let tmp = { id: row.id }
+          let tmpArr = [tmp]
+          _this.projects = _this.projects.filter(item =>
+            tmpArr.every(ele => ele.id !== item.id)
+          )
+          _this.tmpId = row.id
+          // 后端删除
+          this.$axios
+            .post('/project_detail/function/delete', {
+              project_id: _this.tmpId,
+              function_id: '-1'
+            })
+            .then(resp => {
+              if (resp.data.status === 'ok') {
+                this.getAllProjects()
+                this.$message.success('已经删除')
+              }
+            })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
+    },
     getAllInfo () {
       let _this = this
       this.$axios
