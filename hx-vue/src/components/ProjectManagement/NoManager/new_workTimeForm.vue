@@ -46,26 +46,14 @@
           :label-width="formLabelWidth"
           prop="start_time"
         >
-          <el-date-picker
-            v-model="form.start_time"
-            type="datetime"
-            placeholder="开始日期"
-            :picker-options="startDatePicker"
-          >
-          </el-date-picker>
+          <el-input v-model="form.start_time" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item
           label="end_time"
           :label-width="formLabelWidth"
           prop="end_time"
         >
-          <el-date-picker
-            v-model="form.end_time"
-            type="datetime"
-            placeholder="结束日期"
-            :picker-options="endDatePicker"
-          >
-          </el-date-picker>
+          <el-input v-model="form.end_time" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item
           label="remain"
@@ -167,17 +155,17 @@ export default {
             _this.dialogFormVisible = false
             _this.$emit('update:show', false)
             _this.$emit('updateAgain')
-            this.$message.error('work_time > 24h')
+            this.$message.error('一天的工作时间超过24h')
           } else if (status === 'fail_2') {
             _this.dialogFormVisible = false
             _this.$emit('update:show', false)
             _this.$emit('updateAgain')
-            this.$message.error('start_time < end_time')
+            this.$message.error('开始时间>=结束时间')
           } else if (status === 'fail_3') {
             _this.dialogFormVisible = false
             _this.$emit('update:show', false)
             _this.$emit('updateAgain')
-            this.$message.error('remain < 0')
+            this.$message.error('开始、结束、剩余时间必须为数字')
           }
         })
         .catch(failResponse => {})

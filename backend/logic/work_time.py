@@ -66,7 +66,7 @@ def get_info_by_work_time_id(work_time_id):
     
 def get_info_by_uid_project_id(uid, project_id):
     sql = f'''
-           select distinct work_time.id as work_time_id, project.id as project_id, project.name as project_name, project_function.function_name, work_time.event_name, work_time.start_time, work_time.end_time, work_time.date, timestampdiff(minute,work_time.start_time,work_time.end_time) as work_time, work_time.remain, work_time.status, work_time.describe
+           select distinct work_time.id as work_time_id, project.id as project_id, project.name as project_name, project_function.function_name, work_time.event_name, work_time.start_time, work_time.end_time, work_time.date, work_time.end_time-work_time.start_time as work_time, work_time.remain, work_time.status, work_time.describe
            from work_time
            join project on project.id=work_time.project_id
            join project_function on project_function.id=work_time.function_id
@@ -79,8 +79,6 @@ def get_info_by_uid_project_id(uid, project_id):
         return []
     else:
         res = change_time_format(res, 'date')
-        for record in res:
-            record['work_time'] = record['work_time'] / 60
         return res
 
 def confirm(work_time_id, status):
@@ -124,24 +122,35 @@ def delete(work_time_id):
     return res
 
 def create(uid, project_id, date, function_id, event_name, start_time, end_time, remain, describe):
-    # status: "ok"/"fail_x" (fail_1: work_time > 24h, fail_2: start_time >= end_time, fail_3: remain < 0)
+    # status: "ok"/"fail_x" (fail_1: work_time > 24h, fail_2: start_time >= end_time, fail_3: cannot cast to int)
+
     # 1. check fail_1, fail_2, fail_3
-    if int(remain) < 0:
+    if not start_time.isdigit() or not end_time.isdigit() or not remain.isdigit():
         return 'fail_3'
+
+    start_time, end_time, remain = int(start_time), int(end_time), int(remain)
+
     if start_time >= end_time:
         return 'fail_2'
+
+    date = date[:10] + ' 00:00:00'
+
     sql = f'select sum(end_time-start_time) from work_time where worker_id={uid} and date=\'{date}\';'
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     work_time = db.selectDB(sql)[0]['sum(end_time-start_time)']
-    if work_time + (end_time-start_time) > 24:
+    if work_time is None:
+        work_time = 0
+    if work_time + (end_time - start_time) > 24:
         return 'fail_1'
+
     # 2. get max id
     sql = f'select max(id) from work_time;'
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-    Id = int(db.selectDB(sql)[0]['max(id)'])+1
+    work_time_id = int(db.selectDB(sql)[0]['max(id)']) + 1
+
     # 3. insert (status=1, delete_label=0)
     sql = f'''insert into work_time(id,worker_id,project_id, date, function_id, event_name, start_time, end_time, remain, `describe`,status,delete_label)
-                  values({Id},\'{uid}\',\'{project_id}\', \'{date}\', \'{function_id}\',\'{event_name}\', {start_time}, {end_time}, {remain}, \'{describe}\',1,0);'''
+                  values({work_time_id},\'{uid}\',\'{project_id}\', \'{date}\', \'{function_id}\',\'{event_name}\', {start_time}, {end_time}, {remain}, \'{describe}\',1,0);'''
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     db.otherDB(sql)
     return 'ok'
