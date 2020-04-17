@@ -261,7 +261,7 @@ def get_project_member(project_id, function_id=None):
 
 def add(a,index):
     if a[index] < '9' or (a[index] >= 'a' and a[index] < 'z') or (a[index] >= 'A' and a[index] < 'Z'):
-        a[index] = chr(ord(a[index])+1)
+        a[index] = chr(ord(a[index]) + 1)
     else :
         if a[index] == '9':
             a[index] = 'a'
@@ -271,7 +271,7 @@ def add(a,index):
             else :
                 if a[index] == 'Z':
                     a[index] = '0'
-                    add(a,index-1)
+                    add(a,index - 1)
 
 def add_function(project_id, parent_function_id, function_name):
     # new function id:
@@ -287,7 +287,10 @@ def add_function(project_id, parent_function_id, function_name):
     
     three_id = list(last_function_id[-3:])
     add(three_id, 2)
-    new_function_id = parent_function_id + three_id[0] + three_id[1] + three_id[2]
+    if parent_function_id == '000':
+        new_function_id = three_id[0] + three_id[1] + three_id[2]
+    else:
+        new_function_id = parent_function_id + three_id[0] + three_id[1] + three_id[2]
 
     sql = f'''insert into project_function(id, function_name, project_id, parent_function_id, function_status, delete_label)
               values(\'{new_function_id}\', \'{function_name}\', \'{project_id}\', \'{parent_function_id}\', 0, 0);'''

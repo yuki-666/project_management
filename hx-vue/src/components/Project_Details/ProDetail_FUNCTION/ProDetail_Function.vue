@@ -89,6 +89,9 @@ export default {
   },
   methods: {
     Add () {
+      this.$refs.edit.form = {
+        parent_function_id: '000'
+      }
       this.dialogVisible3 = true
     },
     handleDelete (index, row) {
@@ -144,9 +147,6 @@ export default {
       this.$refs.edit.form = {
         parent_function_id: row.function_id
       }
-      // this.tmpId = row.id
-      // this.$refs.edit.form.id = row.id
-      // this.getAllInfo()
       this.dialogVisible3 = true
     },
     handleCurrentChange (currentPage) {

@@ -48,7 +48,7 @@ export default {
     onSubmit () {
       let _this = this
       this.$axios
-        .post('/project_detail/project_worker/modify_worker/save', {
+        .post('/project_detail/function/add', {
           project_id: '2020-0000-D-01',
           parent_function_id: _this.form.parent_function_id,
           function_name: _this.form.function_name

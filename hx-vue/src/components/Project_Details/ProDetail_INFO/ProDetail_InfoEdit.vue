@@ -84,7 +84,6 @@ export default {
         delivery_day: '',
         major_milestones: '',
         adopting_technology: '',
-        business_area: '',
         main_function: '',
         project_superior_id: '',
         project_superior: [
@@ -99,7 +98,7 @@ export default {
             business_id: '',
             business_name: ''
           }
-        ],
+        ]
       },
       status_dict: [{
         key: '0',
