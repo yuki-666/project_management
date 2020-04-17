@@ -25,10 +25,10 @@
           <el-input v-model="form.describe" autocomplete="off" ></el-input>
         </el-form-item>
         <el-form-item label="预定时间" :label-width="formLabelWidth" prop="scheduled_time">
-          <el-date-picker v-model="form.scheduled_time" type="datetime" placeholder="开始日期" :picker-options="startDatePicker"></el-date-picker>
+          <el-date-picker v-model="form.scheduled_time" type="datetime" placeholder="预定时间" :picker-options="startDatePicker"></el-date-picker>
         </el-form-item>
         <el-form-item label="交付日" :label-width="formLabelWidth" prop="deliveyr_day">
-          <el-date-picker v-model="form.delivery_day" type="datetime" placeholder="开始日期" :picker-options="startDatePicker"></el-date-picker>
+          <el-date-picker v-model="form.delivery_day" type="datetime" placeholder="交付日" :picker-options="startDatePicker"></el-date-picker>
         </el-form-item>
         <el-form-item label="项目上级" :label-width="formLabelWidth" prop="project_superior">
           <el-select v-model="form.project_superior_id" placeholder="请选择项目上级">
@@ -149,8 +149,8 @@ export default {
           id: _this.form.id,
           name: _this.form.name,
           status: _this.form.status,
-          scheduled_time: _this.form.scheduled_time,
-          delivery_day: _this.form.delivery_day,
+          scheduled_time: _this.dateFormat(_this.form.scheduled_time),
+          delivery_day: _this.dateFormat(_this.form.delivery_day),
           project_superior_id: _this.form.project_superior_id,
           major_milestones: _this.form.major_milestones,
           adopting_technology: _this.form.adopting_technology,
