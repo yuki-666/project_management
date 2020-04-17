@@ -15,7 +15,7 @@ def project_detail_info():
     if not check_dict(request_data, ['id']):
         return json.dumps('PARAM ERROR')
 
-    data = project.get_info(project_id=request_data['id'], detail=True)
+    data = project.get_info(project_id=request_data['id'], detail=True, include_reject=True)
     business = project.get_business_area()
     for line in business:
         if data[0]['business_area'] == line['business_id']:
@@ -33,22 +33,27 @@ def project_detail_modify_show():
     if not check_dict(request_data, ['id']):
         return json.dumps('PARAM ERROR')
 
-    data = project.get_info(project_id=request_data['id'], detail=True)
+    data = project.get_info(project_id=request_data['id'], detail=True, include_reject=True)[0]
+    data_project_superior = user.get_project_superior()
+    data_business = project.get_business_area()
 
     if has_error(data):
         return json.dumps('BACKEND ERROR')
     else:
+        data['project_superior'] = data_project_superior
+        data['business'] = data_business
+        data['status'] = str(data['status'])
         return json.dumps(data)
 
 @project_detail_access.route('/modify/save', methods=['POST'])
 def project_detail_modify_save():
     request_data = get_value_dict()
-    if not check_dict(request_data, ['id', 'name', 'describe', 'scheduled_time', 'delivery_day', \
+    if not check_dict(request_data, ['id', 'name', 'describe', 'status', 'scheduled_time', 'delivery_day', \
                                      'project_superior_id', 'major_milestones', 'adopting_technology', \
                                      'business_area', 'main_function']):
         return json.dumps('PARAM ERROR')
     
-    data = project.modify(request_data['id'], request_data['name'], request_data['describe'], \
+    data = project.modify(request_data['id'], request_data['name'], request_data['describe'], request_data['status'], \
         request_data['scheduled_time'], request_data['delivery_day'], request_data['project_superior_id'], \
         request_data['major_milestones'], request_data['adopting_technology'], request_data['business_area'], request_data['main_function'])
 

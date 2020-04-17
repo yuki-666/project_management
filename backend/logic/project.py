@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 
 sys.path.append(os.path.join(os.path.dirname(__file__) , '..'))
 from datetime import datetime
@@ -113,15 +114,14 @@ def confirm(project_id, status):
     else:
         return 'error'
 
-def modify(project_id, project_name, describe, scheduled_time, delivery_day, project_superior_id, major_milestones, adopting_technology, business_area, main_function):
-    # modify project info, search by id
-    sql = '''update project
-    set name = '%s', `describe` = '%s', scheduled_time = '%s', delivery_day = '%s', project_superior_id = '%s', major_milestones = '%s', adopting_technology = '%s', business_area = '%s', main_function ='%s'
-    where id = '%s';''' %(project_name, describe, scheduled_time, delivery_day, project_superior_id, \
-    major_milestones, adopting_technology, business_area, main_function, project_id)
-    
-    # id | name  | status | customer_id | main_function 
-    #    | domain_id | tech   | project_leader_id | submit_date | reserve_date | update_time     
+def modify(project_id, project_name, describe, status, scheduled_time, delivery_day, project_superior_id, major_milestones, adopting_technology, business_area, main_function):
+    update_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+
+    sql = f'''
+           update project set name=\'{project_name}\', `describe`=\'{describe}\', scheduled_time=\'{scheduled_time}\', update_time=\'{update_time}\',
+           delivery_day=\'{delivery_day}\', project_superior_id=\'{project_superior_id}\', major_milestones={major_milestones},
+           adopting_technology={adopting_technology}, business_area=\'{business_area}\', main_function=\'{main_function}\', status={status}
+           where id=\'{project_id}\';'''
 
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     res = db.otherDB(sql)

@@ -11,19 +11,6 @@
           <el-form-item label="项目名称">
             <span>{{ props.row.name }}</span>
           </el-form-item>
-          <!-- <el-table-column
-          label="项目状态"
-          prop="status"
-          column-key="status"
-          :filters="filter_status"
-          filter-placement="bottom-end"
-        >
-          <template slot-scope="props">
-            <zx-tag :type="FlowStatusRules[props.row.status]">
-              {{ FLOWS_STATUS[props.row.status] }}
-            </zx-tag>
-          </template> -->
-        <!-- </el-table-column> -->
           <el-form-item label="更新时间">
             <span>{{ props.row.update_time }}</span>
           </el-form-item>
@@ -56,11 +43,17 @@
     </el-table-column>
     <el-table-column label="项目ID" prop="id"></el-table-column>
     <el-table-column label="名称" prop="name"></el-table-column>
-    <el-table-column label="状态" prop="stat"></el-table-column>
+    <el-table-column label="状态" prop="status" column-key="status" :filters="filter_status" filter-placement="bottom-end">
+      <template slot-scope="props">
+        <zx-tag :type="FlowStatusRules[props.row.status]">
+          {{ FLOWS_STATUS[props.row.status] }}
+        </zx-tag>
+      </template>
+    </el-table-column>
     <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
-              >查 看</el-button
+              >修 改</el-button
             >
           </template>
         </el-table-column>
@@ -94,22 +87,22 @@ export default {
       dialogFormVisible: this.show,
       FlowStatusRules,
       filter_status: [
-        { text: 'rejection', value: 0 },
-        { text: 'pending', value: 1 },
-        { text: 'established', value: 2 },
-        { text: 'processing', value: 3 },
-        { text: 'paid', value: 4 },
-        { text: 'finished', value: 5 },
-        { text: 'archived', value: 6 }
+        { text: '驳回', value: 0 },
+        { text: '审批中', value: 1 },
+        { text: '已立项', value: 2 },
+        { text: '进行中', value: 3 },
+        { text: '已交付', value: 4 },
+        { text: '已结束', value: 5 },
+        { text: '已归档', value: 6 }
       ],
       FLOWS_STATUS: [
-        'rejection',
-        'pending',
-        'established',
-        'processing',
-        'paid',
-        'finished',
-        'archived'
+        '驳回',
+        '审批中',
+        '已立项',
+        '进行中',
+        '已交付',
+        '已结束',
+        '已归档'
       ],
       tableData: [
         {
@@ -147,23 +140,11 @@ export default {
       this.$axios
         .get('/project_detail/modify/show', {
           params: {
-            id: _this.id,
-            name: _this.name,
-            status: _this.status,
-            update_time: _this.update_time,
-            describe: _this.describe,
-            scheduled_time: _this.scheduled_time,
-            delivery_day: _this.delivery_day,
-            project_superior_name: _this.project_superior_name,
-            stonmajor_milestonese: _this.major_milestones,
-            adopting_technology: _this.adopting_technology,
-            business_area: _this.business_area,
-            main_function: _this.main_function
+            id: '2020-0000-D-01'
           }
         })
         .then(successResponse => {
           _this.$refs.edit.form = successResponse.data
-          _this.$refs.edit.form.status = _this.FLOWS_STATUS[successResponse.data.status]
         })
     },
     handleEdit (index, row) {

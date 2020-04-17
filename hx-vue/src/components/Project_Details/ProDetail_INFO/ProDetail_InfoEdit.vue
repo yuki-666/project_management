@@ -8,28 +8,32 @@
     >
       <el-form :model="form">
         <el-form-item label="项目ID" :label-width="formLabelWidth" prop="id">
-          <el-input v-model="form.project_id" autocomplete="off" ></el-input>
+          <el-input v-model="form.id" autocomplete="off" disabled></el-input>
         </el-form-item>
         <el-form-item label="项目名称" :label-width="formLabelWidth" prop="name">
-          <el-input v-model="form.project_name" autocomplete="off" ></el-input>
+          <el-input v-model="form.name" autocomplete="off" ></el-input>
         </el-form-item>
         <el-form-item label="项目状态" :label-width="formLabelWidth" prop="status">
-          <el-input v-model="form.project_stat" autocomplete="off" ></el-input>
+          <el-select v-model="form.status" placeholder="请选择项目状态">
+            <el-option v-for="item in status_dict" :key="item.key" :label="item.value" :value="item.key"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="更新时间" :label-width="formLabelWidth" prop="update_time">
-          <el-input v-model="form.update_time" autocomplete="off" ></el-input>
+          <el-input v-model="form.update_time" autocomplete="off" disabled></el-input>
         </el-form-item>
         <el-form-item label="项目描述" :label-width="formLabelWidth" prop="describe">
           <el-input v-model="form.describe" autocomplete="off" ></el-input>
         </el-form-item>
         <el-form-item label="预定时间" :label-width="formLabelWidth" prop="scheduled_time">
-          <el-input v-model="form.scheduled_time" autocomplete="off" ></el-input>
+          <el-date-picker v-model="form.scheduled_time" type="datetime" placeholder="开始日期" :picker-options="startDatePicker"></el-date-picker>
         </el-form-item>
         <el-form-item label="交付日" :label-width="formLabelWidth" prop="deliveyr_day">
-          <el-input v-model="form.delivery_day" autocomplete="off" ></el-input>
+          <el-date-picker v-model="form.delivery_day" type="datetime" placeholder="开始日期" :picker-options="startDatePicker"></el-date-picker>
         </el-form-item>
-        <el-form-item label="项目上级" :label-width="formLabelWidth" prop="project_superior_name">
-          <el-input v-model="form.project_superior_name" autocomplete="off" ></el-input>
+        <el-form-item label="项目上级" :label-width="formLabelWidth" prop="project_superior">
+          <el-select v-model="form.project_superior_id" placeholder="请选择项目上级">
+            <el-option v-for="item in form.project_superior" :key="item.project_superior_id" :label="item.project_superior_name" :value="item.project_superior_id"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="主要里程碑" :label-width="formLabelWidth" prop="major_milestones">
           <el-input v-model="form.major_milestones" autocomplete="off" ></el-input>
@@ -38,7 +42,9 @@
           <el-input v-model="form.adopting_technology" autocomplete="off" ></el-input>
         </el-form-item>
         <el-form-item label="业务领域" :label-width="formLabelWidth" prop="business_area">
-          <el-input v-model="form.business_area" autocomplete="off" ></el-input>
+          <el-select v-model="form.business_area" placeholder="请选择业务领域">
+            <el-option v-for="item in form.business" :key="item.business_id" :label="item.business_name" :value="item.business_id"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="主要功能" :label-width="formLabelWidth" prop="main_function">
           <el-input v-model="form.main_function" autocomplete="off" ></el-input>
@@ -71,17 +77,52 @@ export default {
       form: {
         id: '',
         name: '',
-        status: 'success',
+        status: '',
         update_time: '',
         describe: '',
         scheduled_time: '',
         delivery_day: '',
-        project_superior_name: '',
         major_milestones: '',
         adopting_technology: '',
         business_area: '',
-        main_function: ''
+        main_function: '',
+        project_superior_id: '',
+        project_superior: [
+          {
+            project_superior_id: '',
+            project_superior_name: ''
+          }
+        ],
+        business_area: '',
+        business: [
+          {
+            business_id: '',
+            business_name: ''
+          }
+        ],
       },
+      status_dict: [{
+        key: '0',
+        value: '驳回'
+      }, {
+        key: '1',
+        value: '审批中'
+      }, {
+        key: '2',
+        value: '已立项'
+      }, {
+        key: '3',
+        value: '进行中'
+      }, {
+        key: '4',
+        value: '已交付'
+      }, {
+        key: '5',
+        value: '已结束'
+      }, {
+        key: '6',
+        value: '已归档'
+      }],
       formLabelWidth: '100px'
     }
   },
@@ -108,14 +149,14 @@ export default {
           id: _this.form.id,
           name: _this.form.name,
           status: _this.form.status,
-          update_time: _this.form.update_time,
           scheduled_time: _this.form.scheduled_time,
           delivery_day: _this.form.delivery_day,
-          project_superior_name: _this.form.project_superior_name,
+          project_superior_id: _this.form.project_superior_id,
           major_milestones: _this.form.major_milestones,
           adopting_technology: _this.form.adopting_technology,
           business_area: _this.form.business_area,
-          main_function: _this.form.main_function
+          main_function: _this.form.main_function,
+          describe: _this.form.describe
         })
         .then(resp => {
           if (resp && resp.status === 200) {
