@@ -9,9 +9,10 @@ export default new Vuex.Store({
       username: window.localStorage.getItem('user' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('user' || '[]')).username
     },
     zuid: '' || localStorage.getItem('zuid'),
-    zcareer: '' || localStorage.getItem('zcareer')
+    zcareer: '' || localStorage.getItem('zcareer'),
+    zprojectname: '' || localStorage.getItem('zprojectname')
   },
-  getters: { uid: (state) => state.zuid, career: (state) => state.zcareer },
+  getters: { uid: (state) => state.zuid, career: (state) => state.zcareer, projectname: (state) => state.zprojectname },
   mutations: {
     login (state, user) {
       state.user = user
@@ -24,6 +25,10 @@ export default new Vuex.Store({
     handleCareer: (state, zcareer) => {
       state.zcareer = zcareer
       localStorage.setItem('zcareer', zcareer)
+    },
+    handleProjectname: (state, zprojectname) => {
+      state.zprojectname = zprojectname
+      localStorage.setItem('zprojectname', zprojectname)
     }
   }
 })
