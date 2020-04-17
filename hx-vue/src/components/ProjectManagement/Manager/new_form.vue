@@ -168,18 +168,18 @@ export default {
         main_function: ''
       },
       development_type_dict: [{
-          key: 'D',
-          value: '开发'
-        }, {
-          key: 'M',
-          value: '维护'
-        }, {
-          key: 'S',
-          value: '服务'
-        }, {
-          key: 'O',
-          value: '其他'
-        }],
+        key: 'D'
+        // value: '开发'
+      }, {
+        key: 'M',
+        value: '维护'
+      }, {
+        key: 'S',
+        value: '服务'
+      }, {
+        key: 'O',
+        value: '其他'
+      }],
       formLabelWidth: '100px'
     }
   },

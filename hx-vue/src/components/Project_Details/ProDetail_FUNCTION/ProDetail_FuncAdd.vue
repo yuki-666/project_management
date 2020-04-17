@@ -7,12 +7,6 @@
       center
     >
       <el-form :model="form">
-        <el-form-item label="项目ID" :label-width="formLabelWidth" prop="project_id">
-          <el-input v-model="form.project_id" autocomplete="off" ></el-input>
-        </el-form-item>
-        <el-form-item label="父功能ID" :label-width="formLabelWidth" prop="parent_function_id">
-          <el-input v-model="form.parent_function_id" placeholder="如不存在，请输入-1" autocomplete="off" ></el-input>
-        </el-form-item>
         <el-form-item label="功能名称" :label-width="formLabelWidth" prop="function_name">
           <el-input v-model="form.function_name" autocomplete="off" ></el-input>
         </el-form-item>
@@ -38,7 +32,6 @@ export default {
     return {
       dialogVisible3: this.show,
       form: {
-        project_id: '',
         parent_function_id: '',
         function_name: ''
       },
@@ -54,8 +47,8 @@ export default {
     onSubmit () {
       let _this = this
       this.$axios
-        .post('/project_detail/authority_manage/modify', {
-          project_id: _this.form.project_id,
+        .post('/project_detail/function/add', {
+          project_id: '2020-0000-D-01',
           parent_function_id: _this.form.parent_function_id,
           function_name: _this.form.function_name
         })

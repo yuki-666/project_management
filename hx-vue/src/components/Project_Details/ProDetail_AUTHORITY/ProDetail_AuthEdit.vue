@@ -38,9 +38,10 @@ export default {
     return {
       dialogVisible: this.show,
       form: {
-        git_authority: '1',
-        file_authority: '2',
-        mail_authority: 'success'
+        worker_id: '',
+        git_authority: '',
+        file_authority: '',
+        mail_authority: ''
       },
       formLabelWidth: '100px'
     }
@@ -55,18 +56,21 @@ export default {
       let _this = this
       this.$axios
         .post('/project_detail/authority_manage/modify', {
-          uid: _this.form.uid,
-          project_id: _this.form.project_id,
+          uid: _this.form.worker_id,
+          project_id: '2020-0000-D-01',
           git_authority: _this.form.git_authority,
           file_authority: _this.form.file_authority,
           mail_authority: _this.form.mail_authority
         })
         .then(resp => {
-          if (resp && resp.status === 200) {
+          if (resp.data.status === 'ok') {
             this.dialogVisible = false
             this.$emit('onSubmit')
             _this.dialogVisible = false
-            this.$message.success('保存成功')
+            this.$message.success('修改成功')
+          }
+          if (resp.data.status === 'AUTHORITY_PARAM_ERROR') {
+            this.$message.error('修改失败，参数需为是/否')
           }
         })
     },

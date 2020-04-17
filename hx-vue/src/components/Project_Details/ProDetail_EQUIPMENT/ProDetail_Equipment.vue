@@ -13,17 +13,13 @@
         stripe
         @filter-change="filterTagTable"
       >
-        <el-table-column label="项目id" prop="project_id"></el-table-column>
-        <el-table-column label="功能ID" prop="function_id"></el-table-column>
-        <el-table-column label="功能名称" prop="function_name" sortable></el-table-column>
-        <el-table-column label="员工姓名" prop="worker_name"></el-table-column>
-        <el-table-column label="父功能ID" prop="parent_function_id"></el-table-column>
+        <el-table-column label="设备名称" prop="equipment_name"></el-table-column>
+        <el-table-column label="设备租借时间" prop="begin_time" sortable></el-table-column>
+        <el-table-column label="设备到期时间" prop="end_time"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button type="text" @click="handleAdd(scope.$index, scope.row)"
               >添加功能</el-button>
-            <el-button type="text" @click="handleEdit(scope.$index, scope.row)"
-              >修改</el-button>
             <el-button type="text" @click="handleDelete(scope.$index, scope.row)"
               >删除</el-button>
           </template>
@@ -56,21 +52,20 @@
 </template>
 
 <script>
-import FuncEdit from './ProDetail_FuncEdit'
-import SideMenu from './ProDetail_SideMenu'
-import FuncAdd from './ProDetail_FuncAdd'
+// import EquipEdit from './ProDetail_EquipEdit'
+import SideMenu from '../ProDetail_SideMenu'
+// import EquipAdd from './ProDetail_FuncAdd'
 // import { FlowStatusRules } from '../../home/rule/data-config'
 // import ZxTag from '../../tag'
 export default {
-  name: 'ProDetailFUNCTION',
+  name: 'Equipment',
   components: {
-    'side-menu': SideMenu,
-    'editfunc-form': FuncEdit,
-    'add-form': FuncAdd
+    'side-menu': SideMenu
+    // 'editfunc-form': EquipEdit,
+    // 'add-form': EquipAdd
   },
   data () {
     return {
-      // arr: [],
       select: '',
       dialogVisible2: false,
       dialogVisible3: false,
@@ -81,12 +76,9 @@ export default {
       total: 10,
       projects: [
         {
-          project_id: '1',
-          function_id: '2',
-          function_name: '3',
-          worker_id: '124,13523,23523463',
-          worker_name: '4 asdn asdgkn asdlgh asodhgn',
-          parent_function_id: '7'
+          equipment_name: '',
+          begin_time: '',
+          end_time: ''
         }
       ]
     }
@@ -100,18 +92,11 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          // 前端删除 仅供测试
-          let tmp = { id: row.id }
-          let tmpArr = [tmp]
-          _this.projects = _this.projects.filter(item =>
-            tmpArr.every(ele => ele.id !== item.id)
-          )
-          _this.tmpId = row.id
-          // 后端删除
+          _this.tmpId = row.function_id
           this.$axios
             .post('/project_detail/function/delete', {
-              project_id: _this.tmpId,
-              function_id: '-1'
+              project_id: '2020-0000-D-01',
+              function_id: _this.tmpId
             })
             .then(resp => {
               if (resp.data.status === 'ok') {
@@ -150,11 +135,11 @@ export default {
     },
     handleAdd (index, row) {
       this.$refs.edit.form = {
-        id: row.id
+        parent_function_id: row.function_id
       }
-      this.tmpId = row.id
-      this.$refs.edit.form.id = row.id
-      this.getAllInfo()
+      // this.tmpId = row.id
+      // this.$refs.edit.form.id = row.id
+      // this.getAllInfo()
       this.dialogVisible3 = true
     },
     handleCurrentChange (currentPage) {
@@ -166,19 +151,19 @@ export default {
       this.$axios
         .get('/project_detail/function', {
           params: {
-            id: _this.id
+            id: '2020-0000-D-01'
           }
         })
         .then(successResponse => {
           _this.projects = successResponse.data
-          _this.tableDataTmp = successResponse.data
+          // _this.tableDataTmp = successResponse.data
         })
         .catch(failResponse => {
         })
     }
   },
   created () {
-    this.uid = this.$store.getters.uid
+    // this.uid = this.$store.getters.uid
     this.getAllProjects()
   }
 }
@@ -187,7 +172,7 @@ export default {
 <style lang="scss" scoped>
 .project_table {
   padding-top: 0;
-  margin: 20px 100px;
+  margin: 20px 10%;
   position: relative;
   // margin-left: auto;
   // margin-right: auto;

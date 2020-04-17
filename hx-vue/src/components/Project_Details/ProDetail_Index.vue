@@ -9,17 +9,23 @@
       <proDetail-person v-show="this.flag == '2'"></proDetail-person>
       <proDetail-auth v-show="this.flag == '3'"></proDetail-auth>
       <proDetail-auManage v-show="this.flag == '4'"></proDetail-auManage>
+      <proDetail-flaw v-show="this.flag == '5'"></proDetail-flaw>
+      <proDetail-risk v-show="this.flag == '6'"></proDetail-risk>
+      <equipment v-show="this.flag == '7'"></equipment>
     </el-main>
   </el-container>
 </template>
 
 <script>
 import SideMenu from './ProDetail_SideMenu'
-import ProDetailINFO from './ProDetail_Info'
-import ProDetailPERSON from './ProDetail_Person'
-import ProDetailFUNCTION from './ProDetail_Function'
-import ProDetailAUTH from './ProDetail_Auth'
-import ProDetailAuManage from './ProDetail_AuthManage'
+import ProDetailINFO from './ProDetail_INFO/ProDetail_Info'
+import ProDetailPERSON from './ProDetail_PERSON/ProDetail_Person'
+import ProDetailFUNCTION from './ProDetail_FUNCTION/ProDetail_Function'
+import ProDetailAUTH from './ProDetail_AUTHORITY/ProDetail_Auth'
+import ProDetailAuManage from './ProDetail_AUTHORITY/ProDetail_AuthManage'
+import Equipment from './ProDetail_EQUIPMENT/ProDetail_Equipment'
+import ProFLAW from './ProDetail_FLAW/ProDetail_Flaw'
+import ProRisk from './ProDetail_RISK/ProDetail_Risk'
 export default {
   name: 'ProDetail',
   components: {
@@ -28,7 +34,10 @@ export default {
     'proDetail-function': ProDetailFUNCTION,
     'proDetail-person': ProDetailPERSON,
     'proDetail-auth': ProDetailAUTH,
-    'proDetail-auManage': ProDetailAuManage
+    'proDetail-auManage': ProDetailAuManage,
+    'proDetail-flaw': ProFLAW,
+    'proDetail-risk': ProRisk,
+    'equipment': Equipment
   },
   data () {
     return {
@@ -49,8 +58,14 @@ export default {
         this.flag = '2'
       } else if (this.$refs.sideMenu.cid === '3') {
         this.flag = '3'
-      } else {
+      } else if (this.$refs.sideMenu.cid === '4') {
         this.flag = '4'
+      } else if (this.$refs.sideMenu.cid === '5') {
+        this.flag = '5'
+      } else if (this.$refs.sideMenu.cid === '6') {
+        this.flag = '6'
+      } else {
+        this.flag = '7'
       }
     }
   }
