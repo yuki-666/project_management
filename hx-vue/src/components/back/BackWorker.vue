@@ -77,16 +77,24 @@ export default {
   },
   methods: {
     deleteData: function (index) {
+      let _this = this
       this.$confirm('此操作将永久删除该员工信息, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
         this.tableData.splice(index, 1)
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
-        })
+        // 后端删除
+        this.$axios
+          .post('/back/delete_normal_account', {
+            username: _this.form.username
+          })
+          .then(resp => {
+            if (resp.data.status === 'ok') {
+              this.getAllProjects()
+              this.$message.success('删除成功！')
+            }
+          })
       }).catch(() => {
         this.$message({
           type: 'info',
