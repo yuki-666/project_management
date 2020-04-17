@@ -175,7 +175,7 @@ export default {
 <style lang="scss" scoped>
 .project_table {
   padding-top: 0;
-  margin: 20px 10%;
+  margin: 10px 20%;
   position: relative;
   // margin-left: auto;
   // margin-right: auto;

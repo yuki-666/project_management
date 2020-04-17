@@ -46,7 +46,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button round @click="closeDialog">取 消</el-button>
-        <el-button type="success" round @click="closeDialog">保 存</el-button>
+        <el-button type="success" round @click="onSubmit1">保 存</el-button>
       </div>
     </el-dialog>
   </div>
@@ -59,21 +59,21 @@ export default {
     show: {
       type: Boolean,
       default: false
+    },
+    zid: {
+      type: String,
+      default: ''
     }
-    // zid: {
-    //   type: String,
-    //   default: ''
-    // }
   },
   data () {
     return {
       dialogFormVisible: this.show,
       form: {
-        id: '1',
-        name: '2',
+        id: '',
+        name: '',
         status: 'success',
-        update_time: '3',
-        describe: '4',
+        update_time: '',
+        describe: '',
         scheduled_time: '',
         delivery_day: '',
         project_superior_name: '',
@@ -112,7 +112,7 @@ export default {
           scheduled_time: _this.form.scheduled_time,
           delivery_day: _this.form.delivery_day,
           project_superior_name: _this.form.project_superior_name,
-          stonmajor_milestonese: _this.form.major_milestones,
+          major_milestones: _this.form.major_milestones,
           adopting_technology: _this.form.adopting_technology,
           business_area: _this.form.business_area,
           main_function: _this.form.main_function
@@ -120,7 +120,8 @@ export default {
         .then(resp => {
           if (resp && resp.status === 200) {
             this.dialogFormVisible = false
-            this.$emit('onSubmit')
+            this.$emit('update:show', false)
+            this.$emit('updateAgain')
             _this.dialogFormVisible = false
             this.$message.success('保存成功')
           }
@@ -129,6 +130,10 @@ export default {
     closeDialog () {
       this.dialogFormVisible = false
       this.$emit('update:show', false)
+      this.onSubmit()
+    },
+    onSubmit1 () {
+      // this.status = 2
       this.onSubmit()
     }
   },

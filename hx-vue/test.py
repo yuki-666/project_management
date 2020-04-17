@@ -17,6 +17,18 @@ def get_value_dict():
             ret = dict(request.form)
     return ret
 
+@app.route(base_route + '/homepage/project_mine', methods=['GET'])
+def aa4():
+    request_data = get_value_dict()
+    print(request_data)
+
+    ret = []
+    ret.append({'id': 'hahaha', 'name': '奥凯电缆女艾斯比', 'status': '2'})
+    ret.append({'id': 'hohoho', 'name': 'asegbbsdgsdgrgv', 'status': '4'})
+
+    print(json.dumps(ret))
+    return json.dumps(ret)
+
 @app.route(base_route + '/homepage/login', methods=['POST'])
 def homepage_login():
     request_data = get_value_dict()

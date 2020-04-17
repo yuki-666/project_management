@@ -58,18 +58,18 @@
     <el-table-column label="名称" prop="name"></el-table-column>
     <el-table-column label="状态" prop="stat"></el-table-column>
     <el-table-column label="操作">
-          <!-- <template slot-scope="scope">
-            <el-button
-              size="mini"
-              @click="newClick">修改
-              </el-button>
-          </template> -->
-          <el-button type="primary" round @click="newClick" >修 改</el-button>
-    </el-table-column>
+          <template slot-scope="scope">
+            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
+              >查 看</el-button
+            >
+          </template>
+        </el-table-column>
     </el-table>
     </div>
     <edit-form
       :show.sync="dialogFormVisible"
+      :zid="tmpId"
+      @updateAgain="this.getAllProjects"
       ref="edit"
     ></edit-form>
   </div>
@@ -90,6 +90,7 @@ export default {
   data () {
     return {
       //   buttonFlag: false,
+      tmpId: '-1',
       dialogFormVisible: this.show,
       FlowStatusRules,
       filter_status: [
@@ -129,16 +130,22 @@ export default {
     }
   },
   methods: {
-    newClick () {
-      this.dialogFormVisible = true
-    },
+    // handleEdit (index, row) {
+    //   this.$refs.edit.form = {
+    //     id: row.id
+    //   }
+    //   this.tmpId = row.id
+    //   this.$refs.edit.form.id = row.id
+    //   this.getAllInfo()
+    //   this.dialogFormVisible = true
+    // },
     // handleEdit (index, row) {
     //   console.log(index, row)
     // },
     getAllInfo () {
       let _this = this
       this.$axios
-        .get('/project_detail/info', {
+        .get('/project_detail/modify/show', {
           params: {
             id: _this.id,
             name: _this.name,
@@ -158,6 +165,15 @@ export default {
           _this.$refs.edit.form = successResponse.data
           _this.$refs.edit.form.status = _this.FLOWS_STATUS[successResponse.data.status]
         })
+    },
+    handleEdit (index, row) {
+      this.$refs.edit.form = {
+        id: row.id
+      }
+      this.tmpId = row.id
+      this.$refs.edit.form.id = row.id
+      this.getAllInfo()
+      this.dialogFormVisible = true
     },
     // 获取全部项目
     getAllProjects () {
