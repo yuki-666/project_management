@@ -4,6 +4,8 @@
        <!-- <template slot-scope="scope"> -->
           <!-- </template> -->
     <!-- </div> -->
+    <el-button type="primary" style="float: right" round @click="handleAdd"
+            >添加人员</el-button>
     <div class="project_table">
       <el-table
         :data="
@@ -19,8 +21,8 @@
       >
         <el-table-column label="员工姓名" prop="worker_name"></el-table-column>
         <el-table-column label="操作">
-        <el-button type="primary" style="float: right" round @click="handleAdd"
-            >添加人员</el-button>
+        <el-button type="primary" round @click="deletePerson(index)"
+            >删除</el-button>
         </el-table-column>
         <!-- <el-table-column label="是否已在项目中" prop="status"></el-table-column> -->
       </el-table>
@@ -108,6 +110,30 @@ export default {
     //       })
     //     })
     // },
+    deletePerson: function (index) {
+      let _this = this
+      this.$confirm('此操作将永久删除该员工信息, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          this.$axios
+            .post('/project_detail/project_worker/delete_worker', { worker_name: _this.worker_name })
+            .then(resp => {
+              if (resp && resp.status === 200) {
+                this.getAllProjects()
+                this.$message.success('删除成功')
+              }
+            })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
+    },
     getAllInfo () {
       let _this = this
       this.$axios

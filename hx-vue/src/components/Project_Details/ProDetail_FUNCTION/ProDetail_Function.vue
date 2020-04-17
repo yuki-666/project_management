@@ -1,5 +1,6 @@
 <template>
   <div>
+    <el-button type="primary" style="float: right" round  @click="Add">添加功能</el-button>
     <div class="project_table">
       <el-table
         :data="
@@ -87,6 +88,9 @@ export default {
     }
   },
   methods: {
+    Add () {
+      this.dialogVisible3 = true
+    },
     handleDelete (index, row) {
       let _this = this
       this.$confirm('此操作将永久删除此功能, 是否继续?', '提示', {
