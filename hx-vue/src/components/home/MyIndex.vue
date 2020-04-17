@@ -14,11 +14,20 @@
         @filter-change="filterTagTable"
       >
         <el-table-column label="项目id" prop="id" sortable></el-table-column>
+        <!-- <router-link style="margin-right:15px;" :to="{ path:'/project_Detail'}"> -->
+        <!-- <el-link href="https://element.eleme.io" target="_blank">默认链接</el-link> -->
         <el-table-column
           label="项目名称"
           prop="name"
           sortable
-        ></el-table-column>
+        >
+        <!-- <template slot-scope="scope">
+            <router-link v-bind:to="'/project_Detail' + scope.row.title">{{
+              scope.row.title
+            }}</router-link>
+          </template> -->
+        </el-table-column>
+         <!-- </router-link> -->
         <el-table-column
           label="项目状态"
           prop="status"
