@@ -1,5 +1,7 @@
 <template>
   <div>
+    <el-button type="primary" style="float: right" round @click="newClick"
+              >添加设备</el-button>
     <div class="project_table">
       <el-table
         :data="
@@ -13,15 +15,18 @@
         stripe
         @filter-change="filterTagTable"
       >
-        <el-table-column label="设备名称" prop="equipment_name"></el-table-column>
-        <el-table-column label="设备租借时间" prop="begin_time" sortable></el-table-column>
-        <el-table-column label="设备到期时间" prop="end_time"></el-table-column>
+        <el-table-column label="设备ID" prop="id"></el-table-column>
+        <el-table-column label="设备名称" prop="name"></el-table-column>
+        <el-table-column label="管理者" prop="manager"></el-table-column>
+        <el-table-column label="租借日期" prop="ztime" ></el-table-column>
+        <el-table-column label="到期日期" prop="dtime"></el-table-column>
+        <el-table-column label="设备状态" prop="status"></el-table-column>
+        <el-table-column label="是否归还" prop="label"></el-table-column>
+        <el-table-column label="归还日期" prop="htime"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="text" @click="handleAdd(scope.$index, scope.row)"
-              >添加功能</el-button>
-            <el-button type="text" @click="handleDelete(scope.$index, scope.row)"
-              >删除</el-button>
+            <el-button type="text" @click="handleEdit(scope.$index, scope.row)"
+              >操作</el-button>
           </template>
           <!-- </el-button-group> -->
         </el-table-column>
@@ -36,17 +41,15 @@
         </el-pagination>
       </el-row>
     </div>
-    <editfunc-form
-      :show.sync="dialogVisible2"
-      :zid="tmpId"
-      @updateAgain="this.getAllInfo"
+    <edit-form
+      :show.sync="dialogVisible"
+      @updateAgain="this.getAllProjects"
       ref="edit"
-    ></editfunc-form>
+    ></edit-form>
     <add-form
-      :show.sync="dialogVisible3"
-      :zid="tmpId"
-      @updateAgain="this.getAllInfo"
-      ref="edit"
+      :show.sync="dialogVisible1"
+      @updateAgain="this.getAllProjects"
+      ref="edit1"
     ></add-form>
   </div>
 </template>
@@ -57,90 +60,51 @@ import SideMenu from '../ProDetail_SideMenu'
 // import EquipAdd from './ProDetail_FuncAdd'
 // import { FlowStatusRules } from '../../home/rule/data-config'
 // import ZxTag from '../../tag'
+import EEdit from './proDetail_EEdit'
+import EAdd from './proDetail_EAdd'
 export default {
   name: 'Equipment',
   components: {
-    'side-menu': SideMenu
-    // 'editfunc-form': EquipEdit,
-    // 'add-form': EquipAdd
+    'side-menu': SideMenu,
+    'edit-form': EEdit,
+    'add-form': EAdd
   },
   data () {
     return {
       select: '',
-      dialogVisible2: false,
-      dialogVisible3: false,
-      tmpId: '-1',
-      tableDataTmp: [],
+      dialogVisible: false,
+      dialogVisible1: false,
       currentPage: 1,
       pagesize: 5,
       total: 10,
       projects: [
         {
-          equipment_name: '',
-          begin_time: '',
-          end_time: ''
+          name: '',
+          manager: '',
+          ztime: '',
+          dtime: '',
+          status: '',
+          label: '',
+          htime: ''
         }
       ]
     }
   },
   methods: {
-    handleDelete (index, row) {
-      let _this = this
-      this.$confirm('此操作将永久删除此功能, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(() => {
-          _this.tmpId = row.function_id
-          this.$axios
-            .post('/project_detail/function/delete', {
-              project_id: '2020-0000-D-01',
-              function_id: _this.tmpId
-            })
-            .then(resp => {
-              if (resp.data.status === 'ok') {
-                this.getAllProjects()
-                this.$message.success('已经删除')
-              }
-            })
-        })
-        .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
-        })
-    },
-    getAllInfo () {
-      let _this = this
-      this.$axios
-        .get('/project_detail/function', {
-          params: {
-            project_id: _this.tmpId
-          }
-        })
-        .then(successResponse => {
-          _this.$refs.edit.form = successResponse.data
-        })
-    },
     handleEdit (index, row) {
       this.$refs.edit.form = {
-        id: row.id
+        name: row.name,
+        manager: row.manager,
+        ztime: row.ztime,
+        dtime: row.dtime,
+        status: row.status,
+        label: row.label,
+        htime: row.htime
       }
-      this.tmpId = row.id
-      this.$refs.edit.form.id = row.id
-      this.getAllInfo()
-      this.dialogVisible2 = true
+      this.dialogVisible = true
     },
-    handleAdd (index, row) {
-      this.$refs.edit.form = {
-        parent_function_id: row.function_id
-      }
-      // this.tmpId = row.id
-      // this.$refs.edit.form.id = row.id
-      // this.getAllInfo()
-      this.dialogVisible3 = true
+    newClick () {
+      this.dialogVisible1 = true
     },
     handleCurrentChange (currentPage) {
       this.currentPage = currentPage
@@ -149,9 +113,9 @@ export default {
     getAllProjects () {
       var _this = this
       this.$axios
-        .get('/project_detail/function', {
+        .get('/project_detail/project_equipment', {
           params: {
-            id: '2020-0000-D-01'
+            project_id: '2020-04-18'
           }
         })
         .then(successResponse => {

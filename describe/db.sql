@@ -230,6 +230,40 @@ INSERT INTO `project` VALUES ('01','图书馆系统12',2,'003','good1','图书�
 UNLOCK TABLES;
 
 --
+-- Table structure for table `project_equipment`
+--
+
+DROP TABLE IF EXISTS `project_equipment`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `project_equipment` (
+  `id` varchar(45) NOT NULL,
+  `project_id` varchar(45) DEFAULT NULL,
+  `name` varchar(45) DEFAULT NULL,
+  `start_time` date DEFAULT NULL,
+  `endtime` date DEFAULT NULL,
+  `status` int(11) DEFAULT NULL,
+  `label` int(11) DEFAULT NULL,
+  `return_time` date DEFAULT NULL,
+  `manager_id` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `proeq_project_id_idx` (`project_id`),
+  KEY `proeq_worker_id_idx` (`manager_id`),
+  CONSTRAINT `proeq_project_id` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`),
+  CONSTRAINT `proeq_worker_id` FOREIGN KEY (`manager_id`) REFERENCES `employee` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `project_equipment`
+--
+
+LOCK TABLES `project_equipment` WRITE;
+/*!40000 ALTER TABLE `project_equipment` DISABLE KEYS */;
+/*!40000 ALTER TABLE `project_equipment` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `project_function`
 --
 
@@ -392,4 +426,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-04-18 16:10:11
+-- Dump completed on 2020-04-18 18:06:57
