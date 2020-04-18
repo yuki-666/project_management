@@ -442,10 +442,44 @@ def add_risk(project_id, describe, level):
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     return db.otherDB(sql)
 
-def modify_risk(project_id, describe, level, label):
+def modify_risk(project_id, id, describe, level, label):
     sql = f'''update project_risk
               set risk_level=\'{level}\', risk_describe=\'{describe}\', project_label=\'{label}\'
-              where `id`={project_id};'''
+              where `id`={id} and project_id=\'{project_id}\';'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    res = db.otherDB(sql)
+    return 'ok'
+
+def get_equipment(project_id):
+    sql = f'''select e.id, e.name as name, u.id as manager_id, u.name as manager, start_time, end_time, status, label, return_time
+              from project_equipment as e
+              join employee as u on e.manager_id=u.id
+              where project_id=\'{project_id}\';'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    res = db.selectDB(sql)
+    res = change_time_format(res, 'start_time', only_day=True)
+    res = change_time_format(res, 'end_time', only_day=True)
+    res = change_time_format(res, 'return_time', only_day=True)
+    return res if res != 'Empty' else []
+
+def add_equipment(project_id, name, manager, start_time, end_time, status):
+    # get max id in db
+    sql = f'''select max(id) from project_equipment where project_id=\'{project_id}\';'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    new_id = db.selectDB(sql)[0]['max(id)']
+    new_id = 0 if new_id is None else int(new_id)
+    new_id += 1
+    
+    # insert
+    sql = f'''insert into project_equipment
+              values(\'{new_id}\', \'{project_id}\', \'{name}\', \'{start_time}\', \'{end_time}\', {status}, 0, 0, \'{manager}\');'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    return db.otherDB(sql)
+
+def modify_equipment(project_id, id, name, manager, start_time, end_time, status, label, return_time):
+    sql = f'''update project_equipment
+              set name=\'{name}\', start_time=\'{start_time}\', end_time=\'{end_time}\', status=\'{status}\', label=\'{label}\', return_time=\'{return_time}\', manager_id=\'{manager}\'
+              where `id`={id} and project_id=\'{project_id}\';'''
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     res = db.otherDB(sql)
     return 'ok'

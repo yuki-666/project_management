@@ -64,7 +64,7 @@ def get_info_by_uid_project_id(uid, project_id):
            from work_time
            join project on project.id=work_time.project_id
            join project_function on project_function.id=work_time.function_id
-           where work_time.worker_id={uid} and work_time.project_id={project_id} and work_time.delete_label=0;'''
+           where work_time.worker_id=\'{uid}\' and work_time.project_id=\'{project_id}\' and work_time.delete_label=0;'''
 
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     res = db.selectDB(sql)

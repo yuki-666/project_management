@@ -52,6 +52,7 @@ export default {
     return {
       dialogVisible: this.show,
       form: {
+        id: '',
         describe: '',
         level: '',
         label: ''
@@ -86,6 +87,7 @@ export default {
       let _this = this
       this.$axios
         .post('/project_detail/project_risk/modify', {
+          id: _this.form.id,
           project_id: _this.projectid,
           describe: _this.form.describe,
           level: _this.form.level,

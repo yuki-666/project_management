@@ -66,14 +66,12 @@ export default {
       currentPage: 1,
       pagesize: 5,
       total: 10,
-      projects: [
-        {
-          id: '',
-          describe: '',
-          level: '',
-          label: ''
-        }
-      ],
+      projects: [{
+        id: '',
+        describe: '',
+        level: '',
+        label: ''
+      }],
       level_dict: [{
         key: '0',
         value: '低'
@@ -96,6 +94,7 @@ export default {
   methods: {
     handleEdit (index, row) {
       this.$refs.edit.form = {
+        id: row.id,
         describe: row.describe,
         level: row.level,
         label: row.label
