@@ -50,10 +50,10 @@ def back_create_normal_account():
 @backstage_access.route('/delete_normal_account', methods=['POST'])
 def back_delete_normal_account():
     request_data = get_value_dict()
-    if not check_dict(request_data, ['username']):
+    if not check_dict(request_data, ['id']):
         return json.dumps('PARAM ERROR')
 
-    data = user.delete_normal_account(request_data['username'])
+    data = user.delete_normal_account(request_data['id'])
 
     if has_error(data):
         return json.dumps('BACKEND ERROR')
@@ -63,7 +63,7 @@ def back_delete_normal_account():
 @backstage_access.route('/modify_normal_account', methods=['POST'])
 def back_modify_normal_account():
     request_data = get_value_dict()
-    if not check_dict(request_data, ['username', 'password', 'name', 'career', 'department']):
+    if not check_dict(request_data, ['id', 'username', 'name', 'career', 'department']):
         return json.dumps('PARAM ERROR')
 
     if request_data['career'] == '项目上级':
@@ -72,7 +72,11 @@ def back_modify_normal_account():
         request_data['career'] = '1'
     elif request_data['career'] == '普通工人':
         request_data['career'] = '2'
-    data = user.modify_normal_account(request_data['username'], request_data['password'], request_data['name'], request_data['career'], request_data['department'])
+
+    if 'password' not in request_data.keys():
+        request_data['password'] = None
+
+    data = user.modify_normal_account(request_data['id'], request_data['username'], request_data['password'], request_data['name'], request_data['career'], request_data['department'])
 
     if has_error(data):
         return json.dumps('BACKEND ERROR')
@@ -81,10 +85,6 @@ def back_modify_normal_account():
 
 @backstage_access.route('/show_normal_account', methods=['GET'])
 def back_show_normal_account():
-    request_data = get_value_dict()
-    if not check_dict(request_data, ['username']):
-        return json.dumps('PARAM ERROR')
-
     data = user.get_normal_account()
 
     if has_error(data):
@@ -94,10 +94,6 @@ def back_show_normal_account():
 
 @backstage_access.route('/show_super_account', methods=['GET'])
 def back_show_super_account():
-    request_data = get_value_dict()
-    if not check_dict(request_data, ['username']):
-        return json.dumps('PARAM ERROR')
-
     data = user.get_super_account()
 
     if has_error(data):
@@ -117,10 +113,10 @@ def back_import_normal_account():
 
     f = request.files['file']
     if not f.filename.endswith('xlsx'):
-        return json.dumps({'status': 1})
+        return json.dumps({'status_code': 1})
     
     file_name = os.path.join(file_dir, 'temp.xlsx')
     f.save(file_name)
     user.import_normal_account(file_name)
 
-    return json.dumps({'status': 0})
+    return json.dumps({'status_code': 0})

@@ -15,9 +15,7 @@
         <a href="http://127.0.0.1:7777/api/back/export_normal_account_sample" rel="external nofollow" download="模板">
           <el-button type="success">下载模板</el-button>
         </a>
-        <!-- <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button> -->
         <div slot="tip" class="el-upload__tip">只能上传excel文件</div>
-        <!-- <div slot="tip" class="el-upload-list__item-name">{{}}</div> -->
       </el-upload>
       <span slot="footer" class="dialog-footer">
         <el-button @click="closeDialog">取 消</el-button>
@@ -61,12 +59,17 @@ export default {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
-        }).then(response => {
-          console.log(response.data)
-          this.dialogFormVisible = false
-          this.$emit('submitUpload')
-          _this.dialogFormVisible = false
-          this.$message.success('上传成功')
+        }).then(resp => {
+          if (resp.data.status_code === 0) {
+            this.dialogFormVisible = false
+            this.$emit('update:show', false)
+            this.$emit('updateAgain')
+            _this.dialogFormVisible = false
+            this.$message.success('上传成功')
+          }
+          if (resp.data.status_code === 1) {
+            this.$message.error('请上传.xlsx文件')
+          }
         })
     },
     closeDialog () {

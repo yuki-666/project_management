@@ -158,7 +158,7 @@ export default {
           describe: _this.form.describe
         })
         .then(resp => {
-          if (resp && resp.status === 200) {
+          if (resp.data.status === 'ok') {
             this.dialogFormVisible = false
             this.$emit('update:show', false)
             this.$emit('updateAgain')

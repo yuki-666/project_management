@@ -28,24 +28,26 @@
       width="180">
     </el-table-column>
     <el-table-column label="操作">
-          <template slot-scope="scope">
-            <el-button type="primary" plain @click="editData(scope.$index, scope.row)" >修改</el-button
-            >
-            <el-button type="primary" plain @click="deleteData(index)">删除</el-button
-            >
-          </template>
-        </el-table-column>
+      <template slot-scope="scope">
+        <el-button type="primary" plain @click="editData(scope.$index, scope.row)">修改</el-button>
+        <el-button type="primary" plain @click="deleteData(scope.$index, scope.row)">删除</el-button>
+      </template>
+    </el-table-column>
   </el-table>
-  <edit-form
+    <edit-form
       :show.sync="dialogFormVisible"
+      :zid="tmpId"
+      @updateAgain="this.getAllProjects"
       ref="edit"
     ></edit-form>
     <work-edit
       :show.sync="dialogForm"
+      @updateAgain="this.getAllProjects"
       ref="create"
     ></work-edit>
     <file-edit
       :show.sync="dialogForm2"
+      @updateAgain="this.getAllProjects"
       ref="create"
     ></file-edit>
   </div>
@@ -68,6 +70,7 @@ export default {
       dialogForm: false,
       dialogForm2: false,
       tableData: [{
+        id: '',
         username: '',
         name: '',
         career: '',
@@ -76,26 +79,24 @@ export default {
     }
   },
   methods: {
-    deleteData: function (index) {
+    deleteData (index, row) {
       let _this = this
-      this.$confirm('此操作将永久删除该员工信息, 是否继续?', '提示', {
+      this.$confirm('此操作将删除该员工, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(() => {
-        this.tableData.splice(index, 1)
-        // 后端删除
+      })
+      .then(() => {
         this.$axios
-          .post('/back/delete_normal_account', {
-            username: _this.form.username
-          })
+          .post('/back/delete_normal_account', { id: row.id })
           .then(resp => {
             if (resp.data.status === 'ok') {
               this.getAllProjects()
-              this.$message.success('删除成功！')
+              this.$message.success('已经删除')
             }
           })
-      }).catch(() => {
+      })
+      .catch(() => {
         this.$message({
           type: 'info',
           message: '已取消删除'
@@ -104,18 +105,13 @@ export default {
     },
     editData (index, row) {
       this.$refs.edit.form = {
+        id: row.id,
         username: row.username,
         name: row.name,
         career: row.career,
         department: row.department
       }
-      // this.tmpId = row.id
-      // this.getAllInfo()
       this.dialogFormVisible = true
-      // this.$refs.edit.form = {
-      //   username: item.username,
-      //   password: item.password,
-      // }
     },
     newClick () {
       this.dialogForm = true
@@ -126,11 +122,7 @@ export default {
     getAllProjects () {
       var _this = this
       this.$axios
-        .get('/back/show_normal_account', {
-          params: {
-            username: '123'
-          }
-        })
+        .get('/back/show_normal_account')
         .then(successResponse => {
           _this.tableData = successResponse.data
         })
@@ -138,8 +130,6 @@ export default {
     }
   },
   created () {
-    // this.uid = this.$store.getters.uid
-    // this.career = this.$store.getters.career
     this.getAllProjects()
   }
 }

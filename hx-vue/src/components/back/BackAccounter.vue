@@ -17,8 +17,9 @@
       width="180">
     </el-table-column>
   </el-table>
-  <edit-form
+    <edit-form
       :show.sync="dialogFormVisible"
+      @updateAgain="this.getAllProjects"
       ref="edit"
     ></edit-form>
   </div>
@@ -42,16 +43,11 @@ export default {
   methods: {
     newClick () {
       this.dialogFormVisible = true
-      // this.clear()
     },
     getAllProjects () {
       var _this = this
       this.$axios
-        .get('/back/show_super_account', {
-          params: {
-            username: '123'
-          }
-        })
+        .get('/back/show_super_account')
         .then(successResponse => {
           _this.tableData = successResponse.data
         })
@@ -59,8 +55,6 @@ export default {
     }
   },
   created () {
-    // this.uid = this.$store.getters.uid
-    // this.career = this.$store.getters.career
     this.getAllProjects()
   }
 }
