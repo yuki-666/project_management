@@ -91,7 +91,7 @@ export default {
     getMember () {
       var _this = this
       this.$axios
-        .get('/project_detail/project_equipment/user', {
+        .get('/project_detail/get_user', {
           params: {
             project_id: _this.projectid
           }

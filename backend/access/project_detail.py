@@ -316,8 +316,8 @@ def project_detail_project_equipment():
     else:
         return json.dumps(data)
 
-@project_detail_access.route('/project_equipment/user', methods=['GET'])
-def project_detail_project_equipment_user():
+@project_detail_access.route('/get_user', methods=['GET'])
+def project_detail_get_user():
     request_data = get_value_dict()
     if not check_dict(request_data, ['project_id']):
         return json.dumps('PARAM ERROR')
@@ -350,6 +350,46 @@ def project_detail_project_equipment_modify():
 
     data = project.modify_equipment(request_data['project_id'], request_data['id'], request_data['name'], request_data['manager'], 
             request_data['start_time'], request_data['end_time'], request_data['status'], request_data['label'], request_data['return_time'])
+
+    if has_error(data):
+        return json.dumps('BACKEND ERROR')
+    else:
+        return json.dumps({'status': data})
+
+@project_detail_access.route('/project_flaw', methods=['GET'])
+def project_detail_project_flaw():
+    request_data = get_value_dict()
+    if not check_dict(request_data, ['project_id']):
+        return json.dumps('PARAM ERROR')
+
+    data = project.get_flaw(request_data['project_id'])
+
+    if has_error(data):
+        return json.dumps('BACKEND ERROR')
+    else:
+        return json.dumps(data)
+
+@project_detail_access.route('/project_flaw/add', methods=['POST'])
+def project_detail_project_flaw_add():
+    request_data = get_value_dict()
+    if not check_dict(request_data, ['project_id', 'describe', 'level', 'follower']):
+        return json.dumps('PARAM ERROR')
+
+    data = project.add_flaw(request_data['project_id'], request_data['describe'], request_data['level'], request_data['follower'])
+
+    if has_error(data):
+        return json.dumps('BACKEND ERROR')
+    else:
+        return json.dumps({'status': data})
+
+@project_detail_access.route('/project_flaw/modify', methods=['POST'])
+def project_detail_project_flaw_modify():
+    request_data = get_value_dict()
+    print(request_data)
+    if not check_dict(request_data, ['project_id', 'id', 'describe', 'level', 'follower', 'status']):
+        return json.dumps('PARAM ERROR')
+
+    data = project.modify_flaw(request_data['project_id'], request_data['id'], request_data['describe'], request_data['level'], request_data['follower'], request_data['status'])
 
     if has_error(data):
         return json.dumps('BACKEND ERROR')

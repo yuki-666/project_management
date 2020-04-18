@@ -457,10 +457,12 @@ def get_equipment(project_id):
               where project_id=\'{project_id}\';'''
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     res = db.selectDB(sql)
+    if res == 'Empty':
+        return []
     res = change_time_format(res, 'start_time', only_day=True)
     res = change_time_format(res, 'end_time', only_day=True)
     res = change_time_format(res, 'return_time', only_day=True)
-    return res if res != 'Empty' else []
+    return res
 
 def add_equipment(project_id, name, manager, start_time, end_time, status):
     # get max id in db
@@ -479,6 +481,37 @@ def add_equipment(project_id, name, manager, start_time, end_time, status):
 def modify_equipment(project_id, id, name, manager, start_time, end_time, status, label, return_time):
     sql = f'''update project_equipment
               set name=\'{name}\', start_time=\'{start_time}\', end_time=\'{end_time}\', status=\'{status}\', label=\'{label}\', return_time=\'{return_time}\', manager_id=\'{manager}\'
+              where `id`={id} and project_id=\'{project_id}\';'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    res = db.otherDB(sql)
+    return 'ok'
+
+def get_flaw(project_id):
+    sql = f'''select e.id, `describe`, level, u.id as follower_id, u.name as follower, status
+              from project_flaw as e
+              join employee as u on e.follower_id=u.id
+              where project_id=\'{project_id}\';'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    res = db.selectDB(sql)
+    return res if res != 'Empty' else []
+
+def add_flaw(project_id, describe, level, follower):
+    # get max id in db
+    sql = f'''select max(id) from project_flaw where project_id=\'{project_id}\';'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    new_id = db.selectDB(sql)[0]['max(id)']
+    new_id = 0 if new_id is None else int(new_id)
+    new_id += 1
+    
+    # insert
+    sql = f'''insert into project_flaw
+              values(\'{new_id}\', \'{project_id}\', \'{describe}\', \'{level}\', \'{follower}\', 0);'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    return db.otherDB(sql)
+
+def modify_flaw(project_id, id, describe, level, follower, status):
+    sql = f'''update project_flaw
+              set `describe`=\'{describe}\', level=\'{level}\', follower_id=\'{follower}\', status=\'{status}\'
               where `id`={id} and project_id=\'{project_id}\';'''
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     res = db.otherDB(sql)

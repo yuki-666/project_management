@@ -21,10 +21,8 @@
         <el-table-column label="缺陷状态" prop="status"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="text" @click="handleEdit(scope.$index, scope.row)"
-              >操作</el-button>
+            <el-button type="text" @click="handleEdit(scope.$index, scope.row)">修改</el-button>
           </template>
-          <!-- </el-button-group> -->
         </el-table-column>
       </el-table>
       <el-row class="pag">
@@ -52,19 +50,15 @@
 </template>
 
 <script>
-// import FlawEdit from './ProDetail_FlawEdit'
 import SideMenu from '../ProDetail_SideMenu'
 import FlawAdd from './ProDetail_FlawAdd'
 import FlawEdit from './proDetail_FlawEdit'
-// import { FlowStatusRules } from '../../home/rule/data-config'
-// import ZxTag from '../../tag'
 export default {
   name: 'ProFLAW',
   components: {
     'side-menu': SideMenu,
     'add-form': FlawAdd,
     'edit-form': FlawEdit
-
   },
   data () {
     return {
@@ -76,15 +70,14 @@ export default {
       currentPage: 1,
       pagesize: 5,
       total: 10,
-      projects: [
-        {
-          id: '',
-          describe: '',
-          level: '',
-          follower: '',
-          status: ''
-        }
-      ]
+      projects: [{
+        id: '',
+        describe: '',
+        level: '',
+        follower_id: '',
+        follower: '',
+        status: ''
+      }]
     }
   },
   methods: {
@@ -93,9 +86,10 @@ export default {
     },
     handleEdit (index, row) {
       this.$refs.edit.form = {
+        id: row.id,
         describe: row.describe,
         level: row.level,
-        follower: row.follower,
+        follower: row.follower_id,
         status: row.status
       }
       this.dialogVisible = true
@@ -106,19 +100,18 @@ export default {
       this.$axios
         .get('/project_detail/project_flaw', {
           params: {
-            project_id: '2020-04-18'
+            project_id: _this.projectid
           }
         })
         .then(successResponse => {
           _this.projects = successResponse.data
-          // _this.tableDataTmp = successResponse.data
         })
         .catch(failResponse => {
         })
     }
   },
   created () {
-    // this.uid = this.$store.getters.uid
+    this.projectid = this.$store.getters.projectid
     this.getAllProjects()
   }
 }
@@ -129,8 +122,6 @@ export default {
   padding-top: 0;
   margin: 20px 10%;
   position: relative;
-  // margin-left: auto;
-  // margin-right: auto;
 }
 .demo-table-expand {
   font-size: 0;
