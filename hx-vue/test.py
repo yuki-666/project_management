@@ -35,9 +35,21 @@ def homepage_login():
     print(request_data)
     
     ret = {}
-    ret['status'], ret['uid'], ret['career'] = 0, 123, 1
+    ret['status'], ret['uid'], ret['career'] = 0, 123, 0
 
     print(json.dumps(ret)) # {"career": 0, "status": 0, "uid": 123}
+    return json.dumps(ret)
+
+@app.route(base_route + '/project/mine', methods=['GET'])
+def ddd():
+    request_data = get_value_dict()
+    print(request_data)
+
+    ret = []
+    ret.append({'id': 'hahaha', 'name': '奥凯电缆女艾斯比', 'update_time': '2020-04-18 01:16:41'})
+    ret.append({'id': 'hohoho', 'name': 'akdlhgab', 'update_time': '2020-04-18 01:16:41'})
+
+    print(json.dumps(ret))
     return json.dumps(ret)
 
 @app.route(base_route + '/project_detail/function/modify', methods=['POST'])
@@ -46,7 +58,7 @@ def aaa():
     print(request_data)
     
     ret = {}
-    ret['status'], ret['uid'], ret['career'] = 0, 123, 0
+    ret['status'], ret['uid'], ret['career'] = 0, 123, 1
 
     print(json.dumps(ret)) # {"career": 0, "status": 0, "uid": 123}
     return json.dumps(ret)
@@ -81,7 +93,7 @@ def aa3():
     print(request_data)
     
     ret = {}
-    ret['status'], ret['uid'], ret['career'] = 0, 123, 0
+    ret['status'], ret['uid'], ret['career'] = 0, 123, 1
 
     print(json.dumps(ret)) # {"career": 0, "status": 0, "uid": 123}
     return json.dumps(ret)
