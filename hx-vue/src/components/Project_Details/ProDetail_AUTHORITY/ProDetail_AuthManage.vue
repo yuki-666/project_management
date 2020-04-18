@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import SideMenu from '../ProDetail_SideMenu'
+import SideMenu from '../ProDetail_ManagerSideMenu'
 import AuthEdit from './ProDetail_AuthEdit'
 export default {
   name: 'ProDetailAuManage',

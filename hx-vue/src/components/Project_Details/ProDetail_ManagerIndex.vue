@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import SideMenu from './ProDetail_SideMenu'
+import SideMenu from './ProDetail_ManagerSideMenu'
 import ProDetailINFO from './ProDetail_INFO/ProDetail_Info'
 import ProDetailPERSON from './ProDetail_PERSON/ProDetail_Person'
 import ProDetailFUNCTION from './ProDetail_FUNCTION/ProDetail_Function'
@@ -27,7 +27,7 @@ import Equipment from './ProDetail_EQUIPMENT/ProDetail_Equipment'
 import ProFLAW from './ProDetail_FLAW/ProDetail_Flaw'
 import ProRisk from './ProDetail_RISK/ProDetail_Risk'
 export default {
-  name: 'ProDetail',
+  name: 'ProDetailManager',
   components: {
     'side-menu': SideMenu,
     'proDetail-info': ProDetailINFO,

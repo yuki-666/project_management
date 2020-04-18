@@ -50,35 +50,20 @@
         </zx-tag>
       </template>
     </el-table-column>
-    <el-table-column label="操作">
-          <template slot-scope="scope">
-            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
-              >修 改</el-button
-            >
-          </template>
-        </el-table-column>
     </el-table>
     </div>
-    <edit-form
-      :show.sync="dialogFormVisible"
-      :zid="tmpId"
-      @updateAgain="this.getAllProjects"
-      ref="edit"
-    ></edit-form>
   </div>
 </template>
 
 <script>
-import SideMenu from '../ProDetail_ManagerSideMenu'
-import InfoEdit from './ProDetail_InfoEdit'
-import { FlowStatusRules } from '../../home/rule/data-config'
-import ZxTag from '../../tag/src/tag'
+import SideMenu from './ProDetail_WorkerSideMenu'
+import { FlowStatusRules } from '../home/rule/data-config'
+import ZxTag from '../tag/src/tag'
 export default {
   name: 'ProDetailINFO',
   components: {
     'side-menu': SideMenu,
-    'zx-tag': ZxTag,
-    'edit-form': InfoEdit
+    'zx-tag': ZxTag
   },
   data () {
     return {

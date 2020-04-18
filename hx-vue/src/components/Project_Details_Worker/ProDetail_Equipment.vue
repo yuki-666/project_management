@@ -1,7 +1,5 @@
 <template>
   <div>
-    <el-button type="primary" style="float: right" round @click="newClick"
-              >添加设备</el-button>
     <div class="project_table">
       <el-table
         :data="
@@ -23,13 +21,6 @@
         <el-table-column label="设备状态" prop="status"></el-table-column>
         <el-table-column label="是否归还" prop="label"></el-table-column>
         <el-table-column label="归还日期" prop="htime"></el-table-column>
-        <el-table-column label="操作">
-          <template slot-scope="scope">
-            <el-button type="text" @click="handleEdit(scope.$index, scope.row)"
-              >操作</el-button>
-          </template>
-          <!-- </el-button-group> -->
-        </el-table-column>
       </el-table>
       <el-row class="pag">
         <el-pagination
@@ -41,33 +32,15 @@
         </el-pagination>
       </el-row>
     </div>
-    <edit-form
-      :show.sync="dialogVisible"
-      @updateAgain="this.getAllProjects"
-      ref="edit"
-    ></edit-form>
-    <add-form
-      :show.sync="dialogVisible1"
-      @updateAgain="this.getAllProjects"
-      ref="edit1"
-    ></add-form>
   </div>
 </template>
 
 <script>
-// import EquipEdit from './ProDetail_EquipEdit'
-import SideMenu from '../ProDetail_ManagerSideMenu'
-// import EquipAdd from './ProDetail_FuncAdd'
-// import { FlowStatusRules } from '../../home/rule/data-config'
-// import ZxTag from '../../tag'
-import EEdit from './proDetail_EEdit'
-import EAdd from './proDetail_EAdd'
+import SideMenu from './ProDetail_WorkerSideMenu'
 export default {
   name: 'Equipment',
   components: {
-    'side-menu': SideMenu,
-    'edit-form': EEdit,
-    'add-form': EAdd
+    'side-menu': SideMenu
   },
   data () {
     return {
@@ -91,21 +64,6 @@ export default {
     }
   },
   methods: {
-    handleEdit (index, row) {
-      this.$refs.edit.form = {
-        name: row.name,
-        manager: row.manager,
-        ztime: row.ztime,
-        dtime: row.dtime,
-        status: row.status,
-        label: row.label,
-        htime: row.htime
-      }
-      this.dialogVisible = true
-    },
-    newClick () {
-      this.dialogVisible1 = true
-    },
     handleCurrentChange (currentPage) {
       this.currentPage = currentPage
     },

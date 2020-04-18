@@ -13,17 +13,9 @@
         stripe
         @filter-change="filterTagTable"
       >
-        <el-table-column label="缺陷内容" prop="flaw_detail"></el-table-column>
-        <el-table-column label="优先级" prop="priority" sortable></el-table-column>
-        <el-table-column label="跟进人" prop="follower"></el-table-column>
-        <el-table-column label="缺陷状态" prop="status"></el-table-column>
-        <el-table-column label="操作">
-          <template slot-scope="scope">
-            <el-button type="text" @click="handleAdd(scope.$index, scope.row)"
-              >新建缺陷</el-button>
-          </template>
-          <!-- </el-button-group> -->
-        </el-table-column>
+        <el-table-column label="功能ID" prop="function_id"></el-table-column>
+        <el-table-column label="功能名称" prop="function_name" sortable></el-table-column>
+        <el-table-column label="员工姓名" prop="worker_name"></el-table-column>
       </el-table>
       <el-row class="pag">
         <el-pagination
@@ -35,32 +27,15 @@
         </el-pagination>
       </el-row>
     </div>
-    <editfunc-form
-      :show.sync="dialogVisible2"
-      :zid="tmpId"
-      @updateAgain="this.getAllInfo"
-      ref="edit"
-    ></editfunc-form>
-    <add-form
-      :show.sync="dialogVisible3"
-      :zid="tmpId"
-      @updateAgain="this.getAllInfo"
-      ref="edit"
-    ></add-form>
   </div>
 </template>
 
 <script>
-// import FlawEdit from './ProDetail_FlawEdit'
-import SideMenu from '../ProDetail_ManagerSideMenu'
-import FlawAdd from './ProDetail_FlawAdd'
-// import { FlowStatusRules } from '../../home/rule/data-config'
-// import ZxTag from '../../tag'
+import SideMenu from './ProDetail_WorkerSideMenu'
 export default {
-  name: 'ProFLAW',
+  name: 'ProDetailFUNCTION',
   components: {
-    'side-menu': SideMenu,
-    'add-form': FlawAdd
+    'side-menu': SideMenu
   },
   data () {
     return {
@@ -74,48 +49,20 @@ export default {
       total: 10,
       projects: [
         {
-          equipment_name: '',
-          begin_time: '',
-          end_time: ''
+          function_id: '',
+          function_name: '',
+          worker_name: ''
         }
       ]
     }
   },
   methods: {
-    handleDelete (index, row) {
-      let _this = this
-      this.$confirm('此操作将永久删除此功能, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(() => {
-          _this.tmpId = row.function_id
-          this.$axios
-            .post('/project_detail/function/delete', {
-              project_id: '2020-0000-D-01',
-              function_id: _this.tmpId
-            })
-            .then(resp => {
-              if (resp.data.status === 'ok') {
-                this.getAllProjects()
-                this.$message.success('已经删除')
-              }
-            })
-        })
-        .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
-        })
-    },
     getAllInfo () {
       let _this = this
       this.$axios
         .get('/project_detail/function', {
           params: {
-            project_id: _this.tmpId
+            project_id: _this.projectid
           }
         })
         .then(successResponse => {
@@ -135,9 +82,6 @@ export default {
       this.$refs.edit.form = {
         parent_function_id: row.function_id
       }
-      // this.tmpId = row.id
-      // this.$refs.edit.form.id = row.id
-      // this.getAllInfo()
       this.dialogVisible3 = true
     },
     handleCurrentChange (currentPage) {
@@ -149,19 +93,18 @@ export default {
       this.$axios
         .get('/project_detail/function', {
           params: {
-            id: '2020-0000-D-01'
+            id: _this.projectid
           }
         })
         .then(successResponse => {
           _this.projects = successResponse.data
-          // _this.tableDataTmp = successResponse.data
         })
         .catch(failResponse => {
         })
     }
   },
   created () {
-    // this.uid = this.$store.getters.uid
+    this.projectid = this.$store.getters.projectid
     this.getAllProjects()
   }
 }
@@ -170,7 +113,7 @@ export default {
 <style lang="scss" scoped>
 .project_table {
   padding-top: 0;
-  margin: 20px 10%;
+  margin: 10px 20%;
   position: relative;
   // margin-left: auto;
   // margin-right: auto;

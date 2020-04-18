@@ -17,13 +17,6 @@
         <el-table-column label="优先级" prop="priority" sortable></el-table-column>
         <el-table-column label="跟进人" prop="follower"></el-table-column>
         <el-table-column label="缺陷状态" prop="status"></el-table-column>
-        <el-table-column label="操作">
-          <template slot-scope="scope">
-            <el-button type="text" @click="handleAdd(scope.$index, scope.row)"
-              >新建缺陷</el-button>
-          </template>
-          <!-- </el-button-group> -->
-        </el-table-column>
       </el-table>
       <el-row class="pag">
         <el-pagination
@@ -35,32 +28,15 @@
         </el-pagination>
       </el-row>
     </div>
-    <editfunc-form
-      :show.sync="dialogVisible2"
-      :zid="tmpId"
-      @updateAgain="this.getAllInfo"
-      ref="edit"
-    ></editfunc-form>
-    <add-form
-      :show.sync="dialogVisible3"
-      :zid="tmpId"
-      @updateAgain="this.getAllInfo"
-      ref="edit"
-    ></add-form>
   </div>
 </template>
 
 <script>
-// import FlawEdit from './ProDetail_FlawEdit'
-import SideMenu from '../ProDetail_ManagerSideMenu'
-import FlawAdd from './ProDetail_FlawAdd'
-// import { FlowStatusRules } from '../../home/rule/data-config'
-// import ZxTag from '../../tag'
+import SideMenu from './ProDetail_WorkerSideMenu'
 export default {
   name: 'ProFLAW',
   components: {
-    'side-menu': SideMenu,
-    'add-form': FlawAdd
+    'side-menu': SideMenu
   },
   data () {
     return {

@@ -1,6 +1,5 @@
 <template>
   <div>
-    <el-button type="primary" style="float: right" round @click="newClick">新建风险</el-button>
     <div class="project_table">
       <el-table
         :data="
@@ -18,11 +17,6 @@
         <el-table-column label="风险内容" prop="describe"></el-table-column>
         <el-table-column label="优先级" prop="level" sortable></el-table-column>
         <el-table-column label="风险状态" prop="label"></el-table-column>
-        <el-table-column label="操作">
-          <template slot-scope="scope">
-            <el-button type="text" @click="handleEdit(scope.$index, scope.row)">修改</el-button>
-          </template>
-        </el-table-column>
       </el-table>
       <el-row class="pag">
         <el-pagination
@@ -34,29 +28,15 @@
         </el-pagination>
       </el-row>
     </div>
-    <risk-edit
-      :show.sync="dialogVisible"
-      @updateAgain="this.getAllProjects"
-      ref="edit"
-    ></risk-edit>
-    <risk-add
-      :show.sync="dialogVisible1"
-      @updateAgain="this.getAllProjects"
-      ref="edit1"
-    ></risk-add>
   </div>
 </template>
 
 <script>
-import SideMenu from '../ProDetail_ManagerSideMenu'
-import RiskEdit from './proDetail_RiskEdit'
-import RiskAdd from './proDetail_RiskAdd'
+import SideMenu from './ProDetail_WorkerSideMenu'
 export default {
   name: 'ProRisk',
   components: {
-    'side-menu': SideMenu,
-    'risk-edit': RiskEdit,
-    'risk-add': RiskAdd
+    'side-menu': SideMenu
   },
   data () {
     return {
@@ -94,17 +74,6 @@ export default {
     }
   },
   methods: {
-    handleEdit (index, row) {
-      this.$refs.edit.form = {
-        describe: row.describe,
-        level: row.level,
-        label: row.label
-      }
-      this.dialogVisible = true
-    },
-    newClick () {
-      this.dialogVisible1 = true
-    },
     handleCurrentChange (currentPage) {
       this.currentPage = currentPage
     },

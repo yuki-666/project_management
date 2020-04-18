@@ -56,7 +56,7 @@
 
 <script>
 import FuncEdit from './ProDetail_FuncEdit'
-import SideMenu from '../ProDetail_SideMenu'
+import SideMenu from '../ProDetail_ManagerSideMenu'
 import FuncAdd from './ProDetail_FuncAdd'
 export default {
   name: 'ProDetailFUNCTION',
