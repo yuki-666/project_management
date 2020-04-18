@@ -249,7 +249,7 @@ CREATE TABLE `project_equipment` (
   PRIMARY KEY (`id`),
   KEY `proeq_project_id_idx` (`project_id`),
   KEY `proeq_worker_id_idx` (`manager_id`),
-  CONSTRAINT `proeq_project_id` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`),
+  CONSTRAINT `proeq_project_id` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `proeq_worker_id` FOREIGN KEY (`manager_id`) REFERENCES `employee` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -261,6 +261,37 @@ CREATE TABLE `project_equipment` (
 LOCK TABLES `project_equipment` WRITE;
 /*!40000 ALTER TABLE `project_equipment` DISABLE KEYS */;
 /*!40000 ALTER TABLE `project_equipment` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `project_flaw`
+--
+
+DROP TABLE IF EXISTS `project_flaw`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `project_flaw` (
+  `id` varchar(45) NOT NULL COMMENT '缺陷ID',
+  `project_id` varchar(45) DEFAULT NULL COMMENT '项目ID',
+  `describe` varchar(45) DEFAULT NULL COMMENT '缺陷描述',
+  `level` int(11) DEFAULT NULL COMMENT '风险等级',
+  `follower_id` varchar(45) DEFAULT NULL COMMENT '追踪者',
+  `status` int(11) DEFAULT NULL COMMENT '缺陷状态（是否修复）',
+  PRIMARY KEY (`id`),
+  KEY `flaw_project_id_idx` (`project_id`),
+  KEY `flaw_follower_id_idx` (`follower_id`),
+  CONSTRAINT `flaw_follower_id` FOREIGN KEY (`follower_id`) REFERENCES `employee` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `flaw_project_id` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `project_flaw`
+--
+
+LOCK TABLES `project_flaw` WRITE;
+/*!40000 ALTER TABLE `project_flaw` DISABLE KEYS */;
+/*!40000 ALTER TABLE `project_flaw` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -332,14 +363,23 @@ DROP TABLE IF EXISTS `project_risk`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `project_risk` (
-  `id` varchar(45) NOT NULL,
-  `project_id` varchar(45) DEFAULT NULL,
-  `risk_level` varchar(45) DEFAULT NULL,
-  `risk_describe` varchar(45) DEFAULT NULL,
-  `project_label` varchar(45) DEFAULT NULL,
+  `id` varchar(45) NOT NULL COMMENT '风险ID',
+  `project_id` varchar(45) DEFAULT NULL COMMENT '项目ID',
+  `risk_type` varchar(45) DEFAULT NULL COMMENT '风险类型',
+  `risk_describe` varchar(45) DEFAULT NULL COMMENT '风险描述',
+  `risk_level` int(11) DEFAULT NULL COMMENT '风险级别',
+  `risk_effect` varchar(45) DEFAULT NULL COMMENT '风险影响度',
+  `risk_status` int(11) DEFAULT NULL COMMENT '风险状态',
+  `risk_duty_id` varchar(45) DEFAULT NULL COMMENT '风险责任人',
+  `risk_rate` varchar(45) DEFAULT NULL COMMENT '风险跟踪频度',
+  `risk_follower_id` varchar(45) DEFAULT NULL COMMENT '风险相关者',
   PRIMARY KEY (`id`),
   KEY `risk_project_id_idx` (`project_id`),
-  CONSTRAINT `risk_project_id` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`)
+  KEY `risk_duty_worker_id_idx` (`risk_duty_id`),
+  KEY `risk_follower_worker_id_idx` (`risk_follower_id`),
+  CONSTRAINT `risk_duty_worker_id` FOREIGN KEY (`risk_duty_id`) REFERENCES `employee` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `risk_follower_worker_id` FOREIGN KEY (`risk_follower_id`) REFERENCES `employee` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `risk_project_id` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -426,4 +466,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-04-18 18:06:57
+-- Dump completed on 2020-04-18 23:51:55
