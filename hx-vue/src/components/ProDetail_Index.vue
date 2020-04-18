@@ -1,7 +1,7 @@
 <template>
   <div>
     <manager-index v-if="this.flag == 1" ref="managerIndex"></manager-index>
-    <worker-index v-else-if="this.flag == 3" ref="workerIndex"></worker-index>
+    <worker-index v-else-if="this.flag == 2" ref="workerIndex"></worker-index>
   </div>
 </template>
 
@@ -26,8 +26,8 @@ export default {
       this.flag = 1
     // eslint-disable-next-line eqeqeq
     // eslint-disable-next-line eqeqeq
-    } else if (this.$store.getters.career == 3) {
-      this.flag = 3
+    } else if (this.$store.getters.career == 0 || this.$store.getters.career == 2) {
+      this.flag = 2
     }
   }
 }
