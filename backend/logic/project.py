@@ -120,12 +120,17 @@ def modify(project_id, project_name, describe, status, scheduled_time, delivery_
     sql = f'''
            update project set name=\'{project_name}\', `describe`=\'{describe}\', scheduled_time=\'{scheduled_time}\', update_time=\'{update_time}\',
            delivery_day=\'{delivery_day}\', project_superior_id=\'{project_superior_id}\', major_milestones=\'{major_milestones}\',
-           adopting_technology=\'{adopting_technology}\', business_area=\'{business_area}\', main_function=\'{main_function}\', status={status}
+           adopting_technology=\'{adopting_technology}\', business_area=\'{business_area}\', main_function=\'{main_function}\'
            where id=\'{project_id}\';'''
-
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-    res = db.otherDB(sql)
-    return res
+    db.otherDB(sql)
+
+    if status is not None:
+        sql = f'''update project set status=\'{status}\' where id=\'{project_id}\';'''
+        db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+        db.otherDB(sql)
+
+    return 'ok'
 
 def create(uid, name, describe, development_type, scheduled_time, delivery_day, project_superior_id, custom_id, major_milestones, adopting_technology, business_area, main_function):
     # id:
@@ -160,8 +165,7 @@ def create(uid, name, describe, development_type, scheduled_time, delivery_day, 
     if db.otherDB(d.insertSql(p)) == 'ok':
         p.clear()
         p['tablename'] = 'project_participant'
-        #p['column'] = ['id','`name`', '`status`', '`describe`', 'scheduled_time', 'delivery_day', 'project_superior_id', 'customer_id','major_milestones', 'adopting_technology', 'business_area', 'main_function', 'delete_label']
-        p['values'] = [id + sequence_number, uid, '0000', '0']
+        p['values'] = [id + sequence_number, uid, '0000']
         db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
         return db.otherDB(d.insertSql(p))
     return 'error'

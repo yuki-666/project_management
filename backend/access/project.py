@@ -50,7 +50,7 @@ def project_modify_save():
                                      'business_area', 'main_function']):
         return json.dumps('PARAM ERROR')
     
-    data = project.modify(request_data['id'], request_data['name'], request_data['describe'], \
+    data = project.modify(request_data['id'], request_data['name'], request_data['describe'], None, \
         request_data['scheduled_time'], request_data['delivery_day'], request_data['project_superior_id'], \
         request_data['major_milestones'], request_data['adopting_technology'], request_data['business_area'], request_data['main_function'])
 
