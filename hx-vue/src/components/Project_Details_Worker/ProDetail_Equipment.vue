@@ -16,11 +16,36 @@
         <el-table-column label="设备ID" prop="id"></el-table-column>
         <el-table-column label="设备名称" prop="name"></el-table-column>
         <el-table-column label="管理者" prop="manager"></el-table-column>
-        <el-table-column label="租借日期" prop="ztime" ></el-table-column>
-        <el-table-column label="到期日期" prop="dtime"></el-table-column>
-        <el-table-column label="设备状态" prop="status"></el-table-column>
+        <el-table-column label="租借日期" prop="start_time"></el-table-column>
+        <el-table-column label="到期日期" prop="end_time"></el-table-column>
+        <el-table-column
+          label="设备状态"
+          prop="status"
+          column-key="status"
+          :filters="filter_status"
+          filter-placement="bottom-end"
+        >
+          <template slot-scope="props">
+            <zx-tag>{{ FLOWS_STATUS[props.row.status] }}</zx-tag>
+          </template>
+        </el-table-column>
         <el-table-column label="是否归还" prop="label"></el-table-column>
-        <el-table-column label="归还日期" prop="htime"></el-table-column>
+        <el-table-column
+          label="归还日期"
+          prop="return_time"
+          column-key="label"
+          :filters="filter_label"
+          filter-placement="bottom-end"
+        >
+          <template slot-scope="props">
+            <zx-tag>{{ FLOWS_LABEL[props.row.label] }}</zx-tag>
+          </template>>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button type="text" @click="handleEdit(scope.$index, scope.row)">操作</el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <el-row class="pag">
         <el-pagination
@@ -37,9 +62,11 @@
 
 <script>
 import SideMenu from './ProDetail_WorkerSideMenu'
+import ZxTag from '../tag/src/tag'
 export default {
   name: 'Equipment',
   components: {
+    'zx-tag': ZxTag,
     'side-menu': SideMenu
   },
   data () {
@@ -51,15 +78,27 @@ export default {
       pagesize: 5,
       total: 10,
       projectid: '',
+      filter_status: [
+        { text: '损坏', value: 0 },
+        { text: '完好', value: 1 }
+      ],
+      FLOWS_STATUS: ['损坏', '完好'],
+      filter_label: [
+        { text: '否', value: 0 },
+        { text: '是', value: 1 }
+      ],
+      FLOWS_LABEL: ['否', '是'],
       projects: [
         {
+          id: '',
           name: '',
+          manager_id: '',
           manager: '',
-          ztime: '',
-          dtime: '',
+          start_time: '',
+          end_time: '',
           status: '',
           label: '',
-          htime: ''
+          return_time: ''
         }
       ]
     }

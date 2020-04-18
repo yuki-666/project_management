@@ -16,13 +16,31 @@
       >
         <el-table-column label="缺陷ID" prop="id"></el-table-column>
         <el-table-column label="缺陷内容" prop="describe"></el-table-column>
-        <el-table-column label="优先级" prop="level" sortable></el-table-column>
+        <el-table-column label="优先级" prop="level" column-key="level"
+          :filters="filter_level"
+          filter-placement="bottom-end"
+        >
+          <template slot-scope="props">
+            <zx-tag>
+              {{ FLOWS_LEVEL[props.row.level] }}
+            </zx-tag>
+          </template></el-table-column>
         <el-table-column label="跟进人" prop="follower"></el-table-column>
-        <el-table-column label="缺陷状态" prop="status"></el-table-column>
+        <el-table-column label="缺陷状态" prop="status" column-key="status"
+          :filters="filter_status"
+          filter-placement="bottom-end"
+        >
+          <template slot-scope="props">
+            <zx-tag>
+              {{ FLOWS_STATUS[props.row.status] }}
+            </zx-tag>
+          </template></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="text" @click="handleEdit(scope.$index, scope.row)">修改</el-button>
+            <el-button type="text" @click="handleEdit(scope.$index, scope.row)"
+              >操作</el-button>
           </template>
+          <!-- </el-button-group> -->
         </el-table-column>
       </el-table>
       <el-row class="pag">
@@ -54,12 +72,17 @@
 import SideMenu from '../ProDetail_ManagerSideMenu'
 import FlawAdd from './ProDetail_FlawAdd'
 import FlawEdit from './proDetail_FlawEdit'
+import ZxTag from '../../tag/src/tag'
+// import { FlowStatusRules } from '../../home/rule/data-config'
+// import ZxTag from '../../tag'
 export default {
   name: 'ProFLAW',
   components: {
     'side-menu': SideMenu,
     'add-form': FlawAdd,
+    'zx-tag': ZxTag,
     'edit-form': FlawEdit
+
   },
   data () {
     return {
@@ -71,14 +94,26 @@ export default {
       currentPage: 1,
       pagesize: 5,
       total: 10,
-      projects: [{
-        id: '',
-        describe: '',
-        level: '',
-        follower_id: '',
-        follower: '',
-        status: ''
-      }]
+      filter_status: [
+        { text: '未修复', value: 0 },
+        { text: '已修复', value: 1 }
+      ],
+      FLOWS_STATUS: ['未修复', '已修复'],
+      filter_level: [
+        { text: '低', value: 0 },
+        { text: '中', value: 1 },
+        { text: '高', value: 2 }
+      ],
+      FLOWS_LEVEL: ['低', '中', '高'],
+      projects: [
+        {
+          id: '',
+          describe: '',
+          level: '',
+          follower: '',
+          status: ''
+        }
+      ]
     }
   },
   methods: {
@@ -87,10 +122,9 @@ export default {
     },
     handleEdit (index, row) {
       this.$refs.edit.form = {
-        id: row.id,
         describe: row.describe,
         level: row.level,
-        follower: row.follower_id,
+        follower: row.follower,
         status: row.status
       }
       this.dialogVisible = true
@@ -101,18 +135,19 @@ export default {
       this.$axios
         .get('/project_detail/project_flaw', {
           params: {
-            project_id: _this.projectid
+            project_id: '2020-04-18'
           }
         })
         .then(successResponse => {
           _this.projects = successResponse.data
+          // _this.tableDataTmp = successResponse.data
         })
         .catch(failResponse => {
         })
     }
   },
   created () {
-    this.projectid = this.$store.getters.projectid
+    // this.uid = this.$store.getters.uid
     this.getAllProjects()
   }
 }
@@ -123,6 +158,8 @@ export default {
   padding-top: 0;
   margin: 20px 10%;
   position: relative;
+  // margin-left: auto;
+  // margin-right: auto;
 }
 .demo-table-expand {
   font-size: 0;
