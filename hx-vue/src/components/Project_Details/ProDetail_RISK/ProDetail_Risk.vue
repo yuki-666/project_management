@@ -39,13 +39,13 @@
                 <span>{{ props.row.status }}</span>
               </el-form-item>
               <el-form-item label="风险责任人">
-                <span>{{ props.row.duty }}</span>
+                <span>{{ props.row.duty_name }}</span>
               </el-form-item>
               <el-form-item label="风险跟踪频度">
                 <span>{{ props.row.rate }}</span>
               </el-form-item>
               <el-form-item label="风险相关者">
-                <span>{{ props.row.follower }}</span>
+                <span>{{ props.row.follower_name }}</span>
               </el-form-item>
             </el-form>
           </template>
@@ -70,7 +70,7 @@
               {{ FLOWS_STATUS[props.row.status] }}
             </zx-tag>
           </template></el-table-column>
-        <el-table-column label="风险责任人" prop="duty"></el-table-column>
+        <el-table-column label="风险责任人" prop="duty_name"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">修 改</el-button>
@@ -130,25 +130,26 @@ export default {
         '未修复',
         '已修复'
       ],
-      projects: [
-        {
-          id: '',
-          type: '',
-          describe: '',
-          level: '',
-          effect: '',
-          solve: '',
-          status: '',
-          duty: '',
-          rate: '',
-          follower: ''
-        }
-      ]
+      projects: [{
+        id: '',
+        type: '',
+        describe: '',
+        level: '',
+        effect: '',
+        solve: '',
+        status: '',
+        duty_id: '',
+        duty_name: '',
+        follower_id: '',
+        follower_name: '',
+        rate: '',
+      }]
     }
   },
   methods: {
     handleEdit (index, row) {
       this.$refs.edit.form = {
+        id: row.id,
         type: row.type,
         describe: row.describe,
         level: row.level,
@@ -157,7 +158,7 @@ export default {
         status: row.status,
         duty: row.duty_id,
         rate: row.rate,
-        follower: row.follow_id
+        follower: row.follower_id
       }
       this.dialogVisible = true
     },

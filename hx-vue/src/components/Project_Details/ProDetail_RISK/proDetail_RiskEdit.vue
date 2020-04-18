@@ -83,6 +83,7 @@ export default {
   data () {
     return {
       dialogVisible: this.show,
+      projectid: '',
       form: {
         id: '',
         type: '',
@@ -125,12 +126,27 @@ export default {
     }
   },
   methods: {
+    getMember () {
+      var _this = this
+      this.$axios
+        .get('/project_detail/get_user', {
+          params: {
+            project_id: _this.projectid
+          }
+        })
+        .then(successResponse => {
+          _this.member = successResponse.data
+        })
+        .catch(failResponse => {
+        })
+    },
     onSubmit () {
       let _this = this
       this.$axios
         .post('/project_detail/project_risk/modify', {
+          project_id: _this.projectid,
           id: _this.form.id,
-          type: _this.type,
+          type: _this.form.type,
           describe: _this.form.describe,
           level: _this.form.level,
           effect: _this.form.effect,
@@ -141,7 +157,6 @@ export default {
           follower: _this.form.follower
         })
         .then(resp => {
-          console.log(resp)
           if (resp.data.status === 'ok') {
             this.dialogFormVisible = false
             this.$emit('update:show', false)
@@ -157,6 +172,7 @@ export default {
   },
   created () {
     this.projectid = this.$store.getters.projectid
+    this.getMember()
   }
 }
 </script>

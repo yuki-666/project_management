@@ -29,19 +29,6 @@
           <el-input v-model="form.event_name" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item
-          label="date"
-          :label-width="formLabelWidth"
-          prop="date"
-        >
-          <el-date-picker
-            v-model="form.date"
-            type="datetime"
-            placeholder="开始日期"
-            :picker-options="startDatePicker"
-          >
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item
           label="start_time"
           :label-width="formLabelWidth"
           prop="start_time"
@@ -136,7 +123,6 @@ export default {
         .post('/project/work_time/create/save', {
           uid: _this.$store.getters.uid,
           project_id: _this.zid,
-          date: _this.form.date,
           function_id: _this.form.function_id,
           event_name: _this.form.event_name,
           start_time: _this.form.start_time,
@@ -150,21 +136,12 @@ export default {
             _this.dialogFormVisible = false
             _this.$emit('update:show', false)
             _this.$emit('updateAgain')
-            this.$message.success('已经更新')
+            this.$message.success('新建成功')
           } else if (status === 'fail_1') {
-            _this.dialogFormVisible = false
-            _this.$emit('update:show', false)
-            _this.$emit('updateAgain')
-            this.$message.error('一天的工作时间超过24h')
+            this.$message.error('一天的工作时间不得超过24h')
           } else if (status === 'fail_2') {
-            _this.dialogFormVisible = false
-            _this.$emit('update:show', false)
-            _this.$emit('updateAgain')
             this.$message.error('开始时间>=结束时间')
           } else if (status === 'fail_3') {
-            _this.dialogFormVisible = false
-            _this.$emit('update:show', false)
-            _this.$emit('updateAgain')
             this.$message.error('开始、结束、剩余时间必须为数字')
           }
         })

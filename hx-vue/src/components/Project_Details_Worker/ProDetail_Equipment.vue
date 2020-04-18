@@ -50,6 +50,7 @@ export default {
       currentPage: 1,
       pagesize: 5,
       total: 10,
+      projectid: '',
       projects: [
         {
           name: '',
@@ -73,19 +74,18 @@ export default {
       this.$axios
         .get('/project_detail/project_equipment', {
           params: {
-            project_id: '2020-04-18'
+            project_id: _this.projectid
           }
         })
         .then(successResponse => {
           _this.projects = successResponse.data
-          // _this.tableDataTmp = successResponse.data
         })
         .catch(failResponse => {
         })
     }
   },
   created () {
-    // this.uid = this.$store.getters.uid
+    this.projectid = this.$store.getters.projectid
     this.getAllProjects()
   }
 }
@@ -96,8 +96,6 @@ export default {
   padding-top: 0;
   margin: 20px 10%;
   position: relative;
-  // margin-left: auto;
-  // margin-right: auto;
 }
 .demo-table-expand {
   font-size: 0;

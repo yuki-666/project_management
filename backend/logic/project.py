@@ -427,12 +427,30 @@ def get_business_area():
     return db.selectDB(sql)
 
 def get_risk(project_id):
-    sql = f'''select `id`, risk_level as level, risk_describe as `describe`, project_label as label from project_risk where project_id=\'{project_id}\';'''
+    sql = f'''select `id`, risk_type as type, risk_describe as `describe`,
+              risk_level as level, risk_effect as effect, risk_solve as solve,
+              risk_status as status, risk_rate as rate, risk_duty_id as duty_id, risk_follower_id as follower_id
+              from project_risk where project_id=\'{project_id}\';'''
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     res = db.selectDB(sql)
-    return res if res != 'Empty' else []
+    
+    if res == 'Empty':
+        return []
 
-def add_risk(project_id, describe, level):
+    for i in res:
+        sql = f'''select name from employee where id=\'{i['duty_id']}\''''
+        db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+        name = db.selectDB(sql)[0]['name']
+        i['duty_name'] = name
+
+        sql = f'''select name from employee where id=\'{i['follower_id']}\''''
+        db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+        name = db.selectDB(sql)[0]['name']
+        i['follower_name'] = name
+
+    return res
+
+def add_risk(project_id, id, risk_type, describe, level, effect, solve, status, duty, rate, follower):
     # get max id in db
     sql = f'''select max(id) from project_risk where project_id=\'{project_id}\';'''
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
@@ -442,14 +460,17 @@ def add_risk(project_id, describe, level):
     
     # insert
     sql = f'''insert into project_risk
-              values(\'{new_id}\', \'{project_id}\', \'{level}\', \'{describe}\', 0);'''
+              values(\'{new_id}\', \'{project_id}\', \'{risk_type}\', \'{describe}\',
+              \'{level}\', \'{effect}\', \'{status}\', \'{duty}\', \'{rate}\', \'{follower}\', \'{solve}\');'''
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     return db.otherDB(sql)
 
-def modify_risk(project_id, id, describe, level, label):
+def modify_risk(project_id, id, risk_type, describe, level, effect, solve, status, duty, rate, follower):
     sql = f'''update project_risk
-              set risk_level=\'{level}\', risk_describe=\'{describe}\', project_label=\'{label}\'
-              where `id`={id} and project_id=\'{project_id}\';'''
+              set risk_type=\'{risk_type}\', risk_describe=\'{describe}\', risk_level=\'{level}\',
+              risk_effect=\'{effect}\', risk_solve=\'{solve}\', risk_status=\'{status}\',
+              risk_rate=\'{rate}\', risk_duty_id=\'{duty}\', risk_follower_id=\'{follower}\'
+              where `id`=\'{id}\' and project_id=\'{project_id}\';'''
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     res = db.otherDB(sql)
     return 'ok'

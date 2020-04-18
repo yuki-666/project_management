@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-dialog
-      title="添加设备"
+      title="修改设备"
       :visible.sync="dialogVisible"
       @close="$emit('update:show', false)"
       center

@@ -30,10 +30,9 @@
             <zx-tag>{{ FLOWS_STATUS[props.row.status] }}</zx-tag>
           </template>
         </el-table-column>
-        <el-table-column label="是否归还" prop="label"></el-table-column>
         <el-table-column
-          label="归还日期"
-          prop="return_time"
+          label="是否归还"
+          prop="label"
           column-key="label"
           :filters="filter_label"
           filter-placement="bottom-end"
@@ -42,9 +41,10 @@
             <zx-tag>{{ FLOWS_LABEL[props.row.label] }}</zx-tag>
           </template>>
         </el-table-column>
+        <el-table-column label="归还日期" prop="return_time"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="text" @click="handleEdit(scope.$index, scope.row)">操作</el-button>
+            <el-button type="text" @click="handleEdit(scope.$index, scope.row)">修改</el-button>
           </template>
         </el-table-column>
       </el-table>
