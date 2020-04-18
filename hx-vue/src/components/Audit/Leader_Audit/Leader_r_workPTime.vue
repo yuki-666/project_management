@@ -74,7 +74,7 @@
     <edit-form
       :show.sync="dialogFormVisible"
       :zid="tmpId"
-      @updateAgain="this.getAllInfo"
+      @updateAgain="this.getAllProjects"
       ref="edit"
     ></edit-form>
   </div>
@@ -126,7 +126,7 @@ export default {
   methods: {
     handleDelete (index, row) {
       let _this = this
-      this.$confirm('此操作将永久删除该书籍, 是否继续?', '提示', {
+      this.$confirm('此操作将删除该工时, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'

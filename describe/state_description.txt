@@ -30,3 +30,19 @@ file upload:
 function_status:
 0: pending
 1: finished
+
+risk_status:
+0: low
+1: middle
+2: high
+
+0: exist
+1: finish
+
+device:
+label:
+0: not yet
+1: returned
+status:
+0: error
+1: ok

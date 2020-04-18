@@ -189,7 +189,6 @@ export default {
             _this.dialogFormVisible = false
             this.$message.success('已经更新')
           }
-          // this.dialogFormVisible = false
         })
         .catch(failResponse => {
           this.$message.error('404更新失败')

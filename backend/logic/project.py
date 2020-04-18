@@ -412,15 +412,77 @@ def get_authority(project_id, uid=None):
     return db.selectDB(sql)
 
 def modify_authority(project_id, uid, git_authority, file_authority, mail_authority):
-    # if can't find project_id uid in table, return 'error'
     sql = f'''update authority set git_authority={git_authority}, file_authority={file_authority}, mail_authority={mail_authority} where project_id=\'{project_id}\' and worker_id={uid};'''
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-    return 'ok' if db.otherDB(sql) == 'ok' else 'error'
+    res = db.otherDB(sql)
+    return 'ok'
 
 def get_business_area():
     sql = 'select id as business_id, name as business_name from business_area where delete_label=0;'
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     return db.selectDB(sql)
+
+def get_risk(project_id):
+    sql = f'''select `id`, risk_level as level, risk_describe as `describe`, project_label as label from project_risk where project_id=\'{project_id}\';'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    res = db.selectDB(sql)
+    return res if res != 'Empty' else []
+
+def add_risk(project_id, describe, level):
+    # get max id in db
+    sql = f'''select max(id) from project_risk where project_id=\'{project_id}\';'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    new_id = db.selectDB(sql)[0]['max(id)']
+    new_id = 0 if new_id is None else int(new_id)
+    new_id += 1
+    
+    # insert
+    sql = f'''insert into project_risk
+              values(\'{new_id}\', \'{project_id}\', \'{level}\', \'{describe}\', 0);'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    return db.otherDB(sql)
+
+def modify_risk(project_id, id, describe, level, label):
+    sql = f'''update project_risk
+              set risk_level=\'{level}\', risk_describe=\'{describe}\', project_label=\'{label}\'
+              where `id`={id} and project_id=\'{project_id}\';'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    res = db.otherDB(sql)
+    return 'ok'
+
+def get_equipment(project_id):
+    sql = f'''select e.id, e.name as name, u.id as manager_id, u.name as manager, start_time, end_time, status, label, return_time
+              from project_equipment as e
+              join employee as u on e.manager_id=u.id
+              where project_id=\'{project_id}\';'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    res = db.selectDB(sql)
+    res = change_time_format(res, 'start_time', only_day=True)
+    res = change_time_format(res, 'end_time', only_day=True)
+    res = change_time_format(res, 'return_time', only_day=True)
+    return res if res != 'Empty' else []
+
+def add_equipment(project_id, name, manager, start_time, end_time, status):
+    # get max id in db
+    sql = f'''select max(id) from project_equipment where project_id=\'{project_id}\';'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    new_id = db.selectDB(sql)[0]['max(id)']
+    new_id = 0 if new_id is None else int(new_id)
+    new_id += 1
+    
+    # insert
+    sql = f'''insert into project_equipment
+              values(\'{new_id}\', \'{project_id}\', \'{name}\', \'{start_time}\', \'{end_time}\', {status}, 0, 0, \'{manager}\');'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    return db.otherDB(sql)
+
+def modify_equipment(project_id, id, name, manager, start_time, end_time, status, label, return_time):
+    sql = f'''update project_equipment
+              set name=\'{name}\', start_time=\'{start_time}\', end_time=\'{end_time}\', status=\'{status}\', label=\'{label}\', return_time=\'{return_time}\', manager_id=\'{manager}\'
+              where `id`={id} and project_id=\'{project_id}\';'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    res = db.otherDB(sql)
+    return 'ok'
 
 if __name__ == '__main__':
     print(get_info(keyword='系统', include_reject=True))

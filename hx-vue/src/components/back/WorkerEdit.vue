@@ -114,7 +114,8 @@ export default {
         .then(successResponse => {
           if (successResponse.data.status === 0) {
             this.dialogFormVisible = false
-            this.$emit('onSubmit')
+            this.$emit('update:show', false)
+            this.$emit('updateAgain')
             _this.dialogFormVisible = false
             this.$message.success('新建成功')
           }

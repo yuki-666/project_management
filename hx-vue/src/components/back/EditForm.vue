@@ -18,14 +18,14 @@
           <el-input
             v-model="form.password"
             autocomplete="off"
-            placeholder="请输入密码"
+            placeholder="请输入密码，若为空则不进行修改"
           ></el-input>
         </el-form-item>
         <el-form-item label="姓名" :label-width="formLabelWidth" prop="name">
           <el-input
             v-model="form.name"
             autocomplete="off"
-            placeholder="请输入密码"
+            placeholder="请输入姓名"
           ></el-input>
         </el-form-item>
         <el-form-item label="职位" :label-width="formLabelWidth" prop="career">
@@ -94,6 +94,7 @@ export default {
   methods: {
     clear () {
       this.form = {
+        id: '',
         username: '',
         password: '',
         name: '',
@@ -105,6 +106,7 @@ export default {
       let _this = this
       this.$axios
         .post('/back/modify_normal_account', {
+          id: _this.form.id,
           username: _this.form.username,
           password: _this.form.password,
           name: _this.form.name,
@@ -112,9 +114,10 @@ export default {
           department: _this.form.department
         })
         .then(resp => {
-          if (resp && resp.status === 200) {
+          if (resp.data.status === 'ok') {
             this.dialogFormVisible = false
             this.$emit('update:show', false)
+            this.$emit('updateAgain')
             _this.dialogFormVisible = false
             this.$message.success('修改成功')
           }

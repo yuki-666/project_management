@@ -15,6 +15,7 @@
     </div>
     <edit-form
       :show.sync="dialogVisible"
+      @updateAgain="this.getAllInfo"
       ref="edit"
     ></edit-form>
   </div>
@@ -31,7 +32,6 @@ export default {
   },
   data () {
     return {
-      //   buttonFlag: false,
       dialogVisible: this.show,
       tableData: [
         {

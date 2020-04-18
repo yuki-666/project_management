@@ -36,31 +36,11 @@
         >
           <el-input v-model="form.event_name" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item
-          label="start_time"
-          :label-width="formLabelWidth"
-          prop="start_time"
-        >
-          <el-date-picker
-            v-model="form.start_time"
-            type="datetime"
-            placeholder="开始日期"
-            :picker-options="startDatePicker"
-          >
-          </el-date-picker>
+        <el-form-item label="start_time" :label-width="formLabelWidth" prop="start_time">
+          <el-input v-model="form.start_time" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item
-          label="end_time"
-          :label-width="formLabelWidth"
-          prop="end_time"
-        >
-          <el-date-picker
-            v-model="form.end_time"
-            type="datetime"
-            placeholder="结束日期"
-            :picker-options="endDatePicker"
-          >
-          </el-date-picker>
+        <el-form-item label="end_time" :label-width="formLabelWidth" prop="end_time">
+          <el-input v-model="form.end_time" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -127,16 +107,17 @@ export default {
           project_name: _this.form.project_name,
           function_name: _this.form.function_name,
           event_name: _this.form.event_name,
-          start_time: _this.dateFormat(_this.form.start_time),
-          end_time: _this.dateFormat(_this.form.end_time)
+          start_time: _this.form.start_time,
+          end_time: _this.form.end_time
         })
         .then(successResponse => {
           let status = successResponse.data.status
           if (status === 'ok') {
+            this.dialogFormVisible = false
+            this.$emit('update:show', false)
+            this.$emit('updateAgain')
             _this.dialogFormVisible = false
-            _this.$emit('update:show', false)
-            _this.$emit('updateAgain')
-            this.$message.success('已经更新')
+            this.$message.success('更新成功')
           }
         })
         .catch(failResponse => {})
