@@ -14,15 +14,14 @@
         stripe
         @filter-change="filterTagTable"
       >
+        <el-table-column label="风险id" prop="id"></el-table-column>
         <el-table-column label="风险内容" prop="describe"></el-table-column>
         <el-table-column label="优先级" prop="level" sortable></el-table-column>
         <el-table-column label="风险状态" prop="label"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="text" @click="handleEdit(scope.$index, scope.row)"
-              >修改</el-button>
+            <el-button type="text" @click="handleEdit(scope.$index, scope.row)">修改</el-button>
           </template>
-          <!-- </el-button-group> -->
         </el-table-column>
       </el-table>
       <el-row class="pag">
@@ -49,11 +48,7 @@
 </template>
 
 <script>
-// import FlawEdit from './ProDetail_FlawEdit'
 import SideMenu from '../ProDetail_SideMenu'
-// import FlawAdd from './ProDetail_FlawAdd'
-// import { FlowStatusRules } from '../../home/rule/data-config'
-// import ZxTag from '../../tag'
 import RiskEdit from './proDetail_RiskEdit'
 import RiskAdd from './proDetail_RiskAdd'
 export default {
@@ -62,7 +57,6 @@ export default {
     'side-menu': SideMenu,
     'risk-edit': RiskEdit,
     'risk-add': RiskAdd
-    // 'add-form': FlawAdd
   },
   data () {
     return {
@@ -74,11 +68,29 @@ export default {
       total: 10,
       projects: [
         {
+          id: '',
           describe: '',
           level: '',
           label: ''
         }
-      ]
+      ],
+      level_dict: [{
+        key: '0',
+        value: '低'
+      }, {
+        key: '1',
+        value: '中'
+      }, {
+        key: '2',
+        value: '高'
+      }],
+      label_dict: [{
+        key: '0',
+        value: '存在'
+      }, {
+        key: '1',
+        value: '已修复'
+      }]
     }
   },
   methods: {
@@ -102,7 +114,7 @@ export default {
       this.$axios
         .get('/project_detail/project_risk', {
           params: {
-            project_id: '2020-04-18'
+            project_id: _this.projectid
           }
         })
         .then(successResponse => {
@@ -111,7 +123,7 @@ export default {
     }
   },
   created () {
-    // this.uid = this.$store.getters.uid
+    this.projectid = this.$store.getters.projectid
     this.getAllProjects()
   }
 }
@@ -122,8 +134,6 @@ export default {
   padding-top: 0;
   margin: 20px 10%;
   position: relative;
-  // margin-left: auto;
-  // margin-right: auto;
 }
 .demo-table-expand {
   font-size: 0;

@@ -263,3 +263,42 @@ def project_detail_authority_manage_modify():
         return json.dumps('BACKEND ERROR')
     else:
         return json.dumps({'status': data})
+
+@project_detail_access.route('/project_risk', methods=['GET'])
+def project_detail_project_risk():
+    request_data = get_value_dict()
+    if not check_dict(request_data, ['project_id']):
+        return json.dumps('PARAM ERROR')
+
+    data = project.get_risk(request_data['project_id'])
+
+    if has_error(data):
+        return json.dumps('BACKEND ERROR')
+    else:
+        return json.dumps(data)
+
+@project_detail_access.route('/project_risk/add', methods=['POST'])
+def project_detail_project_risk_add():
+    request_data = get_value_dict()
+    if not check_dict(request_data, ['project_id', 'describe', 'level']):
+        return json.dumps('PARAM ERROR')
+
+    data = project.add_risk(request_data['project_id'], request_data['describe'], request_data['level'])
+
+    if has_error(data):
+        return json.dumps('BACKEND ERROR')
+    else:
+        return json.dumps({'status': data})
+
+@project_detail_access.route('/project_risk/modify', methods=['POST'])
+def project_detail_project_risk_modify():
+    request_data = get_value_dict()
+    if not check_dict(request_data, ['project_id', 'describe', 'level', 'label']):
+        return json.dumps('PARAM ERROR')
+
+    data = project.modify_risk(request_data['project_id'], request_data['describe'], request_data['level'], request_data['label'])
+
+    if has_error(data):
+        return json.dumps('BACKEND ERROR')
+    else:
+        return json.dumps({'status': data})

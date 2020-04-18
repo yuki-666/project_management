@@ -9,7 +9,7 @@
       <el-form :model="form">
         <el-form-item label="风险内容" :label-width="formLabelWidth" prop="describe">
           <el-input
-            v-model="form.risk_describe"
+            v-model="form.describe"
             autocomplete="off"
             placeholder="请输入内容"
           ></el-input>
@@ -18,16 +18,6 @@
          <el-select v-model="form.level" placeholder="请选择优先级">
             <el-option
               v-for="item in level_dict"
-              :key="item.key"
-              :label="item.value"
-              :value="item.key"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="风险状态" :label-width="formLabelWidth" prop="label">
-          <el-select v-model="form.label" placeholder="请选择状态">
-            <el-option
-              v-for="item in label_dict"
               :key="item.key"
               :label="item.value"
               :value="item.key"
@@ -58,25 +48,17 @@ export default {
       form: {
         describe: '',
         level: '',
-        label: '',
-        career_dict: [{
-          key: '0',
-          value: '低'
-        }, {
-          key: '1',
-          value: '中'
-        }, {
-          key: '2',
-          value: '高'
-        }],
-        label_dict: [{
-          key: '0',
-          value: '存在'
-        }, {
-          key: '1',
-          value: '已修复'
-        }]
       },
+      level_dict: [{
+        key: '0',
+        value: '低'
+      }, {
+        key: '1',
+        value: '中'
+      }, {
+        key: '2',
+        value: '高'
+      }],
       formLabelWidth: '100px'
     }
   },
@@ -90,24 +72,18 @@ export default {
       let _this = this
       this.$axios
         .post('/project_detail/project_risk/add', {
-          project_id: '2020-04-18',
+          project_id: _this.projectid,
           describe: _this.form.describe,
-          level: _this.form.level,
-          label: _this.form.label
+          level: _this.form.level
         })
         .then(resp => {
-          if (resp && resp.status === 200) {
-            this.dialogVisible = false
+          if (resp.data.status === 'ok') {
+            this.dialogFormVisible = false
             this.$emit('update:show', false)
-            _this.dialogVisible = false
-            this.$message.success('新建成功')
+            this.$emit('updateAgain')
+            _this.dialogFormVisible = false
+            this.$message.success('添加成功')
           }
-        //   if (resp.data.status === 'ok') {
-        //     this.dialogVisible = false
-        //     this.$emit('onSubmit')
-        //     _this.dialogVisible = false
-        //     this.$message.success('添加成功')
-        //   }
         })
     },
     closeDialog () {

@@ -8,11 +8,7 @@
     >
       <el-form :model="form">
         <el-form-item label="风险内容" :label-width="formLabelWidth" prop="describe">
-          <el-input
-            v-model="form.risk_describe"
-            autocomplete="off"
-            placeholder="请输入内容"
-          ></el-input>
+          <el-input v-model="form.describe" autocomplete="off" placeholder="请输入内容"></el-input>
         </el-form-item>
         <el-form-item label="优先级" :label-width="formLabelWidth" prop="level">
          <el-select v-model="form.level" placeholder="请选择优先级">
@@ -59,24 +55,24 @@ export default {
         describe: '',
         level: '',
         label: '',
-        career_dict: [{
-          key: '0',
-          value: '低'
-        }, {
-          key: '1',
-          value: '中'
-        }, {
-          key: '2',
-          value: '高'
-        }],
-        label_dict: [{
-          key: '0',
-          value: '存在'
-        }, {
-          key: '1',
-          value: '已修复'
-        }]
       },
+      level_dict: [{
+        key: '0',
+        value: '低'
+      }, {
+        key: '1',
+        value: '中'
+      }, {
+        key: '2',
+        value: '高'
+      }],
+      label_dict: [{
+        key: '0',
+        value: '存在'
+      }, {
+        key: '1',
+        value: '已修复'
+      }],
       formLabelWidth: '100px'
     }
   },
@@ -90,24 +86,20 @@ export default {
       let _this = this
       this.$axios
         .post('/project_detail/project_risk/modify', {
-          project_id: '2020-04-18',
+          project_id: _this.projectid,
           describe: _this.form.describe,
           level: _this.form.level,
           label: _this.form.label
         })
         .then(resp => {
-          if (resp && resp.status === 200) {
-            this.dialogVisible = false
+          console.log(resp)
+          if (resp.data.status === 'ok') {
+            this.dialogFormVisible = false
             this.$emit('update:show', false)
-            _this.dialogVisible = false
-            this.$message.success('操作成功')
+            this.$emit('updateAgain')
+            _this.dialogFormVisible = false
+            this.$message.success('修改成功')
           }
-        //   if (resp.data.status === 'ok') {
-        //     this.dialogVisible = false
-        //     this.$emit('onSubmit')
-        //     _this.dialogVisible = false
-        //     this.$message.success('添加成功')
-        //   }
         })
     },
     closeDialog () {

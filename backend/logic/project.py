@@ -422,5 +422,33 @@ def get_business_area():
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     return db.selectDB(sql)
 
+def get_risk(project_id):
+    sql = f'''select `id`, risk_level as level, risk_describe as `describe`, project_label as label from project_risk where project_id=\'{project_id}\';'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    res = db.selectDB(sql)
+    return res if res != 'Empty' else []
+
+def add_risk(project_id, describe, level):
+    # get max id in db
+    sql = f'''select max(id) from project_risk where project_id=\'{project_id}\';'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    new_id = db.selectDB(sql)[0]['max(id)']
+    new_id = 0 if new_id is None else int(new_id)
+    new_id += 1
+    
+    # insert
+    sql = f'''insert into project_risk
+              values(\'{new_id}\', \'{project_id}\', \'{level}\', \'{describe}\', 0);'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    return db.otherDB(sql)
+
+def modify_risk(project_id, describe, level, label):
+    sql = f'''update project_risk
+              set risk_level=\'{level}\', risk_describe=\'{describe}\', project_label=\'{label}\'
+              where `id`={project_id};'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    res = db.otherDB(sql)
+    return 'ok'
+
 if __name__ == '__main__':
     print(get_info(keyword='系统', include_reject=True))
