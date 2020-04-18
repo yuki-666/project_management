@@ -27,11 +27,11 @@
     </el-menu-item>
     <el-menu-item index="5">
       <i class="el-icon-menu"></i>
-      <span slot="title">项目风险</span>
+      <span slot="title">缺陷跟踪</span>
     </el-menu-item>
     <el-menu-item index="6">
       <i class="el-icon-menu"></i>
-      <span slot="title">缺陷跟踪</span>
+      <span slot="title">项目风险</span>
     </el-menu-item>
     <el-menu-item index="7">
       <i class="el-icon-menu"></i>
