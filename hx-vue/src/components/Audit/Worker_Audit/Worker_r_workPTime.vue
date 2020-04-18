@@ -74,7 +74,7 @@
     <edit-form
       :show.sync="dialogFormVisible"
       :zid="tmpId"
-      @updateAgain="this.getAllInfo"
+      @updateAgain="this.getAllProjects"
       ref="edit"
     ></edit-form>
   </div>
@@ -126,20 +126,12 @@ export default {
   methods: {
     handleDelete (index, row) {
       let _this = this
-      this.$confirm('此操作将永久删除该书籍, 是否继续?', '提示', {
+      this.$confirm('此操作将删除该工时, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
         .then(() => {
-          // 前端删除 仅供测试
-          let tmp = { id: row.id }
-          let tmpArr = [tmp]
-          _this.projects = _this.projects.filter(item =>
-            tmpArr.every(ele => ele.id !== item.id)
-          )
-          _this.tmpId = row.id
-          // 后端删除
           this.$axios
             .post('/approval/work_time/passive/delete', { id: _this.tmpId })
             .then(resp => {

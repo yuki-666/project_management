@@ -112,10 +112,11 @@ export default {
         .then(successResponse => {
           let status = successResponse.data.status
           if (status === 'ok') {
+            this.dialogFormVisible = false
+            this.$emit('update:show', false)
+            this.$emit('updateAgain')
             _this.dialogFormVisible = false
-            _this.$emit('update:show', false)
-            _this.$emit('updateAgain')
-            this.$message.success('已经更新')
+            this.$message.success('更新成功')
           }
         })
         .catch(failResponse => {
