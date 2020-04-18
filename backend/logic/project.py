@@ -120,12 +120,17 @@ def modify(project_id, project_name, describe, status, scheduled_time, delivery_
     sql = f'''
            update project set name=\'{project_name}\', `describe`=\'{describe}\', scheduled_time=\'{scheduled_time}\', update_time=\'{update_time}\',
            delivery_day=\'{delivery_day}\', project_superior_id=\'{project_superior_id}\', major_milestones=\'{major_milestones}\',
-           adopting_technology=\'{adopting_technology}\', business_area=\'{business_area}\', main_function=\'{main_function}\', status={status}
+           adopting_technology=\'{adopting_technology}\', business_area=\'{business_area}\', main_function=\'{main_function}\'
            where id=\'{project_id}\';'''
-
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-    res = db.otherDB(sql)
-    return res
+    db.otherDB(sql)
+
+    if status is not None:
+        sql = f'''update project set status=\'{status}\' where id=\'{project_id}\';'''
+        db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+        db.otherDB(sql)
+
+    return 'ok'
 
 def create(uid, name, describe, development_type, scheduled_time, delivery_day, project_superior_id, custom_id, major_milestones, adopting_technology, business_area, main_function):
     # id:
@@ -160,8 +165,7 @@ def create(uid, name, describe, development_type, scheduled_time, delivery_day, 
     if db.otherDB(d.insertSql(p)) == 'ok':
         p.clear()
         p['tablename'] = 'project_participant'
-        #p['column'] = ['id','`name`', '`status`', '`describe`', 'scheduled_time', 'delivery_day', 'project_superior_id', 'customer_id','major_milestones', 'adopting_technology', 'business_area', 'main_function', 'delete_label']
-        p['values'] = [id + sequence_number, uid, '0000', '0']
+        p['values'] = [id + sequence_number, uid, '0000']
         db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
         return db.otherDB(d.insertSql(p))
     return 'error'
@@ -423,12 +427,30 @@ def get_business_area():
     return db.selectDB(sql)
 
 def get_risk(project_id):
-    sql = f'''select `id`, risk_level as level, risk_describe as `describe`, project_label as label from project_risk where project_id=\'{project_id}\';'''
+    sql = f'''select `id`, risk_type as type, risk_describe as `describe`,
+              risk_level as level, risk_effect as effect, risk_solve as solve,
+              risk_status as status, risk_rate as rate, risk_duty_id as duty_id, risk_follower_id as follower_id
+              from project_risk where project_id=\'{project_id}\';'''
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     res = db.selectDB(sql)
-    return res if res != 'Empty' else []
+    
+    if res == 'Empty':
+        return []
 
-def add_risk(project_id, describe, level):
+    for i in res:
+        sql = f'''select name from employee where id=\'{i['duty_id']}\''''
+        db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+        name = db.selectDB(sql)[0]['name']
+        i['duty_name'] = name
+
+        sql = f'''select name from employee where id=\'{i['follower_id']}\''''
+        db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+        name = db.selectDB(sql)[0]['name']
+        i['follower_name'] = name
+
+    return res
+
+def add_risk(project_id, id, risk_type, describe, level, effect, solve, status, duty, rate, follower):
     # get max id in db
     sql = f'''select max(id) from project_risk where project_id=\'{project_id}\';'''
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
@@ -438,14 +460,84 @@ def add_risk(project_id, describe, level):
     
     # insert
     sql = f'''insert into project_risk
-              values(\'{new_id}\', \'{project_id}\', \'{level}\', \'{describe}\', 0);'''
+              values(\'{new_id}\', \'{project_id}\', \'{risk_type}\', \'{describe}\',
+              \'{level}\', \'{effect}\', \'{status}\', \'{duty}\', \'{rate}\', \'{follower}\', \'{solve}\');'''
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     return db.otherDB(sql)
 
-def modify_risk(project_id, describe, level, label):
+def modify_risk(project_id, id, risk_type, describe, level, effect, solve, status, duty, rate, follower):
     sql = f'''update project_risk
-              set risk_level=\'{level}\', risk_describe=\'{describe}\', project_label=\'{label}\'
-              where `id`={project_id};'''
+              set risk_type=\'{risk_type}\', risk_describe=\'{describe}\', risk_level=\'{level}\',
+              risk_effect=\'{effect}\', risk_solve=\'{solve}\', risk_status=\'{status}\',
+              risk_rate=\'{rate}\', risk_duty_id=\'{duty}\', risk_follower_id=\'{follower}\'
+              where `id`=\'{id}\' and project_id=\'{project_id}\';'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    res = db.otherDB(sql)
+    return 'ok'
+
+def get_equipment(project_id):
+    sql = f'''select e.id, e.name as name, u.id as manager_id, u.name as manager, start_time, end_time, status, label, return_time
+              from project_equipment as e
+              join employee as u on e.manager_id=u.id
+              where project_id=\'{project_id}\';'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    res = db.selectDB(sql)
+    if res == 'Empty':
+        return []
+    res = change_time_format(res, 'start_time', only_day=True)
+    res = change_time_format(res, 'end_time', only_day=True)
+    res = change_time_format(res, 'return_time', only_day=True)
+    return res
+
+def add_equipment(project_id, name, manager, start_time, end_time, status):
+    # get max id in db
+    sql = f'''select max(id) from project_equipment where project_id=\'{project_id}\';'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    new_id = db.selectDB(sql)[0]['max(id)']
+    new_id = 0 if new_id is None else int(new_id)
+    new_id += 1
+    
+    # insert
+    sql = f'''insert into project_equipment
+              values(\'{new_id}\', \'{project_id}\', \'{name}\', \'{start_time}\', \'{end_time}\', {status}, 0, 0, \'{manager}\');'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    return db.otherDB(sql)
+
+def modify_equipment(project_id, id, name, manager, start_time, end_time, status, label, return_time):
+    sql = f'''update project_equipment
+              set name=\'{name}\', start_time=\'{start_time}\', end_time=\'{end_time}\', status=\'{status}\', label=\'{label}\', return_time=\'{return_time}\', manager_id=\'{manager}\'
+              where `id`={id} and project_id=\'{project_id}\';'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    res = db.otherDB(sql)
+    return 'ok'
+
+def get_flaw(project_id):
+    sql = f'''select e.id, `describe`, level, u.id as follower_id, u.name as follower, status
+              from project_flaw as e
+              join employee as u on e.follower_id=u.id
+              where project_id=\'{project_id}\';'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    res = db.selectDB(sql)
+    return res if res != 'Empty' else []
+
+def add_flaw(project_id, describe, level, follower):
+    # get max id in db
+    sql = f'''select max(id) from project_flaw where project_id=\'{project_id}\';'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    new_id = db.selectDB(sql)[0]['max(id)']
+    new_id = 0 if new_id is None else int(new_id)
+    new_id += 1
+    
+    # insert
+    sql = f'''insert into project_flaw
+              values(\'{new_id}\', \'{project_id}\', \'{describe}\', \'{level}\', \'{follower}\', 0);'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    return db.otherDB(sql)
+
+def modify_flaw(project_id, id, describe, level, follower, status):
+    sql = f'''update project_flaw
+              set `describe`=\'{describe}\', level=\'{level}\', follower_id=\'{follower}\', status=\'{status}\'
+              where `id`={id} and project_id=\'{project_id}\';'''
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     res = db.otherDB(sql)
     return 'ok'

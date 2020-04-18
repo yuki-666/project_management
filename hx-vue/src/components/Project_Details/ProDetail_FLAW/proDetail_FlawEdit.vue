@@ -1,21 +1,31 @@
 <template>
   <div>
     <el-dialog
-      title="添加设备"
+      title="编辑缺陷"
       :visible.sync="dialogVisible"
       @close="$emit('update:show', false)"
       center
     >
       <el-form :model="form">
-        <el-form-item label="设备名称" :label-width="formLabelWidth" prop="name">
+        <el-form-item label="缺陷内容" :label-width="formLabelWidth" prop="describe">
           <el-input
-            v-model="form.name"
+            v-model="form.describe"
             autocomplete="off"
             placeholder="请输入内容"
           ></el-input>
         </el-form-item>
-        <el-form-item label="管理者" :label-width="formLabelWidth" prop="manager">
-          <el-select v-model="form.manager" placeholder="请选择管理者">
+        <el-form-item label="优先级" :label-width="formLabelWidth" prop="level">
+         <el-select v-model="form.level" placeholder="请选择优先级">
+            <el-option
+              v-for="item in level_dict"
+              :key="item.key"
+              :label="item.value"
+              :value="item.key"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="跟进人" :label-width="formLabelWidth" prop="follower">
+          <el-select v-model="form.follower" placeholder="请选择跟进人">
             <el-option
               v-for="item in member"
               :key="item.worker_id"
@@ -24,16 +34,10 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="租借日期" :label-width="formLabelWidth" prop="start_time">
-            <el-date-picker v-model="form.start_time" type="datetime" placeholder="租借日期" :picker-options="startDatePicker"></el-date-picker>
-        </el-form-item>
-        <el-form-item label="到期日期" :label-width="formLabelWidth" prop="end_time">
-          <el-date-picker v-model="form.end_time" type="datetime" placeholder="到期日期" :picker-options="startDatePicker"></el-date-picker>
-        </el-form-item>
-        <el-form-item label="设备状态" :label-width="formLabelWidth" prop="status">
-          <el-select v-model="form.status" placeholder="请选择设备状态">
+        <el-form-item label="缺陷状态" :label-width="formLabelWidth" prop="status">
+          <el-select v-model="form.status" placeholder="请选择状态">
             <el-option
-              v-for="item in status_dict"
+              v-for="item in label_dict"
               :key="item.key"
               :label="item.value"
               :value="item.key"
@@ -51,7 +55,7 @@
 
 <script>
 export default {
-  name: 'RiskAdd',
+  name: 'RiskEdit',
   props: {
     show: {
       type: Boolean,
@@ -62,18 +66,28 @@ export default {
     return {
       dialogVisible: this.show,
       form: {
-        name: '',
-        manager: '',
-        start_time: '',
-        end_time: '',
+        id: '',
+        describe: '',
+        level: '',
+        follower: '',
         status: ''
       },
-      status_dict: [{
-        key: '0',
-        value: '损坏'
+      level_dict: [{
+        key: 0,
+        value: '低'
       }, {
-        key: '1',
-        value: '完好'
+        key: 1,
+        value: '中'
+      }, {
+        key: 2,
+        value: '高'
+      }],
+      label_dict: [{
+        key: 0,
+        value: '存在'
+      }, {
+        key: 1,
+        value: '已修复'
       }],
       member: [{
         worker_id: '',
@@ -102,25 +116,15 @@ export default {
         .catch(failResponse => {
         })
     },
-    dateFormat (value) {
-      var date = new Date(value)
-      var year = date.getFullYear()
-      var month =
-        date.getMonth() + 1 < 10
-          ? '0' + (date.getMonth() + 1)
-          : date.getMonth() + 1
-      var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
-      return year + '-' + month + '-' + day
-    },
     onSubmit () {
       let _this = this
       this.$axios
-        .post('/project_detail/project_equipment/add', {
+        .post('/project_detail/project_flaw/modify', {
           project_id: _this.projectid,
-          name: _this.form.name,
-          manager: _this.form.manager,
-          start_time: _this.dateFormat(_this.form.start_time),
-          end_time: _this.dateFormat(_this.form.end_time),
+          id: _this.form.id,
+          describe: _this.form.describe,
+          level: _this.form.level,
+          follower: _this.form.follower,
           status: _this.form.status
         })
         .then(resp => {
@@ -129,7 +133,7 @@ export default {
             this.$emit('update:show', false)
             this.$emit('updateAgain')
             _this.dialogVisible = false
-            this.$message.success('添加成功')
+            this.$message.success('修改成功')
           }
         })
     },

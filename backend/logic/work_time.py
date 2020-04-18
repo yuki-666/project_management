@@ -4,9 +4,8 @@ import sys
 sys.path.append(os.path.join(os.path.dirname(__file__) , '..'))
 from util.backend import change_time_format
 import config
+import time
 import util.db as d
-import config
-from decimal import Decimal
 
 def get_info_by_uid(uid, is_superior=False, include_finished=False):
     # is_superior=True: uid是上级的uid，要获取他所有项目下级的工时
@@ -64,7 +63,7 @@ def get_info_by_uid_project_id(uid, project_id):
            from work_time
            join project on project.id=work_time.project_id
            join project_function on project_function.id=work_time.function_id
-           where work_time.worker_id={uid} and work_time.project_id={project_id} and work_time.delete_label=0;'''
+           where work_time.worker_id=\'{uid}\' and work_time.project_id=\'{project_id}\' and work_time.delete_label=0;'''
 
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     res = db.selectDB(sql)
@@ -115,7 +114,7 @@ def delete(work_time_id):
     res = db.otherDB(sql)
     return res
 
-def create(uid, project_id, date, function_id, event_name, start_time, end_time, remain, describe):
+def create(uid, project_id, function_id, event_name, start_time, end_time, remain, describe):
     # status: "ok"/"fail_x" (fail_1: work_time > 24h, fail_2: start_time >= end_time, fail_3: cannot cast to int)
 
     # 1. check fail_1, fail_2, fail_3
@@ -123,11 +122,11 @@ def create(uid, project_id, date, function_id, event_name, start_time, end_time,
         return 'fail_3'
 
     start_time, end_time, remain = int(start_time), int(end_time), int(remain)
-
     if start_time >= end_time:
         return 'fail_2'
 
-    date = date[:10] + ' 00:00:00'
+    date = time.strftime("%Y-%m-%d", time.localtime())
+    date += ' 00:00:00'
 
     sql = f'select sum(end_time-start_time) from work_time where worker_id={uid} and date=\'{date}\';'
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)

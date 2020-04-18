@@ -13,8 +13,9 @@
         stripe
         @filter-change="filterTagTable"
       >
-        <el-table-column label="缺陷内容" prop="flaw_detail"></el-table-column>
-        <el-table-column label="优先级" prop="priority" sortable></el-table-column>
+        <el-table-column label="缺陷ID" prop="id"></el-table-column>
+        <el-table-column label="缺陷内容" prop="describe"></el-table-column>
+        <el-table-column label="优先级" prop="level" sortable></el-table-column>
         <el-table-column label="跟进人" prop="follower"></el-table-column>
         <el-table-column label="缺陷状态" prop="status"></el-table-column>
       </el-table>
@@ -48,13 +49,14 @@ export default {
       currentPage: 1,
       pagesize: 5,
       total: 10,
-      projects: [
-        {
-          equipment_name: '',
-          begin_time: '',
-          end_time: ''
-        }
-      ]
+      projectid: '',
+      projects: [{
+        id: '',
+        describe: '',
+        level: '',
+        follower: '',
+        status: ''
+      }]
     }
   },
   methods: {
@@ -68,8 +70,8 @@ export default {
         .then(() => {
           _this.tmpId = row.function_id
           this.$axios
-            .post('/project_detail/function/delete', {
-              project_id: '2020-0000-D-01',
+            .post('/project_detail/project_flaw/delete', {
+              project_id: _this.projectid,
               function_id: _this.tmpId
             })
             .then(resp => {
@@ -89,7 +91,7 @@ export default {
     getAllInfo () {
       let _this = this
       this.$axios
-        .get('/project_detail/function', {
+        .get('/project_detail/project_flaw', {
           params: {
             project_id: _this.tmpId
           }
@@ -123,21 +125,20 @@ export default {
     getAllProjects () {
       var _this = this
       this.$axios
-        .get('/project_detail/function', {
+        .get('/project_detail/project_flaw', {
           params: {
-            id: '2020-0000-D-01'
+            project_id: _this.projectid
           }
         })
         .then(successResponse => {
           _this.projects = successResponse.data
-          // _this.tableDataTmp = successResponse.data
         })
         .catch(failResponse => {
         })
     }
   },
   created () {
-    // this.uid = this.$store.getters.uid
+    this.projectid = this.$store.getters.projectid
     this.getAllProjects()
   }
 }
@@ -148,8 +149,6 @@ export default {
   padding-top: 0;
   margin: 20px 10%;
   position: relative;
-  // margin-left: auto;
-  // margin-right: auto;
 }
 .demo-table-expand {
   font-size: 0;

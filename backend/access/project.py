@@ -50,7 +50,7 @@ def project_modify_save():
                                      'business_area', 'main_function']):
         return json.dumps('PARAM ERROR')
     
-    data = project.modify(request_data['id'], request_data['name'], request_data['describe'], \
+    data = project.modify(request_data['id'], request_data['name'], request_data['describe'], None, \
         request_data['scheduled_time'], request_data['delivery_day'], request_data['project_superior_id'], \
         request_data['major_milestones'], request_data['adopting_technology'], request_data['business_area'], request_data['main_function'])
 
@@ -124,11 +124,11 @@ def project_work_time_create_show():
 @project_access.route('/work_time/create/save', methods=['POST'])
 def project_work_time_create_save():
     request_data = get_value_dict()
-    if not check_dict(request_data, ['uid', 'project_id', 'date', 'function_id', 'event_name', \
+    if not check_dict(request_data, ['uid', 'project_id', 'function_id', 'event_name', \
                                      'start_time', 'end_time', 'remain', 'describe']):
         return json.dumps('PARAM ERROR')
 
-    data = work_time.create(request_data['uid'], request_data['project_id'], request_data['date'], \
+    data = work_time.create(request_data['uid'], request_data['project_id'], \
         request_data['function_id'], request_data['event_name'], request_data['start_time'], request_data['end_time'], \
         request_data['remain'], request_data['describe'])
 

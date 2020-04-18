@@ -96,7 +96,7 @@
         </el-table>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="closeDialog">取 消</el-button>
+        <el-button @click="closeDialog">关 闭</el-button>
       </div>
     </el-dialog>
   </div>
