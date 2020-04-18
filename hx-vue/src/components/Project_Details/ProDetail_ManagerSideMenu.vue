@@ -61,6 +61,7 @@ export default {
 .categories {
   position: fixed;
   margin-left: 20px;
+  left: 20px;
   top: 100px;
   width: 150px
   /* left: -600px;

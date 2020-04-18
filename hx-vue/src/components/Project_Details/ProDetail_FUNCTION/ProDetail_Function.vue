@@ -1,6 +1,8 @@
 <template>
   <div>
-    <el-button type="primary" style="float: right" round  @click="Add">添加功能</el-button>
+    <el-button type="primary" style="float: right" round @click="Add"
+      >添加功能</el-button
+    >
     <div class="project_table">
       <el-table
         :data="
@@ -15,16 +17,35 @@
         @filter-change="filterTagTable"
       >
         <el-table-column label="功能ID" prop="function_id"></el-table-column>
-        <el-table-column label="功能名称" prop="function_name" sortable></el-table-column>
-        <el-table-column label="员工姓名" prop="worker_name" :show-overflow-tooltip= "true" ></el-table-column>
+        <el-table-column
+          label="功能名称"
+          prop="function_name"
+          sortable
+        ></el-table-column>
+        <el-table-column label="员工姓名" prop="worker_name"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button type="text" @click="handleAdd(scope.$index, scope.row)"
-              >添加功能</el-button>
+              >添加功能</el-button
+            >
             <el-button type="text" @click="handleEdit(scope.$index, scope.row)"
-              >修改</el-button>
-            <el-button type="text" @click="handleDelete(scope.$index, scope.row)"
-              >删除功能</el-button>
+              >修改</el-button
+            >
+            <el-button
+              type="text"
+              @click="handleDelete(scope.$index, scope.row)"
+              >删除</el-button
+            >
+            <el-button
+              type="text"
+              @click="handleAddPerson(scope.$index, scope.row)"
+              >添加人员</el-button
+            >
+            <el-button
+              type="text"
+              @click="handleDeletePerson(scope.$index, scope.row)"
+              >删除人员</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -50,6 +71,12 @@
       @updateAgain="this.getAllProjects"
       ref="edit"
     ></add-form>
+    <add-person-form
+      :show.sync="dialogVisibleAddPerson"
+      :zid="tmpId"
+      @updateAgain="this.getAllProjects"
+      ref="edit"
+    ></add-person-form>
   </div>
 </template>
 
@@ -57,18 +84,24 @@
 import FuncEdit from './ProDetail_FuncEdit'
 import SideMenu from '../ProDetail_ManagerSideMenu'
 import FuncAdd from './ProDetail_FuncAdd'
+import FuncAddPerson from './ProDetail_FuncAddPerson'
 export default {
   name: 'ProDetailFUNCTION',
   components: {
     'side-menu': SideMenu,
     'editfunc-form': FuncEdit,
-    'add-form': FuncAdd
+    'add-form': FuncAdd,
+    'add-person-form': FuncAddPerson
   },
   data () {
     return {
+      projectid: '',
+      worker_id: '',
+      function_id: '',
       select: '',
       dialogVisible2: false,
       dialogVisible3: false,
+      dialogVisibleAddPerson: false,
       tmpId: '-1',
       tableDataTmp: [],
       currentPage: 1,
@@ -118,6 +151,35 @@ export default {
           })
         })
     },
+    handleDeletePerson (index, row) {
+      let _this = this
+      this.$confirm('此操作将永久删除此功能, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          _this.tmpId = row.function_id
+          this.$axios
+            .post('/project_detail/function/person/delete ', {
+              project_id: _this.projectid,
+              function_id: _this.tmpId,
+              worker_id: _this.worker_id
+            })
+            .then(resp => {
+              if (resp.data.status === 'ok') {
+                this.getAllProjects()
+                this.$message.success('已经删除')
+              }
+            })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
+    },
     getAllInfo () {
       let _this = this
       this.$axios
@@ -128,6 +190,20 @@ export default {
         })
         .then(successResponse => {
           _this.$refs.edit.form = successResponse.data
+        })
+    },
+    getAllPerson () {
+      let _this = this
+      this.$axios
+        .get('/project_detail/function/person/add/get_person', {
+          params: {
+            project_id: _this.projectid,
+            function_id: _this.function_id
+          }
+        })
+        .then(successResponse => {
+          _this.$refs.edit.form = successResponse.data
+          _this.worker_id = successResponse.data.worker_id
         })
     },
     handleEdit (index, row) {
@@ -145,6 +221,14 @@ export default {
       }
       this.dialogVisible3 = true
     },
+    handleAddPerson (index, row) {
+      this.$refs.edit.form = {
+        projectid: row.projectid,
+        function_id: row.function_id
+      }
+      this.getAllPerson()
+      this.dialogVisibleAddPerson = true
+    },
     handleCurrentChange (currentPage) {
       this.currentPage = currentPage
     },
@@ -160,8 +244,7 @@ export default {
         .then(successResponse => {
           _this.projects = successResponse.data
         })
-        .catch(failResponse => {
-        })
+        .catch(failResponse => {})
     }
   },
   created () {
@@ -174,7 +257,7 @@ export default {
 <style lang="scss" scoped>
 .project_table {
   padding-top: 0;
-  margin: 10px 20%;
+  margin: 10px 20px;
   position: relative;
   // margin-left: auto;
   // margin-right: auto;
@@ -189,7 +272,7 @@ export default {
 .demo-table-expand .el-form-item {
   margin-right: 0;
   margin-bottom: 0;
-  width: 50%;
+  width: 20%;
   color: red;
 }
 .pag {
