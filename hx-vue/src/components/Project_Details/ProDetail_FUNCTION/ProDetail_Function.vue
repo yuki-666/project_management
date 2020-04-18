@@ -16,7 +16,7 @@
       >
         <el-table-column label="功能ID" prop="function_id"></el-table-column>
         <el-table-column label="功能名称" prop="function_name" sortable></el-table-column>
-        <el-table-column label="员工姓名" prop="worker_name"></el-table-column>
+        <el-table-column label="员工姓名" prop="worker_name" :show-overflow-tooltip= "true" ></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button type="text" @click="handleAdd(scope.$index, scope.row)"

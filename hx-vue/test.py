@@ -35,7 +35,7 @@ def homepage_login():
     print(request_data)
     
     ret = {}
-    ret['status'], ret['uid'], ret['career'] = 0, 123, 0
+    ret['status'], ret['uid'], ret['career'] = 0, 123, 1
 
     print(json.dumps(ret)) # {"career": 0, "status": 0, "uid": 123}
     return json.dumps(ret)
@@ -48,6 +48,30 @@ def ddd():
     ret = []
     ret.append({'id': 'hahaha', 'name': '奥凯电缆女艾斯比', 'update_time': '2020-04-18 01:16:41'})
     ret.append({'id': 'hohoho', 'name': 'akdlhgab', 'update_time': '2020-04-18 01:16:41'})
+
+    print(json.dumps(ret))
+    return json.dumps(ret)
+
+@app.route(base_route + '/approval/project', methods=['GET'])
+def eee():
+    request_data = get_value_dict()
+    print(request_data)
+
+    ret = []
+    ret.append({'id': 'hahaha', 'name': '奥凯电缆女艾斯比', 'update_time': '2020-04-18 01:16:41'})
+    ret.append({'id': 'hohoho', 'name': 'akdlhgab', 'update_time': '2020-04-18 01:16:41'})
+
+    print(json.dumps(ret))
+    return json.dumps(ret)
+
+@app.route(base_route + '/approval/work_time/initiative', methods=['GET'])
+def fff():
+    request_data = get_value_dict()
+    print(request_data)
+
+    ret = []
+    ret.append({'id': 'hahaha', 'project_name': '奥凯电缆女艾斯比', 'worker_name': '吴怀峰','function_name': '阿萨德刚', 'event_name': '阿昆达是那个'})
+    ret.append({'id': 'hahaha', 'project_name': '奥凯电艾斯比', 'worker_name': '敬曼丽','function_name': '就看看那地方糍粑', 'event_name': '手表'})
 
     print(json.dumps(ret))
     return json.dumps(ret)
@@ -69,7 +93,7 @@ def aa():
     print(request_data)
 
     ret = []
-    ret.append({'function_id': '123', 'function_name': 'fdsa', 'worker_name': '奥凯电缆女艾斯比'})
+    ret.append({'function_id': '123', 'function_name': 'fdsa', 'worker_name': '奥凯电，缆女艾斯比p，jiqebij，gqpebvwq，ijpbvqw，ijvbwj，divbweip，vepijbvwdj，kvbwqdpvad'})
     ret.append({'function_id': '1237', 'function_name': 'fdsa', 'worker_name': 'akdlhgab'})
 
     print(json.dumps(ret))
@@ -93,7 +117,7 @@ def aa3():
     print(request_data)
     
     ret = {}
-    ret['status'], ret['uid'], ret['career'] = 0, 123, 1
+    ret['status'], ret['uid'], ret['career'] = 0, 123, 0
 
     print(json.dumps(ret)) # {"career": 0, "status": 0, "uid": 123}
     return json.dumps(ret)
