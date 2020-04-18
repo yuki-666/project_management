@@ -1,14 +1,28 @@
 <template>
   <div>
     <el-dialog
-      title="添加功能"
-      :visible.sync="dialogVisible3"
+      title="添加人员"
+      :visible.sync="dialogVisibleAddPerson"
       @close="$emit('update:show', false)"
       center
     >
       <el-form :model="form">
-        <el-form-item label="功能名称" :label-width="formLabelWidth" prop="function_name">
-          <el-input v-model="form.function_name" autocomplete="off" ></el-input>
+        <el-form-item
+          label="添加人员"
+          :label-width="formLabelWidth"
+          prop="member"
+        >
+          <el-select
+            v-model="form.worker_id"
+            placeholder="请选择项目上级"
+          >
+            <el-option
+              v-for="item in form.member"
+              :key="item.worker_id"
+              :label="item.worker_name"
+              :value="item.worker_id"
+            ></el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -30,42 +44,42 @@ export default {
   },
   data () {
     return {
-      dialogVisible3: this.show,
+      dialogVisibleAddPerson: this.show,
       projectid: '',
       form: {
-        project_id: '',
-        parent_function_id: '',
-        function_name: ''
+        function_id: '',
+        worker_id: '',
+        member: [{worker_id: '', worker_name: ''}]
       },
       formLabelWidth: '100px'
     }
   },
   watch: {
     show () {
-      this.dialogVisible3 = this.show
+      this.dialogVisibleAddPerson = this.show
     }
   },
   methods: {
     onSubmit () {
       let _this = this
       this.$axios
-        .post('/project_detail/function/add', {
+        .post('/project_detail/function/person/add', {
           project_id: _this.projectid,
-          parent_function_id: _this.form.parent_function_id,
-          function_name: _this.form.function_name
+          function_id: _this.form.function_id,
+          worker_id: _this.form.worker_id
         })
         .then(resp => {
           if (resp.data.status === 'ok') {
-            this.dialogVisible3 = false
+            this.dialogVisibleAddPerson = false
             this.$emit('update:show', false)
             this.$emit('updateAgain')
-            _this.dialogVisible3 = false
+            _this.dialogVisibleAddPerson = false
             this.$message.success('添加成功')
           }
         })
     },
     closeDialog () {
-      this.dialogVisible3 = false
+      this.dialogVisibleAddPerson = false
     }
   },
   created () {
