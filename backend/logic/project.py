@@ -433,7 +433,7 @@ def get_risk(project_id):
               from project_risk where project_id=\'{project_id}\';'''
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     res = db.selectDB(sql)
-    
+
     if res == 'Empty':
         return []
 

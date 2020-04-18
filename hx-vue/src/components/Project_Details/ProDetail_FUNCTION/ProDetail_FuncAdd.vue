@@ -33,7 +33,6 @@ export default {
       dialogVisible3: this.show,
       projectid: '',
       form: {
-        project_id: '',
         parent_function_id: '',
         function_name: ''
       },
@@ -48,6 +47,8 @@ export default {
   methods: {
     onSubmit () {
       let _this = this
+      console.log('123')
+      console.log(_this.form)
       this.$axios
         .post('/project_detail/function/add', {
           project_id: _this.projectid,

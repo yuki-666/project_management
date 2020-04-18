@@ -142,7 +142,7 @@ export default {
         duty_name: '',
         follower_id: '',
         follower_name: '',
-        rate: '',
+        rate: ''
       }]
     }
   },
