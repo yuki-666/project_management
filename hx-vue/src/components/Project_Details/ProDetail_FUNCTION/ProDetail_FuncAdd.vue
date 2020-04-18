@@ -47,8 +47,6 @@ export default {
   methods: {
     onSubmit () {
       let _this = this
-      console.log('123')
-      console.log(_this.form)
       this.$axios
         .post('/project_detail/function/add', {
           project_id: _this.projectid,

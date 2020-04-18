@@ -46,13 +46,13 @@
                 <span>{{ props.row.status }}</span>
               </el-form-item>
               <el-form-item label="风险责任人">
-                <span>{{ props.row.duty }}</span>
+                <span>{{ props.row.duty_name }}</span>
               </el-form-item>
               <el-form-item label="风险跟踪频度">
                 <span>{{ props.row.rate }}</span>
               </el-form-item>
               <el-form-item label="风险相关者">
-                <span>{{ props.row.follower }}</span>
+                <span>{{ props.row.follower_name }}</span>
               </el-form-item>
             </el-form>
           </template>
@@ -77,8 +77,8 @@
               {{ FLOWS_STATUS[props.row.status] }}
             </zx-tag>
           </template></el-table-column>
-        <el-table-column label="风险责任人" prop="duty"></el-table-column>-column>
-        <el-table-column label="风险状态" prop="label"></el-table-column>
+        <el-table-column label="风险责任人" prop="duty_name"></el-table-column>-column>
+        <el-table-column label="风险状态" prop="status"></el-table-column>
       </el-table>
       <el-row class="pag">
         <el-pagination
@@ -128,20 +128,20 @@ export default {
         '未修复',
         '已修复'
       ],
-      projects: [
-        {
-          id: '',
-          type: '',
-          describe: '',
-          level: '',
-          effect: '',
-          solve: '',
-          status: '',
-          duty: '',
-          rate: '',
-          follower: ''
-        }
-      ]
+      projects: [{
+        id: '',
+        type: '',
+        describe: '',
+        level: '',
+        effect: '',
+        solve: '',
+        status: '',
+        duty_id: '',
+        duty_name: '',
+        follower_id: '',
+        follower_name: '',
+        rate: ''
+      }]
     }
   },
   methods: {

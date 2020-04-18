@@ -34,13 +34,6 @@
               {{ FLOWS_STATUS[props.row.status] }}
             </zx-tag>
           </template></el-table-column>
-        <el-table-column label="操作">
-          <template slot-scope="scope">
-            <el-button type="text" @click="handleEdit(scope.$index, scope.row)"
-              >操作</el-button>
-          </template>
-          <!-- </el-button-group> -->
-        </el-table-column>
       </el-table>
       <el-row class="pag">
         <el-pagination
