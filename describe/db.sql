@@ -1,13 +1,13 @@
--- MySQL dump 10.13  Distrib 8.0.19, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.15, for macos10.14 (x86_64)
 --
--- Host: localhost    Database: achieveit
+-- Host: 127.0.0.1    Database: ACHIEVEIT
 -- ------------------------------------------------------
--- Server version	8.0.19
+-- Server version	8.0.15
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8 */;
+ SET NAMES utf8 ;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -21,13 +21,13 @@
 
 DROP TABLE IF EXISTS `authority`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `authority` (
   `project_id` varchar(45) NOT NULL COMMENT '项目ID',
   `worker_id` varchar(45) NOT NULL COMMENT '人员ID',
-  `git_authority` int DEFAULT NULL COMMENT 'git权限',
-  `file_authority` int DEFAULT NULL COMMENT '文件权限',
-  `mail_authority` int DEFAULT NULL COMMENT '邮箱权限',
+  `git_authority` int(11) DEFAULT NULL COMMENT 'git权限',
+  `file_authority` int(11) DEFAULT NULL COMMENT '文件权限',
+  `mail_authority` int(11) DEFAULT NULL COMMENT '邮箱权限',
   PRIMARY KEY (`project_id`,`worker_id`),
   KEY `worker_id_idx` (`worker_id`),
   CONSTRAINT `authority_project_id` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -51,12 +51,12 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `business_area`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `business_area` (
   `id` varchar(45) NOT NULL,
   `code` varchar(45) DEFAULT NULL COMMENT '客户代码',
   `name` varchar(45) DEFAULT NULL,
-  `delete_label` int DEFAULT NULL,
+  `delete_label` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -77,7 +77,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `customer`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `customer` (
   `id` varchar(45) NOT NULL,
   `project_broker_id` varchar(45) NOT NULL COMMENT '对接人id ',
@@ -86,7 +86,7 @@ CREATE TABLE `customer` (
   `customer_tele` varchar(45) NOT NULL COMMENT '客户电弧',
   `customer_mail` varchar(45) DEFAULT NULL COMMENT '客户邮箱',
   `customer_level` varchar(45) NOT NULL COMMENT '客户等级',
-  `delete_label` int DEFAULT NULL,
+  `delete_label` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `customer_project_broker_idx` (`project_broker_id`),
   CONSTRAINT `customer_project_broker_id` FOREIGN KEY (`project_broker_id`) REFERENCES `employee` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -109,7 +109,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `employee`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `employee` (
   `id` varchar(45) NOT NULL COMMENT '每个员工都有自己的ID',
   `name` varchar(45) DEFAULT NULL COMMENT '员工名称',
@@ -119,7 +119,7 @@ CREATE TABLE `employee` (
   `tele` varchar(45) DEFAULT NULL COMMENT '员工电话信息',
   `department` varchar(45) DEFAULT NULL COMMENT '员工部门',
   `mailbox` varchar(45) DEFAULT NULL COMMENT '员工邮箱地址',
-  `delete_label` int DEFAULT NULL,
+  `delete_label` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -140,7 +140,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `function_partition`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `function_partition` (
   `project_id` varchar(45) NOT NULL COMMENT '项目ID',
   `function_id` varchar(45) NOT NULL COMMENT '项目功能ID',
@@ -170,12 +170,12 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `login`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `login` (
   `id` varchar(45) NOT NULL COMMENT '员工ID',
   `username` varchar(45) DEFAULT NULL COMMENT '登录名',
   `password` varchar(45) DEFAULT NULL COMMENT '用户密码',
-  `delete_label` int DEFAULT NULL,
+  `delete_label` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `login_worker_id` FOREIGN KEY (`id`) REFERENCES `employee` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -197,11 +197,11 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `project`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `project` (
   `id` varchar(45) NOT NULL COMMENT '项目ID',
   `name` varchar(45) DEFAULT NULL COMMENT '项目名称',
-  `status` int DEFAULT NULL COMMENT '项目状态',
+  `status` int(11) DEFAULT NULL COMMENT '项目状态',
   `customer_id` varchar(45) DEFAULT NULL COMMENT '客户ID',
   `describe` varchar(45) DEFAULT NULL COMMENT '项目描述',
   `main_function` varchar(45) DEFAULT NULL COMMENT '主要功能',
@@ -212,7 +212,7 @@ CREATE TABLE `project` (
   `delivery_day` date DEFAULT NULL COMMENT '交付日',
   `scheduled_time` date DEFAULT NULL COMMENT '预定时间',
   `update_time` timestamp NULL DEFAULT NULL COMMENT '更新时间',
-  `delete_label` int DEFAULT NULL,
+  `delete_label` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `project_customer_id_idx` (`customer_id`),
   CONSTRAINT `project_customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -235,14 +235,14 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `project_function`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `project_function` (
   `id` varchar(45) NOT NULL,
   `project_id` varchar(45) NOT NULL COMMENT '项目id',
   `function_name` varchar(45) DEFAULT NULL COMMENT '功能名称',
-  `function_status` int DEFAULT NULL COMMENT '功能状态',
+  `function_status` int(11) DEFAULT NULL COMMENT '功能状态',
   `parent_function_id` varchar(45) DEFAULT NULL COMMENT '父功能id',
-  `delete_label` int DEFAULT NULL,
+  `delete_label` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`,`project_id`),
   KEY `project_id_idx` (`project_id`),
   KEY `project_id` (`project_id`),
@@ -266,7 +266,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `project_participant`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `project_participant` (
   `project_id` varchar(45) NOT NULL,
   `person_id` varchar(45) NOT NULL,
@@ -291,12 +291,40 @@ INSERT INTO `project_participant` VALUES ('2020-0000-D-01','0011','0000'),('01',
 UNLOCK TABLES;
 
 --
+-- Table structure for table `project_risk`
+--
+
+DROP TABLE IF EXISTS `project_risk`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `project_risk` (
+  `id` varchar(45) NOT NULL,
+  `project_id` varchar(45) DEFAULT NULL,
+  `risk_level` varchar(45) DEFAULT NULL,
+  `risk_describe` varchar(45) DEFAULT NULL,
+  `project_label` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `risk_project_id_idx` (`project_id`),
+  CONSTRAINT `risk_project_id` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `project_risk`
+--
+
+LOCK TABLES `project_risk` WRITE;
+/*!40000 ALTER TABLE `project_risk` DISABLE KEYS */;
+/*!40000 ALTER TABLE `project_risk` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `super_login`
 --
 
 DROP TABLE IF EXISTS `super_login`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `super_login` (
   `username` varchar(45) NOT NULL,
   `password` varchar(45) DEFAULT NULL,
@@ -320,21 +348,21 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `work_time`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `work_time` (
-  `id` int NOT NULL COMMENT '工时ID',
+  `id` int(11) NOT NULL COMMENT '工时ID',
   `worker_id` varchar(45) DEFAULT NULL COMMENT '员工id',
   `project_id` varchar(45) DEFAULT NULL COMMENT '项目ID',
   `date` datetime DEFAULT NULL COMMENT '日期',
   `function_id` varchar(45) DEFAULT NULL COMMENT '功能id',
   `event_name` varchar(45) DEFAULT NULL COMMENT '活动名称',
-  `start_time` int DEFAULT NULL COMMENT '开始时间',
-  `end_time` int DEFAULT NULL COMMENT '结束时间',
+  `start_time` int(11) DEFAULT NULL COMMENT '开始时间',
+  `end_time` int(11) DEFAULT NULL COMMENT '结束时间',
   `remain` varchar(45) DEFAULT NULL COMMENT '剩余工时',
   `status` varchar(45) DEFAULT NULL COMMENT '审批状态',
   `remarks` varchar(45) DEFAULT NULL COMMENT '备注',
   `describe` varchar(45) DEFAULT NULL COMMENT '描述',
-  `delete_label` int DEFAULT NULL COMMENT '删除标记',
+  `delete_label` int(11) DEFAULT NULL COMMENT '删除标记',
   PRIMARY KEY (`id`),
   KEY `work_time_project_id_idx` (`project_id`),
   KEY `work_time_worker_id_idx` (`worker_id`),
@@ -364,4 +392,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-04-18 14:03:44
+-- Dump completed on 2020-04-18 16:10:11
