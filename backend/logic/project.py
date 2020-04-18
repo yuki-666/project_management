@@ -119,8 +119,8 @@ def modify(project_id, project_name, describe, status, scheduled_time, delivery_
 
     sql = f'''
            update project set name=\'{project_name}\', `describe`=\'{describe}\', scheduled_time=\'{scheduled_time}\', update_time=\'{update_time}\',
-           delivery_day=\'{delivery_day}\', project_superior_id=\'{project_superior_id}\', major_milestones={major_milestones},
-           adopting_technology={adopting_technology}, business_area=\'{business_area}\', main_function=\'{main_function}\', status={status}
+           delivery_day=\'{delivery_day}\', project_superior_id=\'{project_superior_id}\', major_milestones=\'{major_milestones}\',
+           adopting_technology=\'{adopting_technology}\', business_area=\'{business_area}\', main_function=\'{main_function}\', status={status}
            where id=\'{project_id}\';'''
 
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
@@ -174,8 +174,6 @@ def repush(project_id):
     return 'error' if db.otherDB(sql) == 'none' else 'ok'
 
 def get_function(project_id, worker_id=None):
-    # get function list from project_id
-    # worker_id and worker_name: list->str, split by ','
     if worker_id is None:
         # return function_id, function_name, worker_id, worker_name, parent_function_id
         sql = f'''
@@ -184,6 +182,9 @@ def get_function(project_id, worker_id=None):
                where project_id=\'{project_id}\' and delete_label=0;'''
         db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
         ret = db.selectDB(sql)
+
+        if ret == 'Empty':
+            return []
 
         for i in range(len(ret)):
             ret[i]['worker_id'] = ''
@@ -202,6 +203,7 @@ def get_function(project_id, worker_id=None):
             ret[i]['worker_id'] = ret[i]['worker_id'][:-1]
             ret[i]['worker_name'] = ret[i]['worker_name'][:-1]
         return ret
+
     else:
         # select with worker_id
         # return function_id, function_name
@@ -234,13 +236,14 @@ def get_children_function(project_id, parent_function_id):
     return db.selectDB(d.selectSql(p))
 
 def get_project_member(project_id, function_id=None):
-    sql = f'''select distinct employee.id as project_id, employee.name as worker_name
-              from employee
-              join project_participant on employee.id=project_participant.person_id
-              where project_participant.project_id=\'{project_id}\';'''
-    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-    res = db.selectDB(sql)
-    return res if res != 'Empty' else []
+    if function_id is None:
+        sql = f'''select distinct employee.id as worker_id, employee.name as worker_name
+                from employee
+                join project_participant on employee.id=project_participant.person_id
+                where project_participant.project_id=\'{project_id}\';'''
+        db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+        res = db.selectDB(sql)
+        return res if res != 'Empty' else []
 
     p={}
     p['select_key'] = ['worker_id']
@@ -361,46 +364,38 @@ def modify_function(project_id, function_id, function_name, uid):
         db.otherDB(d.deleteSql(p))
     return 'ok'
 
-def modify_worker(project_id, uid):
-    # uid(split by ',') change to list
-    # update user participate in project
-    uid = uid.split(',')
-    p = {}
-    p['select_key'] = ['person_id']
-    p['tablename'] = 'project_participant'
-    p['key'] = ['project_id']
-    p['value'] = [' = '+project_id]
+def add_project_member(project_id, uid, leader_id):
+    # add in project_participant
+    sql = f'''insert into project_participant values(\'{project_id}\', \'{uid}\', \'{leader_id}\');'''
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-    A = db.selectDB(d.selectSql(p))
+    if db.otherDB(sql) != 'ok':
+        return 'error'
 
-    only_A = []
-    A_and_B = []
-    only_B = []
-    for record in A:
-        if record['person_id'] in uid:
-            A_and_B.append(record['person_id'])
-        else:
-            only_A.append(record['person_id'])
-    only_B = list(set(uid)-set(A_and_B))
-    #insert for only_B
-    p.clear()
-    p['tablename'] = 'project_participant'
-    p['column'] = ['person_id','project_id']
-    p['values'] = ['unknown',project_id,]
-    for worker_id in only_B:
-        p['values'][0] = worker_id
-        db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-        db.otherDB(d.insertSql(p))
-    #delete for only_A
-    p.clear()
-    p['tablename'] = 'project_participant'
-    p['key'] = ['project_id','person_id']
-    p['value'] = [' = '+project_id,'unknown']
-    for worker_id in only_A:
-        p['value'][1] = ' = '+ worker_id
-        db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-        db.otherDB(d.deleteSql(p))
-    
+    # add in authority
+    sql = f'''insert into authority values(\'{project_id}\', \'{uid}\', 0, 0, 0);'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    res = db.otherDB(sql)
+    return res if res != 'none' else 'error'
+
+def delete_project_member(project_id, uid):
+    # delete in project_participant
+    sql = f'''delete from project_participant where project_id=\'{project_id}\' and person_id=\'{uid}\';'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    if db.otherDB(sql) != 'ok':
+        return 'error'
+
+    # delete in authority
+    sql = f'''delete from authority where project_id=\'{project_id}\' and worker_id=\'{uid}\';'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    if db.otherDB(sql) != 'ok':
+        return 'error'
+
+    # update worker whose leader == uid
+    sql = f'''update project_participant
+              set leader_id=\'0000\'
+              where project_id=\'{project_id}\' and leader_id=\'{uid}\';'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    res = db.otherDB(sql)
     return 'ok'
 
 def get_authority(project_id, uid=None):

@@ -7,8 +7,15 @@
       center
     >
       <el-form :model="form">
-        <el-form-item label="功能名称" :label-width="formLabelWidth" prop="function_name">
-          <el-input v-model="form.function_name" autocomplete="off" ></el-input>
+        <el-form-item label="添加员工" :label-width="formLabelWidth" prop="status">
+          <el-select v-model="form.uid" placeholder="请选择添加的员工">
+            <el-option v-for="item in form.total_member" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="员工上级" :label-width="formLabelWidth" prop="status">
+          <el-select v-model="form.leader_id" placeholder="请选择该员工项目中的领导">
+            <el-option v-for="item in form.project_member" :key="item.worker_id" :label="item.worker_name" :value="item.worker_id"></el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -32,8 +39,20 @@ export default {
     return {
       dialogVisible4: this.show,
       form: {
-        id: '',
-        uid: ''
+        uid: '',
+        leader_id: '',
+        total_member: [
+          {
+            id: '',
+            name: ''
+          }
+        ],
+        project_member: [
+          {
+            worker_id: '',
+            worker_name: ''
+          }
+        ]
       },
       formLabelWidth: '100px'
     }
@@ -47,12 +66,13 @@ export default {
     onSubmit () {
       let _this = this
       this.$axios
-        .post('/project_detail/project_worker/modify_worker/save', {
-          project_id: '2020-0000-D-01',
-          uid: _this.form.uid
+        .post('/project_detail/project_worker/add', {
+          project_id: _this.projectid,
+          worker_id: _this.form.uid,
+          leader_id: _this.form.leader_id
         })
         .then(resp => {
-          if (resp && resp.status === 200) {
+          if (resp.data.status === 'ok') {
             this.dialogVisible4 = false
             this.$emit('onSubmit')
             _this.dialogVisible4 = false
@@ -67,8 +87,7 @@ export default {
     }
   },
   created () {
-    // let _this = this
-    // _this.getAllInfo()
+    this.projectid = this.$store.getters.projectid
   }
 }
 </script>

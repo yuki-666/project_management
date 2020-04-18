@@ -21,29 +21,29 @@ def get_custom():
     return db.selectDB(d.selectSql(p))
 
 def get_total_user(project_id=None):
-    p={}
-    p['select_key'] = ['id','name']
-    p['tablename'] = 'employee'
+    # total user in company
+    sql = f'''select distinct id, name from employee;'''
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-    res = db.selectDB(d.selectSql(p))
-    # return total user in company
-    if project_id is not None:
-        # status: if user in project
-        # return uid, name, status
-        p['select_key'] = ['person_id']
-        p['tablename'] = 'project_participant'
-        p['key'] = ['project_id']
-        p['value'] = [' = '+project_id]
-        db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-        worker_in = db.selectDB(d.selectSql(p))
-        w_list = []
-        for i in worker_in:
-            w_list.append(i['person_id'])
-        for i in res:
-            if i['id'] in w_list:
-                i['status'] = 1
-            else :
-                i['status'] = 0
+    res = db.selectDB(sql)
+
+    if project_id is None:
+        return res
+
+    sql = f'''select distinct person_id from project_participant where project_id=\'{project_id}\';'''
+    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+    worker_in = db.selectDB(sql)
+
+    if worker_in == 'Empty':
+        worker_in = []
+
+    w_list = []
+    for i in worker_in:
+        w_list.append(i['person_id'])
+    for i in res:
+        if i['id'] in w_list:
+            i['status'] = 1
+        else :
+            i['status'] = 0
     return res
 
 def get_normal_account():

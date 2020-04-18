@@ -79,10 +79,10 @@ export default {
             // var data = this.loginForm
             _this.$store.commit('login', _this.loginForm)
             var path = this.$route.query.redirect
-            _this.career = successResponse.data.career
             _this.uid = successResponse.data.uid
             localStorage.setItem('zuid', successResponse.data.uid)
             _this.$store.commit('handleUid', successResponse.data.uid)
+            _this.career = successResponse.data.career
             localStorage.setItem('zcareer', successResponse.data.career)
             _this.$store.commit('handleCareer', successResponse.data.career)
             // zhx_e

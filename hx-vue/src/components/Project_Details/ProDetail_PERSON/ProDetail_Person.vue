@@ -4,8 +4,7 @@
        <!-- <template slot-scope="scope"> -->
           <!-- </template> -->
     <!-- </div> -->
-    <el-button type="primary" style="float: right" round @click="handleAdd"
-            >添加人员</el-button>
+    <el-button type="primary" style="float: right" round @click="handleAdd">添加人员</el-button>
     <div class="project_table">
       <el-table
         :data="
@@ -21,10 +20,10 @@
       >
         <el-table-column label="员工姓名" prop="worker_name"></el-table-column>
         <el-table-column label="操作">
-        <el-button type="primary" round @click="deletePerson(index)"
-            >删除</el-button>
+          <template slot-scope="scope">
+            <el-button type="primary" round @click="deletePerson(scope.$index, scope.row)">删除</el-button>
+          </template>
         </el-table-column>
-        <!-- <el-table-column label="是否已在项目中" prop="status"></el-table-column> -->
       </el-table>
       <el-row class="pag">
         <el-pagination
@@ -48,8 +47,6 @@
 <script>
 import SideMenu from '../ProDetail_SideMenu'
 import PerAdd from './ProDetail_PerAdd'
-// import { FlowStatusRules } from '../../home/rule/data-config'
-// import ZxTag from '../../tag'
 export default {
   name: 'ProDetailFUNCTION',
   components: {
@@ -58,7 +55,6 @@ export default {
   },
   data () {
     return {
-      // arr: [],
       select: '',
       dialogVisible4: false,
       tmpId: '-1',
@@ -68,49 +64,14 @@ export default {
       total: 10,
       projects: [
         {
-          // project_id: '',
+          worker_id: '',
           worker_name: ''
         }
       ]
     }
   },
   methods: {
-    // handleDelete (index, row) {
-    //   let _this = this
-    //   this.$confirm('此操作将永久删除此功能, 是否继续?', '提示', {
-    //     confirmButtonText: '确定',
-    //     cancelButtonText: '取消',
-    //     type: 'warning'
-    //   })
-    //     .then(() => {
-    //       // 前端删除 仅供测试
-    //       let tmp = { id: row.id }
-    //       let tmpArr = [tmp]
-    //       _this.projects = _this.projects.filter(item =>
-    //         tmpArr.every(ele => ele.id !== item.id)
-    //       )
-    //       _this.tmpId = row.id
-    //       // 后端删除
-    //       this.$axios
-    //         .post('/project_detail/function/delete', {
-    //           project_id: _this.tmpId,
-    //           function_id: '-1'
-    //         })
-    //         .then(resp => {
-    //           if (resp.data.status === 'ok') {
-    //             this.getAllProjects()
-    //             this.$message.success('已经删除')
-    //           }
-    //         })
-    //     })
-    //     .catch(() => {
-    //       this.$message({
-    //         type: 'info',
-    //         message: '已取消删除'
-    //       })
-    //     })
-    // },
-    deletePerson: function (index) {
+    deletePerson: function (index, row) {
       let _this = this
       this.$confirm('此操作将永久删除该员工信息, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -119,9 +80,12 @@ export default {
       })
         .then(() => {
           this.$axios
-            .post('/project_detail/project_worker/delete_worker', { worker_name: _this.worker_name })
+            .post('/project_detail/project_worker/delete', {
+              project_id: _this.projectid,
+              worker_id: row.worker_id
+            })
             .then(resp => {
-              if (resp && resp.status === 200) {
+              if (resp.data.status === 'ok') {
                 this.getAllProjects()
                 this.$message.success('删除成功')
               }
@@ -137,16 +101,18 @@ export default {
     getAllInfo () {
       let _this = this
       this.$axios
-        .get('/project_detail/project_worker', {
+        .get('/project_detail/project_worker/add/show', {
           params: {
-            project_id: _this.tmpId
+            project_id: _this.projectid
           }
         })
         .then(successResponse => {
           _this.$refs.edit.form = successResponse.data
+          console.log(successResponse.data)
         })
     },
     handleAdd () {
+      this.getAllInfo()
       this.dialogVisible4 = true
     },
     handleCurrentChange (currentPage) {
@@ -158,20 +124,18 @@ export default {
       this.$axios
         .get('/project_detail/project_worker', {
           params: {
-            id: '2020-0000-D-01'
+            id: _this.projectid
           }
         })
         .then(successResponse => {
           _this.projects = successResponse.data
-          console.log(_this.projects)
-          // _this.tableDataTmp = successResponse.data
         })
         .catch(failResponse => {
         })
     }
   },
   created () {
-    // this.uid = this.$store.getters.uid
+    this.projectid = this.$store.getters.projectid
     this.getAllProjects()
   }
 }

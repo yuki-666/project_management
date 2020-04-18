@@ -49,7 +49,7 @@ export default {
       let _this = this
       this.$axios
         .post('/project_detail/function/add', {
-          project_id: '2020-0000-D-01',
+          project_id: _this.projectid,
           parent_function_id: _this.form.parent_function_id,
           function_name: _this.form.function_name
         })
@@ -69,8 +69,7 @@ export default {
     }
   },
   created () {
-    // let _this = this
-    // _this.getAllInfo()
+    this.projectid = this.$store.getters.projectid
   }
 }
 </script>

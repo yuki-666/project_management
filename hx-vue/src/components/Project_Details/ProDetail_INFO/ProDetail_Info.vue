@@ -123,24 +123,12 @@ export default {
     }
   },
   methods: {
-    // handleEdit (index, row) {
-    //   this.$refs.edit.form = {
-    //     id: row.id
-    //   }
-    //   this.tmpId = row.id
-    //   this.$refs.edit.form.id = row.id
-    //   this.getAllInfo()
-    //   this.dialogFormVisible = true
-    // },
-    // handleEdit (index, row) {
-    //   console.log(index, row)
-    // },
     getAllInfo () {
       let _this = this
       this.$axios
         .get('/project_detail/modify/show', {
           params: {
-            id: '2020-0000-D-01'
+            id: _this.projectid
           }
         })
         .then(successResponse => {
@@ -162,7 +150,7 @@ export default {
       this.$axios
         .get('/project_detail/info', {
           params: {
-            id: this.$route.query.id
+            id: _this.projectid
           }
         })
         .then(successResponse => {
@@ -172,11 +160,9 @@ export default {
     }
   },
   created () {
-    // console.log(this.$route.query.id)
-    localStorage.setItem('zprojectname', this.$route.query.id)
-    this.$store.commit('handleProjectname', this.$route.query.id)
-    console.log('124235262')
-    console.log(this.$store.getters.projectname)
+    localStorage.setItem('zprojectid', this.$route.query.id)
+    this.$store.commit('handleProjectid', this.$route.query.id)
+    this.projectid = this.$store.getters.projectid
     this.getAllProjects()
   }
 }

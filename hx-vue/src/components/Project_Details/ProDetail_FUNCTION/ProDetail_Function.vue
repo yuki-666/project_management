@@ -105,7 +105,7 @@ export default {
           _this.tmpId = row.function_id
           this.$axios
             .post('/project_detail/function/delete', {
-              project_id: '2020-0000-D-01',
+              project_id: _this.projectid,
               function_id: _this.tmpId
             })
             .then(resp => {
@@ -158,19 +158,18 @@ export default {
       this.$axios
         .get('/project_detail/function', {
           params: {
-            id: '2020-0000-D-01'
+            id: _this.projectid
           }
         })
         .then(successResponse => {
           _this.projects = successResponse.data
-          // _this.tableDataTmp = successResponse.data
         })
         .catch(failResponse => {
         })
     }
   },
   created () {
-    // this.uid = this.$store.getters.uid
+    this.projectid = this.$store.getters.projectid
     this.getAllProjects()
   }
 }

@@ -10,9 +10,9 @@ export default new Vuex.Store({
     },
     zuid: '' || localStorage.getItem('zuid'),
     zcareer: '' || localStorage.getItem('zcareer'),
-    zprojectname: '' || localStorage.getItem('zprojectname')
+    zprojectid: '' || localStorage.getItem('zprojectid')
   },
-  getters: { uid: (state) => state.zuid, career: (state) => state.zcareer, projectname: (state) => state.zprojectname },
+  getters: { uid: (state) => state.zuid, career: (state) => state.zcareer, projectid: (state) => state.zprojectid },
   mutations: {
     login (state, user) {
       state.user = user
@@ -26,9 +26,9 @@ export default new Vuex.Store({
       state.zcareer = zcareer
       localStorage.setItem('zcareer', zcareer)
     },
-    handleProjectname: (state, zprojectname) => {
-      state.zprojectname = zprojectname
-      localStorage.setItem('zprojectname', zprojectname)
+    handleProjectid: (state, zprojectid) => {
+      state.zprojectid = zprojectid
+      localStorage.setItem('zprojectid', zprojectid)
     }
   }
 })

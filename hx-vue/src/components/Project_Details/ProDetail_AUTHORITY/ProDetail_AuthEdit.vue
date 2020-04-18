@@ -57,7 +57,7 @@ export default {
       this.$axios
         .post('/project_detail/authority_manage/modify', {
           uid: _this.form.worker_id,
-          project_id: '2020-0000-D-01',
+          project_id: _this.projectid,
           git_authority: _this.form.git_authority,
           file_authority: _this.form.file_authority,
           mail_authority: _this.form.mail_authority
@@ -81,8 +81,7 @@ export default {
     }
   },
   created () {
-    // let _this = this
-    // _this.getAllInfo()
+    this.projectid = this.$store.getters.projectid
   }
 }
 </script>

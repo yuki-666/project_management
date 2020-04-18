@@ -59,7 +59,7 @@ export default {
       this.$axios
         .get('/project_detail/authority_manage', {
           params: {
-            project_id: '2020-0000-D-01'
+            project_id: _this.projectid
           }
         })
         .then(successResponse => {
@@ -68,6 +68,7 @@ export default {
     }
   },
   created () {
+    this.projectid = this.$store.getters.projectid
     this.getAllInfo()
   }
 }

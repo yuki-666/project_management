@@ -12,18 +12,14 @@
 </template>
 
 <script>
-// import { FlowStatusRules } from "./rule/data-config";
 import SideMenu from '../ProDetail_SideMenu'
 export default {
   name: 'ProDetailAUTH',
   components: {
     'side-menu': SideMenu
-    //    'edit-form': PDEdit
   },
   data () {
     return {
-      //   buttonFlag: false,
-      //   dialogFormVisible: this.show,
       tableData: [
         {
           git_authority: '',
@@ -34,19 +30,13 @@ export default {
     }
   },
   methods: {
-    // newClick () {
-    //   this.dialogFormVisible = true
-    // },
-    // handleEdit (index, row) {
-    //   console.log(index, row)
-    // },
     getAllInfo () {
       let _this = this
       this.$axios
         .get('/project_detail/authority', {
           params: {
-            uid: '0012',
-            project_id: '2020-0000-D-01'
+            uid: _this.uid,
+            project_id: _this.projectid
           }
         })
         .then(successResponse => {
@@ -55,6 +45,8 @@ export default {
     }
   },
   created () {
+    this.uid = this.$store.getters.uid
+    this.projectid = this.$store.getters.projectid
     this.getAllInfo()
   }
 }

@@ -137,11 +137,6 @@ export default {
         return 1
       }
     },
-    // getAllData () {
-    //   let self = this
-    //   let projectName = this.$route.query.projectName
-    //   console.log("项目名称", projectName)
-    // },
     // 获取全部项目
     getAllProjects () {
       var _this = this

@@ -142,12 +142,10 @@ export default {
       return year + '-' + month + '-' + day
     },
     onSubmit () {
-      // console.log('12334')
-      // console.log(this.$route.query.id)
       let _this = this
       this.$axios
         .post('/project_detail/modify/save', {
-          id: this.$route.query.id,
+          id: _this.form.id,
           name: _this.form.name,
           status: _this.form.status,
           scheduled_time: _this.dateFormat(_this.form.scheduled_time),
@@ -175,7 +173,6 @@ export default {
       this.onSubmit()
     },
     onSubmit1 () {
-      // this.status = 2
       this.onSubmit()
     }
   },

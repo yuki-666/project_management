@@ -153,26 +153,49 @@ def project_detail_project_worker():
     else:
         return json.dumps(data)
 
-@project_detail_access.route('/project_worker/modify_worker', methods=['GET'])
-def project_detail_project_worker_modify_worker():
+@project_detail_access.route('/project_worker/add/show', methods=['GET'])
+def project_detail_project_worker_add_show():
     request_data = get_value_dict()
-    if not check_dict(request_data, ['id']):
+    if not check_dict(request_data, ['project_id']):
         return json.dumps('PARAM ERROR')
     
-    data = user.get_total_user(request_data['id'])
+    project_member = project.get_project_member(request_data['project_id'])
+    project_member.insert(0, {'worker_id': '0000', 'worker_name': '无项目领导'})
+    total_member = user.get_total_user(project_id=request_data['project_id'])
+
+    total_member_exclude_in = []
+    for i in total_member:
+        if i['status'] == 0:
+            total_member_exclude_in.append(i)
+
+    if has_error(project_member) or has_error(total_member_exclude_in):
+        return json.dumps('BACKEND ERROR')
+    else:
+        data = {}
+        data['project_member'] = project_member
+        data['total_member'] = total_member_exclude_in
+        return json.dumps(data)
+
+@project_detail_access.route('/project_worker/add', methods=['POST'])
+def project_detail_project_worker_add():
+    request_data = get_value_dict()
+    if not check_dict(request_data, ['project_id', 'worker_id', 'leader_id']):
+        return json.dumps('PARAM ERROR')
+    
+    data = project.add_project_member(request_data['project_id'], request_data['worker_id'], request_data['leader_id'])
 
     if has_error(data):
         return json.dumps('BACKEND ERROR')
     else:
-        return json.dumps(data)
-        
-@project_detail_access.route('/project_worker/modify_worker/save', methods=['GET'])
-def project_detail_project_worker_modify_worker_save():
+        return json.dumps({'status': data})
+
+@project_detail_access.route('/project_worker/delete', methods=['POST'])
+def project_detail_project_worker_delete():
     request_data = get_value_dict()
-    if not check_dict(request_data, ['id', 'uid']):
+    if not check_dict(request_data, ['project_id', 'worker_id']):
         return json.dumps('PARAM ERROR')
-    
-    data = projcet.modify_worker(request_data['id'], request_data['uid'])
+
+    data = project.delete_project_member(request_data['project_id'], request_data['worker_id'])
 
     if has_error(data):
         return json.dumps('BACKEND ERROR')
