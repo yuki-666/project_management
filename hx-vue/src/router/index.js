@@ -13,7 +13,7 @@ import BackLogin from '../components/back/Back_Login'
 import BackHome from '../components/back/BackHome'
 import BackAccounter from '../components/back/BackAccounter'
 import BackWorker from '../components/back/BackWorker.vue'
-import ProDetail from '../components/Project_Details/ProDetail_Index.vue'
+import ProDetail from '@/components/ProDetail_Index.vue'
 import ProjectManagement from '../components/ProjectManagement/project_index'
 
 Vue.use(Router)

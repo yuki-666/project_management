@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import SideMenu from '../ProDetail_ManagerSideMenu'
+import SideMenu from './ProDetail_WorkerSideMenu'
 export default {
   name: 'ProDetailAUTH',
   components: {

@@ -48,7 +48,6 @@
              <el-button
               size="mini"
               @click="handleEdit2(scope.$index, scope.row)"
-              :disabled="setButtonFlag(scope.row)"
               >重新提交</el-button
             >
           </template>
