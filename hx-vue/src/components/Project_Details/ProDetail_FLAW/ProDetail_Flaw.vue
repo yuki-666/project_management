@@ -50,7 +50,8 @@
 </template>
 
 <script>
-import SideMenu from '../ProDetail_SideMenu'
+// import FlawEdit from './ProDetail_FlawEdit'
+import SideMenu from '../ProDetail_ManagerSideMenu'
 import FlawAdd from './ProDetail_FlawAdd'
 import FlawEdit from './proDetail_FlawEdit'
 export default {

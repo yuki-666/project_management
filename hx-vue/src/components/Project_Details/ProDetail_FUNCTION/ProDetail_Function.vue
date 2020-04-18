@@ -47,7 +47,6 @@
               >删除人员</el-button
             >
           </template>
-          <!-- </el-button-group> -->
         </el-table-column>
       </el-table>
       <el-row class="pag">
@@ -83,7 +82,7 @@
 
 <script>
 import FuncEdit from './ProDetail_FuncEdit'
-import SideMenu from '../ProDetail_SideMenu'
+import SideMenu from '../ProDetail_ManagerSideMenu'
 import FuncAdd from './ProDetail_FuncAdd'
 import FuncAddPerson from './ProDetail_FuncAddPerson'
 export default {

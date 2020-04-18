@@ -5,23 +5,11 @@
       :visible.sync="dialogVisible2"
       @close="$emit('update:show', false)"
       center>
-      <el-table
-        :data="tableData"
-        style="width:100%"
-      >
-      <el-table-column label="项目id" prop="project_id"></el-table-column>
-      <el-table-column label="功能ID" prop="function_id"></el-table-column>
-      <el-table-column label="项目全部成员" prop="uid" >
-       <el-form-item label="活动性质">
-          <el-checkbox-group v-model="form.type">
-          <el-checkbox label="美食/餐厅线上活动" name="type"></el-checkbox>
-          <el-checkbox label="地推活动" name="type"></el-checkbox>
-          <el-checkbox label="线下主题活动" name="type"></el-checkbox>
-          <el-checkbox label="单纯品牌曝光" name="type"></el-checkbox>
-          </el-checkbox-group>
-       </el-form-item>
-      </el-table-column>
-      </el-table>
+     <el-form :model="form">
+        <el-form-item label="项目名称" :label-width="formLabelWidth" prop="id">
+          <el-input v-model="form.function_name" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button round @click="closeDialog">取 消</el-button>
         <el-button type="success" round @click="closeDialog">保 存</el-button>
@@ -43,9 +31,7 @@ export default {
     return {
       dialogVisible2: this.show,
       form: {
-        git_authority: '1',
-        file_authority: '2',
-        mail_authority: 'success'
+        function_name: '1'
       },
       formLabelWidth: '100px'
     }

@@ -14,13 +14,66 @@
         stripe
         @filter-change="filterTagTable"
       >
-        <el-table-column label="风险id" prop="id"></el-table-column>
-        <el-table-column label="风险内容" prop="describe"></el-table-column>
-        <el-table-column label="优先级" prop="level" sortable></el-table-column>
-        <el-table-column label="风险状态" prop="label"></el-table-column>
+        <el-table-column type="expand">
+          <template slot-scope="props">
+            <el-form label-position="left" inline class="demo-table-expand">
+              <el-form-item label="风险ID">
+                <span>{{ props.row.id}}</span>
+              </el-form-item>
+              <el-form-item label="风险类型">
+                <span>{{ props.row.type }}</span>
+              </el-form-item>
+              <el-form-item label="风险描述">
+                <span>{{ props.row.describe }}</span>
+              </el-form-item>
+              <el-form-item label="风险级别">
+                <span>{{ props.row.level }}</span>
+              </el-form-item>
+              <el-form-item label="风险影响度">
+                <span>{{ props.row.effect }}</span>
+              </el-form-item>
+              <el-form-item label="风险应对策略">
+                <span>{{ props.row.solve }}</span>
+              </el-form-item>
+              <el-form-item label="风险状态">
+                <span>{{ props.row.status }}</span>
+              </el-form-item>
+              <el-form-item label="风险责任人">
+                <span>{{ props.row.duty }}</span>
+              </el-form-item>
+              <el-form-item label="风险跟踪频度">
+                <span>{{ props.row.rate }}</span>
+              </el-form-item>
+              <el-form-item label="风险相关者">
+                <span>{{ props.row.follower }}</span>
+              </el-form-item>
+            </el-form>
+          </template>
+        </el-table-column>
+        <el-table-column label="风险描述" prop="describe"></el-table-column>
+        <el-table-column label="风险级别" prop="level"
+         column-key="level"
+          :filters="filter_level"
+          filter-placement="bottom-end"
+        >
+          <template slot-scope="props">
+            <zx-tag>
+              {{ FLOWS_LEVEL[props.row.level] }}
+            </zx-tag>
+          </template></el-table-column>
+        <el-table-column label="风险状态" prop="status" column-key="status"
+          :filters="filter_status"
+          filter-placement="bottom-end"
+        >
+          <template slot-scope="props">
+            <zx-tag>
+              {{ FLOWS_STATUS[props.row.status] }}
+            </zx-tag>
+          </template></el-table-column>
+        <el-table-column label="风险责任人" prop="duty"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="text" @click="handleEdit(scope.$index, scope.row)">修改</el-button>
+            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">修 改</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -30,32 +83,25 @@
           :current-page="currentPage"
           :page-size="pagesize"
           :total="projects.length"
-        >
-        </el-pagination>
+        ></el-pagination>
       </el-row>
     </div>
-    <risk-edit
-      :show.sync="dialogVisible"
-      @updateAgain="this.getAllProjects"
-      ref="edit"
-    ></risk-edit>
-    <risk-add
-      :show.sync="dialogVisible1"
-      @updateAgain="this.getAllProjects"
-      ref="edit1"
-    ></risk-add>
+    <risk-edit :show.sync="dialogVisible" @updateAgain="this.getAllProjects" ref="edit"></risk-edit>
+    <risk-add :show.sync="dialogVisible1" @updateAgain="this.getAllProjects" ref="edit1"></risk-add>
   </div>
 </template>
 
 <script>
-import SideMenu from '../ProDetail_SideMenu'
+import SideMenu from '../ProDetail_ManagerSideMenu'
 import RiskEdit from './proDetail_RiskEdit'
 import RiskAdd from './proDetail_RiskAdd'
+import ZxTag from '../../tag/src/tag'
 export default {
   name: 'ProRisk',
   components: {
     'side-menu': SideMenu,
     'risk-edit': RiskEdit,
+    'zx-tag': ZxTag,
     'risk-add': RiskAdd
   },
   data () {
@@ -66,38 +112,52 @@ export default {
       currentPage: 1,
       pagesize: 5,
       total: 10,
-      projects: [{
-        id: '',
-        describe: '',
-        level: '',
-        label: ''
-      }],
-      level_dict: [{
-        key: '0',
-        value: '低'
-      }, {
-        key: '1',
-        value: '中'
-      }, {
-        key: '2',
-        value: '高'
-      }],
-      label_dict: [{
-        key: '0',
-        value: '存在'
-      }, {
-        key: '1',
-        value: '已修复'
-      }]
+      filter_level: [
+        { text: '低', value: 0 },
+        { text: '中', value: 1 },
+        { text: '高', value: 2 }
+      ],
+      FLOWS_LEVEL: [
+        '低',
+        '中',
+        '高'
+      ],
+      filter_status: [
+        { text: '未修复', value: 0 },
+        { text: '已修复', value: 1 }
+      ],
+      FLOWS_STATUS: [
+        '未修复',
+        '已修复'
+      ],
+      projects: [
+        {
+          id: '',
+          type: '',
+          describe: '',
+          level: '',
+          effect: '',
+          solve: '',
+          status: '',
+          duty: '',
+          rate: '',
+          follower: ''
+        }
+      ]
     }
   },
   methods: {
     handleEdit (index, row) {
       this.$refs.edit.form = {
-        id: row.id,
+        type: row.type,
         describe: row.describe,
         level: row.level,
-        label: row.label
+        effect: row.effect,
+        solve: row.solve,
+        status: row.status,
+        duty: row.duty_id,
+        rate: row.rate,
+        follower: row.follow_id
       }
       this.dialogVisible = true
     },

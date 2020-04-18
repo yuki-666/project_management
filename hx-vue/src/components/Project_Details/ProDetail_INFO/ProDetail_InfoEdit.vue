@@ -14,8 +14,8 @@
           <el-input v-model="form.name" autocomplete="off" ></el-input>
         </el-form-item>
         <el-form-item label="项目状态" :label-width="formLabelWidth" prop="status">
-          <el-select v-model="form.status" placeholder="请选择项目状态">
-            <el-option v-for="item in status_dict" :key="item.key" :label="item.value" :value="item.key"></el-option>
+          <el-select v-model="form.status" placeholder="请选择项目状态" :disabled="StatusFunc()">
+            <el-option v-for="item in status_dict" :key="item.key" :label="item.value" :value="item.key" :disabled="item.disabled"  ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="更新时间" :label-width="formLabelWidth" prop="update_time">
@@ -102,10 +102,12 @@ export default {
       },
       status_dict: [{
         key: '0',
-        value: '驳回'
+        value: '驳回',
+        disabled: true
       }, {
         key: '1',
-        value: '审批中'
+        value: '审批中',
+        disabled: true
       }, {
         key: '2',
         value: '已立项'
@@ -131,6 +133,20 @@ export default {
     }
   },
   methods: {
+    Status1 () {
+      if (this.form.status === '0' || this.form.status === '1') {
+        return true
+      }
+      console.log('hhhhhhh')
+      return false
+    },
+    StatusFunc () {
+      if (this.form.status === '0' || this.form.status === '1') {
+        return true
+      }
+      console.log('hhhhhhh')
+      return false
+    },
     dateFormat (value) {
       var date = new Date(value)
       var year = date.getFullYear()

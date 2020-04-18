@@ -1,10 +1,5 @@
 <template>
   <div>
-    <!-- <div> -->
-       <!-- <template slot-scope="scope"> -->
-          <!-- </template> -->
-    <!-- </div> -->
-    <el-button type="primary" style="float: right" round @click="handleAdd">添加人员</el-button>
     <div class="project_table">
       <el-table
         :data="
@@ -18,12 +13,9 @@
         stripe
         @filter-change="filterTagTable"
       >
+        <el-table-column label="功能ID" prop="function_id"></el-table-column>
+        <el-table-column label="功能名称" prop="function_name" sortable></el-table-column>
         <el-table-column label="员工姓名" prop="worker_name"></el-table-column>
-        <el-table-column label="操作">
-          <template slot-scope="scope">
-            <el-button type="primary" round @click="deletePerson(scope.$index, scope.row)">删除</el-button>
-          </template>
-        </el-table-column>
       </el-table>
       <el-row class="pag">
         <el-pagination
@@ -35,28 +27,21 @@
         </el-pagination>
       </el-row>
     </div>
-    <add-form
-      :show.sync="dialogVisible4"
-      :zid="tmpId"
-      @updateAgain="this.getAllProjects"
-      ref="edit"
-    ></add-form>
   </div>
 </template>
 
 <script>
-import SideMenu from '../ProDetail_ManagerSideMenu'
-import PerAdd from './ProDetail_PerAdd'
+import SideMenu from './ProDetail_WorkerSideMenu'
 export default {
   name: 'ProDetailFUNCTION',
   components: {
-    'side-menu': SideMenu,
-    'add-form': PerAdd
+    'side-menu': SideMenu
   },
   data () {
     return {
       select: '',
-      dialogVisible4: false,
+      dialogVisible2: false,
+      dialogVisible3: false,
       tmpId: '-1',
       tableDataTmp: [],
       currentPage: 1,
@@ -64,56 +49,40 @@ export default {
       total: 10,
       projects: [
         {
-          worker_id: '',
+          function_id: '',
+          function_name: '',
           worker_name: ''
         }
       ]
     }
   },
   methods: {
-    deletePerson: function (index, row) {
-      let _this = this
-      this.$confirm('此操作将在该项目中删除该员工, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(() => {
-          this.$axios
-            .post('/project_detail/project_worker/delete', {
-              project_id: _this.projectid,
-              worker_id: row.worker_id
-            })
-            .then(resp => {
-              if (resp.data.status === 'ok') {
-                this.getAllProjects()
-                this.$message.success('删除成功')
-              }
-            })
-        })
-        .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
-        })
-    },
     getAllInfo () {
       let _this = this
       this.$axios
-        .get('/project_detail/project_worker/add/show', {
+        .get('/project_detail/function', {
           params: {
             project_id: _this.projectid
           }
         })
         .then(successResponse => {
           _this.$refs.edit.form = successResponse.data
-          console.log(successResponse.data)
         })
     },
-    handleAdd () {
+    handleEdit (index, row) {
+      this.$refs.edit.form = {
+        id: row.id
+      }
+      this.tmpId = row.id
+      this.$refs.edit.form.id = row.id
       this.getAllInfo()
-      this.dialogVisible4 = true
+      this.dialogVisible2 = true
+    },
+    handleAdd (index, row) {
+      this.$refs.edit.form = {
+        parent_function_id: row.function_id
+      }
+      this.dialogVisible3 = true
     },
     handleCurrentChange (currentPage) {
       this.currentPage = currentPage
@@ -122,7 +91,7 @@ export default {
     getAllProjects () {
       var _this = this
       this.$axios
-        .get('/project_detail/project_worker', {
+        .get('/project_detail/function', {
           params: {
             id: _this.projectid
           }
@@ -144,7 +113,7 @@ export default {
 <style lang="scss" scoped>
 .project_table {
   padding-top: 0;
-  margin: 20px 10%;
+  margin: 10px 20%;
   position: relative;
   // margin-left: auto;
   // margin-right: auto;
@@ -153,7 +122,7 @@ export default {
   font-size: 0;
 }
 .demo-table-expand label {
-  width: 90px;
+  width: 20px;
   color: #99a9bf;
 }
 .demo-table-expand .el-form-item {
@@ -163,6 +132,6 @@ export default {
   color: red;
 }
 .pag {
-  margin: 5px 70%;
+  margin: 10px 70%;
 }
 </style>

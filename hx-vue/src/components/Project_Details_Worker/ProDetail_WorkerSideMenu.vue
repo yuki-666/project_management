@@ -23,17 +23,13 @@
     </el-menu-item>
     <el-menu-item index="4">
       <i class="el-icon-menu"></i>
-      <span slot="title">权限管理</span>
+      <span slot="title">缺陷跟踪</span>
     </el-menu-item>
     <el-menu-item index="5">
       <i class="el-icon-menu"></i>
-      <span slot="title">缺陷跟踪</span>
-    </el-menu-item>
-    <el-menu-item index="6">
-      <i class="el-icon-menu"></i>
       <span slot="title">项目风险</span>
     </el-menu-item>
-    <el-menu-item index="7">
+    <el-menu-item index="6">
       <i class="el-icon-menu"></i>
       <span slot="title">设备管理</span>
     </el-menu-item>
@@ -61,8 +57,10 @@ export default {
 .categories {
   position: fixed;
   margin-left: 20px;
-  left: 20px;
   top: 100px;
-  width: 150px;
+  width: 150px
+  /* left: -600px;
+  top: 100px;
+  width: 150px; */
 }
 </style>

@@ -1,10 +1,5 @@
 <template>
   <div>
-    <!-- <div> -->
-       <!-- <template slot-scope="scope"> -->
-          <!-- </template> -->
-    <!-- </div> -->
-    <el-button type="primary" style="float: right" round @click="handleAdd">添加人员</el-button>
     <div class="project_table">
       <el-table
         :data="
@@ -19,11 +14,6 @@
         @filter-change="filterTagTable"
       >
         <el-table-column label="员工姓名" prop="worker_name"></el-table-column>
-        <el-table-column label="操作">
-          <template slot-scope="scope">
-            <el-button type="primary" round @click="deletePerson(scope.$index, scope.row)">删除</el-button>
-          </template>
-        </el-table-column>
       </el-table>
       <el-row class="pag">
         <el-pagination
@@ -35,23 +25,15 @@
         </el-pagination>
       </el-row>
     </div>
-    <add-form
-      :show.sync="dialogVisible4"
-      :zid="tmpId"
-      @updateAgain="this.getAllProjects"
-      ref="edit"
-    ></add-form>
   </div>
 </template>
 
 <script>
-import SideMenu from '../ProDetail_ManagerSideMenu'
-import PerAdd from './ProDetail_PerAdd'
+import SideMenu from './ProDetail_WorkerSideMenu'
 export default {
   name: 'ProDetailFUNCTION',
   components: {
-    'side-menu': SideMenu,
-    'add-form': PerAdd
+    'side-menu': SideMenu
   },
   data () {
     return {
@@ -71,33 +53,6 @@ export default {
     }
   },
   methods: {
-    deletePerson: function (index, row) {
-      let _this = this
-      this.$confirm('此操作将在该项目中删除该员工, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(() => {
-          this.$axios
-            .post('/project_detail/project_worker/delete', {
-              project_id: _this.projectid,
-              worker_id: row.worker_id
-            })
-            .then(resp => {
-              if (resp.data.status === 'ok') {
-                this.getAllProjects()
-                this.$message.success('删除成功')
-              }
-            })
-        })
-        .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
-        })
-    },
     getAllInfo () {
       let _this = this
       this.$axios
