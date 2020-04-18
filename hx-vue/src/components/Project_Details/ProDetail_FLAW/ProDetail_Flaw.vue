@@ -1,5 +1,6 @@
 <template>
   <div>
+    <el-button type="primary" style="float: right" round @click="newClick">新建缺陷</el-button>
     <div class="project_table">
       <el-table
         :data="
@@ -13,14 +14,15 @@
         stripe
         @filter-change="filterTagTable"
       >
-        <el-table-column label="缺陷内容" prop="flaw_detail"></el-table-column>
-        <el-table-column label="优先级" prop="priority" sortable></el-table-column>
+        <el-table-column label="缺陷ID" prop="id"></el-table-column>
+        <el-table-column label="缺陷内容" prop="describe"></el-table-column>
+        <el-table-column label="优先级" prop="level" sortable></el-table-column>
         <el-table-column label="跟进人" prop="follower"></el-table-column>
         <el-table-column label="缺陷状态" prop="status"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="text" @click="handleAdd(scope.$index, scope.row)"
-              >新建缺陷</el-button>
+            <el-button type="text" @click="handleEdit(scope.$index, scope.row)"
+              >操作</el-button>
           </template>
           <!-- </el-button-group> -->
         </el-table-column>
@@ -35,17 +37,16 @@
         </el-pagination>
       </el-row>
     </div>
-    <editfunc-form
-      :show.sync="dialogVisible2"
-      :zid="tmpId"
-      @updateAgain="this.getAllInfo"
+    <edit-form
+      :show.sync="dialogVisible"
+      @updateAgain="this.getAllProjects"
       ref="edit"
-    ></editfunc-form>
+    ></edit-form>
     <add-form
-      :show.sync="dialogVisible3"
+      :show.sync="dialogVisible1"
       :zid="tmpId"
-      @updateAgain="this.getAllInfo"
-      ref="edit"
+      @updateAgain="this.getAllProjects"
+      ref="edit1"
     ></add-form>
   </div>
 </template>
@@ -54,19 +55,22 @@
 // import FlawEdit from './ProDetail_FlawEdit'
 import SideMenu from '../ProDetail_SideMenu'
 import FlawAdd from './ProDetail_FlawAdd'
+import FlawEdit from './proDetail_FlawEdit'
 // import { FlowStatusRules } from '../../home/rule/data-config'
 // import ZxTag from '../../tag'
 export default {
   name: 'ProFLAW',
   components: {
     'side-menu': SideMenu,
-    'add-form': FlawAdd
+    'add-form': FlawAdd,
+    'edit-form': FlawEdit
+
   },
   data () {
     return {
       select: '',
-      dialogVisible2: false,
-      dialogVisible3: false,
+      dialogVisible: false,
+      dialogVisible1: false,
       tmpId: '-1',
       tableDataTmp: [],
       currentPage: 1,
@@ -74,82 +78,35 @@ export default {
       total: 10,
       projects: [
         {
-          equipment_name: '',
-          begin_time: '',
-          end_time: ''
+          id: '',
+          describe: '',
+          level: '',
+          follower: '',
+          status: ''
         }
       ]
     }
   },
   methods: {
-    handleDelete (index, row) {
-      let _this = this
-      this.$confirm('此操作将永久删除此功能, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(() => {
-          _this.tmpId = row.function_id
-          this.$axios
-            .post('/project_detail/function/delete', {
-              project_id: '2020-0000-D-01',
-              function_id: _this.tmpId
-            })
-            .then(resp => {
-              if (resp.data.status === 'ok') {
-                this.getAllProjects()
-                this.$message.success('已经删除')
-              }
-            })
-        })
-        .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
-        })
-    },
-    getAllInfo () {
-      let _this = this
-      this.$axios
-        .get('/project_detail/function', {
-          params: {
-            project_id: _this.tmpId
-          }
-        })
-        .then(successResponse => {
-          _this.$refs.edit.form = successResponse.data
-        })
+    newClick () {
+      this.dialogVisible1 = true
     },
     handleEdit (index, row) {
       this.$refs.edit.form = {
-        id: row.id
+        describe: row.describe,
+        level: row.level,
+        follower: row.follower,
+        status: row.status
       }
-      this.tmpId = row.id
-      this.$refs.edit.form.id = row.id
-      this.getAllInfo()
-      this.dialogVisible2 = true
-    },
-    handleAdd (index, row) {
-      this.$refs.edit.form = {
-        parent_function_id: row.function_id
-      }
-      // this.tmpId = row.id
-      // this.$refs.edit.form.id = row.id
-      // this.getAllInfo()
-      this.dialogVisible3 = true
-    },
-    handleCurrentChange (currentPage) {
-      this.currentPage = currentPage
+      this.dialogVisible = true
     },
     // 获取全部项目
     getAllProjects () {
       var _this = this
       this.$axios
-        .get('/project_detail/function', {
+        .get('/project_detail/project_flaw', {
           params: {
-            id: '2020-0000-D-01'
+            project_id: '2020-04-18'
           }
         })
         .then(successResponse => {
