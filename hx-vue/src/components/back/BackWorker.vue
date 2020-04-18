@@ -80,13 +80,11 @@ export default {
   },
   methods: {
     deleteData (index, row) {
-      let _this = this
       this.$confirm('此操作将删除该员工, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      })
-      .then(() => {
+      }).then(() => {
         this.$axios
           .post('/back/delete_normal_account', { id: row.id })
           .then(resp => {
@@ -95,8 +93,7 @@ export default {
               this.$message.success('已经删除')
             }
           })
-      })
-      .catch(() => {
+      }).catch(() => {
         this.$message({
           type: 'info',
           message: '已取消删除'
