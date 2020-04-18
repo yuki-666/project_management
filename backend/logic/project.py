@@ -412,10 +412,10 @@ def get_authority(project_id, uid=None):
     return db.selectDB(sql)
 
 def modify_authority(project_id, uid, git_authority, file_authority, mail_authority):
-    # if can't find project_id uid in table, return 'error'
     sql = f'''update authority set git_authority={git_authority}, file_authority={file_authority}, mail_authority={mail_authority} where project_id=\'{project_id}\' and worker_id={uid};'''
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-    return 'ok' if db.otherDB(sql) == 'ok' else 'error'
+    res = db.otherDB(sql)
+    return 'ok'
 
 def get_business_area():
     sql = 'select id as business_id, name as business_name from business_area where delete_label=0;'

@@ -38,7 +38,7 @@
     <add-form
       :show.sync="dialogVisible4"
       :zid="tmpId"
-      @updateAgain="this.getAllInfo"
+      @updateAgain="this.getAllProjects"
       ref="edit"
     ></add-form>
   </div>
@@ -73,7 +73,7 @@ export default {
   methods: {
     deletePerson: function (index, row) {
       let _this = this
-      this.$confirm('此操作将永久删除该员工信息, 是否继续?', '提示', {
+      this.$confirm('此操作将在该项目中删除该员工, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'

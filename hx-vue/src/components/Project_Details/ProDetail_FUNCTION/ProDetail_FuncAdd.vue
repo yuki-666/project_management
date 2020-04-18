@@ -54,9 +54,10 @@ export default {
           function_name: _this.form.function_name
         })
         .then(resp => {
-          if (resp && resp.status === 200) {
+          if (resp.data.status === 'ok') {
             this.dialogVisible3 = false
-            this.$emit('onSubmit')
+            this.$emit('update:show', false)
+            this.$emit('updateAgain')
             _this.dialogVisible3 = false
             this.$message.success('添加成功')
           }
@@ -64,8 +65,6 @@ export default {
     },
     closeDialog () {
       this.dialogVisible3 = false
-      this.$emit('update:show', false)
-      this.onSubmit()
     }
   },
   created () {

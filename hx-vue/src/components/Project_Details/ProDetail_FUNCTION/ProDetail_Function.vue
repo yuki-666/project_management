@@ -42,13 +42,13 @@
     <editfunc-form
       :show.sync="dialogVisible2"
       :zid="tmpId"
-      @updateAgain="this.getAllInfo"
+      @updateAgain="this.getAllProjects"
       ref="edit"
     ></editfunc-form>
     <add-form
       :show.sync="dialogVisible3"
       :zid="tmpId"
-      @updateAgain="this.getAllInfo"
+      @updateAgain="this.getAllProjects"
       ref="edit"
     ></add-form>
   </div>
@@ -58,8 +58,6 @@
 import FuncEdit from './ProDetail_FuncEdit'
 import SideMenu from '../ProDetail_SideMenu'
 import FuncAdd from './ProDetail_FuncAdd'
-// import { FlowStatusRules } from '../../home/rule/data-config'
-// import ZxTag from '../../tag'
 export default {
   name: 'ProDetailFUNCTION',
   components: {
@@ -81,7 +79,6 @@ export default {
         {
           function_id: '',
           function_name: '',
-          // worker_id: '',
           worker_name: ''
         }
       ]
@@ -127,7 +124,7 @@ export default {
       this.$axios
         .get('/project_detail/function', {
           params: {
-            project_id: _this.tmpId
+            project_id: _this.projectid
           }
         })
         .then(successResponse => {

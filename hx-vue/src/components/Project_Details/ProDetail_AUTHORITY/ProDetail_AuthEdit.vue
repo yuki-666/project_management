@@ -19,7 +19,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button round @click="closeDialog">取 消</el-button>
-        <el-button type="success" round @click="closeDialog">保 存</el-button>
+        <el-button type="success" round @click="onSubmit">保 存</el-button>
       </div>
     </el-dialog>
   </div>
@@ -65,7 +65,8 @@ export default {
         .then(resp => {
           if (resp.data.status === 'ok') {
             this.dialogVisible = false
-            this.$emit('onSubmit')
+            this.$emit('update:show', false)
+            this.$emit('updateAgain')
             _this.dialogVisible = false
             this.$message.success('修改成功')
           }
@@ -76,8 +77,6 @@ export default {
     },
     closeDialog () {
       this.dialogVisible = false
-      this.$emit('update:show', false)
-      this.onSubmit()
     }
   },
   created () {
