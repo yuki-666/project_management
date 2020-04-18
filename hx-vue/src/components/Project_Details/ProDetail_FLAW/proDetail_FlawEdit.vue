@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-dialog
-      title="添加缺陷"
+      title="编辑缺陷"
       :visible.sync="dialogVisible"
       @close="$emit('update:show', false)"
       center
@@ -52,7 +52,7 @@
 
 <script>
 export default {
-  name: 'RiskAdd',
+  name: 'RiskEdit',
   props: {
     show: {
       type: Boolean,
@@ -98,7 +98,7 @@ export default {
     onSubmit () {
       let _this = this
       this.$axios
-        .post('/project_detail/project_flaw/add', {
+        .post('/project_detail/project_flaw/modify', {
           project_id: '2020-04-18',
           describe: _this.form.describe,
           level: _this.form.level,

@@ -264,6 +264,37 @@ LOCK TABLES `project_equipment` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `project_flaw`
+--
+
+DROP TABLE IF EXISTS `project_flaw`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `project_flaw` (
+  `id` varchar(45) NOT NULL COMMENT '缺陷ID',
+  `project_id` varchar(45) DEFAULT NULL COMMENT '项目ID',
+  `describe` varchar(45) DEFAULT NULL COMMENT '缺陷描述',
+  `level` int(11) DEFAULT NULL COMMENT '风险等级',
+  `follower_id` varchar(45) DEFAULT NULL COMMENT '追踪者',
+  `status` int(11) DEFAULT NULL COMMENT '缺陷状态（是否修复）',
+  PRIMARY KEY (`id`),
+  KEY `flaw_project_id_idx` (`project_id`),
+  KEY `flaw_follower_id_idx` (`follower_id`),
+  CONSTRAINT `flaw_follower_id` FOREIGN KEY (`follower_id`) REFERENCES `employee` (`id`),
+  CONSTRAINT `flaw_project_id` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `project_flaw`
+--
+
+LOCK TABLES `project_flaw` WRITE;
+/*!40000 ALTER TABLE `project_flaw` DISABLE KEYS */;
+/*!40000 ALTER TABLE `project_flaw` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `project_function`
 --
 
@@ -426,4 +457,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-04-18 18:06:57
+-- Dump completed on 2020-04-18 19:29:46
