@@ -24,6 +24,16 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="缺陷状态" :label-width="formLabelWidth" prop="status">
+          <el-select v-model="form.status" placeholder="请选择状态">
+            <el-option
+              v-for="item in label_dict"
+              :key="item.key"
+              :label="item.value"
+              :value="item.key"
+            ></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="跟进人" :label-width="formLabelWidth" prop="follower">
           <el-select v-model="form.follower" placeholder="请选择跟进人">
             <el-option
@@ -59,6 +69,7 @@ export default {
         id: '',
         describe: '',
         level: '',
+        status: '',
         follower: ''
       },
       level_dict: [{
@@ -70,6 +81,13 @@ export default {
       }, {
         key: '2',
         value: '高'
+      }],
+      label_dict: [{
+        key: '0',
+        value: '未修复'
+      }, {
+        key: '1',
+        value: '已修复'
       }],
       member: [{
         worker_id: '',
@@ -105,6 +123,7 @@ export default {
           project_id: _this.projectid,
           describe: _this.form.describe,
           level: _this.form.level,
+          status: _this.form.status,
           follower: _this.form.follower
         })
         .then(resp => {
