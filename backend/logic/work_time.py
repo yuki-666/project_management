@@ -36,13 +36,7 @@ def get_info_by_uid(uid, is_superior=False, include_finished=False):
 
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     res = db.selectDB(sql)
-
-    if res == 'Empty':
-        return []
-    else:
-        res = change_time_format(res, 'start_time')
-        res = change_time_format(res, 'end_time')
-        return res
+    return res if res != 'Empty' else []
 
 def get_info_by_work_time_id(work_time_id):
     para_dict = {}
