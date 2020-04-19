@@ -69,7 +69,8 @@ export default {
             this.dialogVisibleDeletePerson = false
             this.$emit('update:show', false)
             this.$emit('updateAgain')
-            _this.member.worker_name = ''
+            _this.member.worker_id = ''
+            _this.form.worker_id = ''
             _this.dialogVisibleDeletePerson = false
             this.$message.success('添加成功')
           }

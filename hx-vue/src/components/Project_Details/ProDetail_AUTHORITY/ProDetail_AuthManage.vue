@@ -3,7 +3,7 @@
     <div class="project_table">
       <el-table
         :data="
-          projects.slice(
+          tableData.slice(
             (this.currentPage - 1) * pagesize,
             this.currentPage * pagesize
           )
@@ -28,7 +28,7 @@
           @current-change="handleCurrentChange"
           :current-page="currentPage"
           :page-size="pagesize"
-          :total="projects.length"
+          :total="tableData.length"
         >
         </el-pagination>
       </el-row>
@@ -53,6 +53,9 @@ export default {
   data () {
     return {
       dialogVisible: this.show,
+      currentPage: 1,
+      pagesize: 5,
+      total: 10,
       tableData: [
         {
           worker_id: '',

@@ -129,6 +129,10 @@ export default {
             this.$emit('update:show', false)
             this.$emit('updateAgain')
             _this.form.name = ''
+            _this.form.manager = ''
+            _this.form.start_time = ''
+            _this.form.end_time = ''
+            _this.form.status = ''
             _this.dialogVisible = false
             this.$message.success('添加成功')
           }

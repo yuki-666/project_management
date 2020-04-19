@@ -46,6 +46,7 @@ def get_info(project_id=None, uid=None, keyword=None, detail=False, include_reje
         if res_name != 'Empty':
             res += res_name
         res = [dict(j) for j in set([tuple(i.items()) for i in res])]
+        res = change_time_format(res, 'update_time')
         return res
 
     if project_id is not None:
@@ -273,12 +274,12 @@ def add_function(project_id, parent_function_id, function_name):
     # 2. new_function_id = last_function_id + 1, 3 digits, each digit: 012……789abc……xyzABC……XYZ
     # worker_id not null
 
-    sql = f'''select distinct max(id) from project_function where project_id=\'{project_id}\' and parent_function_id={parent_function_id};'''
+    sql = f'''select distinct max(id) from project_function where project_id=\'{project_id}\' and parent_function_id=\'{parent_function_id}\';'''
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     last_function_id = db.selectDB(sql)[0]['max(id)']
     if last_function_id is None:
         last_function_id = '000'
-    
+
     three_id = list(last_function_id[-3:])
     add(three_id, 2)
     if parent_function_id == '000':
@@ -293,7 +294,7 @@ def add_function(project_id, parent_function_id, function_name):
 
 def delete_function(project_id, function_id):
     # check if delete_label == 0, return 'error' if delete_label == 1
-    sql = f'''select distinct delete_label from project_function where project_id=\'{project_id}\' and id={function_id} and delete_label=0;'''
+    sql = f'''select distinct delete_label from project_function where project_id=\'{project_id}\' and id=\'{function_id}\' and delete_label=0;'''
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     res = db.selectDB(sql)
     if res == 'Empty':
@@ -351,7 +352,7 @@ def delete_project_member(project_id, uid):
 def get_authority(project_id, uid=None):
     if uid is not None:
         # return ( git_authority, file_authority, mail_authority)
-        sql = f'''select distinct git_authority, file_authority, mail_authority from authority where project_id=\'{project_id}\' and worker_id={uid};'''
+        sql = f'''select distinct git_authority, file_authority, mail_authority from authority where project_id=\'{project_id}\' and worker_id=\'{uid}\';'''
     else:
         # return (uid, name, git_authority, file_authority, mail_authority)
         sql = f'''select distinct a.worker_id, e.name, a.git_authority, a.file_authority, a.mail_authority
@@ -363,7 +364,7 @@ def get_authority(project_id, uid=None):
     return res if res != 'Empty' else []
 
 def modify_authority(project_id, uid, git_authority, file_authority, mail_authority):
-    sql = f'''update authority set git_authority={git_authority}, file_authority={file_authority}, mail_authority={mail_authority} where project_id=\'{project_id}\' and worker_id={uid};'''
+    sql = f'''update authority set git_authority=\'{git_authority}\', file_authority=\'{file_authority}\', mail_authority=\'{mail_authority}\' where project_id=\'{project_id}\' and worker_id=\'{uid}\';'''
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     res = db.otherDB(sql)
     return 'ok'
@@ -456,7 +457,7 @@ def modify_equipment(project_id, id, name, manager, start_time, end_time, status
 
     sql = f'''update project_equipment
               set name=\'{name}\', start_time=\'{start_time}\', end_time=\'{end_time}\', status=\'{status}\', label=\'{label}\', return_time={return_time}, manager_id=\'{manager}\'
-              where `id`={id} and project_id=\'{project_id}\';'''
+              where `id`=\'{id}\' and project_id=\'{project_id}\';'''
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     res = db.otherDB(sql)
     return 'ok'

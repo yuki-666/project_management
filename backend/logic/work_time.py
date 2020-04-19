@@ -80,7 +80,7 @@ def confirm(work_time_id, status):
     # check if project status is 1 (pending), return 'error' if not
     # modify project status, from 1 to 0/2 (rejection/approved)
 
-    sql = f'update work_time set status={status} where id={work_time_id} and delete_label=0 and status=1;'
+    sql = f'update work_time set status=\'{status}\' where id=\'{work_time_id}\' and delete_label=0 and status=1;'
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     res = db.otherDB(sql)
     return res if res != 'none' else 'error'
@@ -128,7 +128,7 @@ def create(uid, project_id, function_id, event_name, start_time, end_time, remai
     date = time.strftime("%Y-%m-%d", time.localtime())
     date += ' 00:00:00'
 
-    sql = f'select sum(end_time-start_time) from work_time where worker_id={uid} and date=\'{date}\';'
+    sql = f'select sum(end_time-start_time) from work_time where worker_id=\'{uid}\' and date=\'{date}\';'
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     work_time = db.selectDB(sql)[0]['sum(end_time-start_time)']
     if work_time is None:

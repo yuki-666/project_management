@@ -52,6 +52,6 @@ def login_super(username, password):
     sql = f'''select username
              from super_login 
              where username = '{username}' and password = '{password}';'''
-    
+
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     return 1 if db.selectDB(sql) == 'Empty' else 0
