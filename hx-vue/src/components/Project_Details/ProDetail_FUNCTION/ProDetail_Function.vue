@@ -45,7 +45,7 @@
       :show.sync="dialogVisible2"
       :zid="tmpId"
       @updateAgain="this.getAllProjects"
-      ref="edit"
+      ref="edit2"
     ></editfunc-form>
     <add-form
       :show.sync="dialogVisible3"
@@ -187,12 +187,8 @@ export default {
         })
     },
     handleEdit (index, row) {
-      this.$refs.edit.form = {
-        id: row.id
-      }
-      this.tmpId = row.id
-      this.$refs.edit.form.id = row.id
-      this.getAllInfo()
+      this.$refs.edit2.form.function_id = row.function_id
+      this.$refs.edit2.form.function_name = row.function_name
       this.dialogVisible2 = true
     },
     handleAdd (index, row) {

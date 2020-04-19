@@ -6,13 +6,13 @@
       @close="$emit('update:show', false)"
       center>
      <el-form :model="form">
-        <el-form-item label="项目名称" :label-width="formLabelWidth" prop="id">
+        <el-form-item label="功能名称" :label-width="formLabelWidth" prop="id">
           <el-input v-model="form.function_name" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button round @click="closeDialog">取 消</el-button>
-        <el-button type="success" round @click="closeDialog">保 存</el-button>
+        <el-button type="success" round @click="onSubmit">保 存</el-button>
       </div>
     </el-dialog>
   </div>
@@ -31,7 +31,9 @@ export default {
     return {
       dialogVisible2: this.show,
       form: {
-        function_name: '1'
+        function_id: '',
+        project_id: '',
+        function_name: ''
       },
       formLabelWidth: '100px'
     }
@@ -46,16 +48,15 @@ export default {
       let _this = this
       this.$axios
         .post('/project_detail/function/modify', {
-          uid: _this.form.uid,
+          function_id: _this.form.function_id,
           project_id: _this.form.project_id,
-          git_authority: _this.form.git_authority,
-          file_authority: _this.form.file_authority,
-          mail_authority: _this.form.mail_authority
+          function_name: _this.form.function_name
         })
         .then(resp => {
-          if (resp && resp.status === 200) {
+          if (resp.data.status === 'ok') {
             this.dialogVisible2 = false
-            this.$emit('onSubmit')
+            this.$emit('update:show', false)
+            this.$emit('updateAgain')
             _this.dialogVisible2 = false
             this.$message.success('保存成功')
           }
@@ -63,13 +64,10 @@ export default {
     },
     closeDialog () {
       this.dialogVisible2 = false
-      this.$emit('update:show', false)
-      this.onSubmit()
     }
   },
   created () {
-    // let _this = this
-    // _this.getAllInfo()
+    this.form.project_id = this.$store.getters.projectid
   }
 }
 </script>

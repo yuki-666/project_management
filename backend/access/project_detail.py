@@ -133,10 +133,10 @@ def project_detail_function_show():
 @project_detail_access.route('/function/modify', methods=['POST'])
 def project_detail_function_modify():
     request_data = get_value_dict()
-    if not check_dict(request_data, ['id', 'function_id', 'function_name', 'uid']):
+    if not check_dict(request_data, ['project_id', 'function_id', 'function_name']):
         return json.dumps('PARAM ERROR')
     
-    data = project.modify_function(request_data['id'], request_data['function_id'], request_data['function_name'], request_data['uid'])
+    data = project.modify_function(request_data['project_id'], request_data['function_id'], request_data['function_name'])
 
     if has_error(data):
         return json.dumps('BACKEND ERROR')

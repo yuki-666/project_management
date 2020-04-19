@@ -196,7 +196,7 @@ def get_function(project_id, worker_id=None):
             sql = f'''select e.id as worker_id, e.name as worker_name
                       from function_partition as f
                       join employee as e on f.worker_id=e.id
-                      where f.project_id=\'{project_id}\' and f.function_id={ret[i]['function_id']};'''
+                      where f.project_id=\'{project_id}\' and f.function_id=\'{ret[i]['function_id']}\';'''
             db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
             worker_list = db.selectDB(sql)
             if worker_list == 'Empty':
@@ -319,53 +319,12 @@ def delete_function(project_id, function_id):
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     return db.otherDB(sql)
 
-def modify_function(project_id, function_id, function_name, uid):
-    #function_name
-    p = {}
-    p['tablename'] = 'project_function'
-    p['set_key'] = ['function_name']
-    p['set_value'] = [function_name]
-    p['where_key'] = ['id','project_id']
-    p['where_value'] = [' = '+function_id,' = '+project_id]
+def modify_function(project_id, function_id, function_name):
+    sql = f'''update project_function
+              set function_name=\'{function_name}\'
+              where id=\'{function_id}\' and project_id=\'{project_id}\''''
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-    db.otherDB(d.updateSql(p))
-    #uid
-    uid = uid.split(',')
-    p.clear()
-    p['select_key'] = ['worker_id']
-    p['tablename'] = 'function_partition'
-    p['key'] = ['function_id','project_id']
-    p['value'] = [' = '+function_id,' = '+project_id]
-    db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-    A = db.selectDB(d.selectSql(p))
-
-    only_A = []
-    A_and_B = []
-    only_B = []
-    for record in A:
-        if record['worker_id'] in uid:
-            A_and_B.append(record['worker_id'])
-        else:
-            only_A.append(record['worker_id'])
-    only_B = list(set(uid)-set(A_and_B))
-    #insert for only_B
-    p.clear()
-    p['tablename'] = 'function_partition'
-    p['column'] = ['function_id','project_id','worker_id']
-    p['values'] = [function_id,project_id,'unknown']
-    for worker_id in only_B:
-        p['values'][2] = worker_id
-        db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-        db.otherDB(d.insertSql(p))
-    #delete for only_A
-    p.clear()
-    p['tablename'] = 'function_partition'
-    p['key'] = ['function_id','project_id','worker_id']
-    p['value'] = [' = '+function_id,' = '+project_id,'unknown']
-    for worker_id in only_A:
-        p['value'][2] = ' = '+ worker_id
-        db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-        db.otherDB(d.deleteSql(p))
+    db.otherDB(sql)
     return 'ok'
 
 def add_project_member(project_id, uid, leader_id):
