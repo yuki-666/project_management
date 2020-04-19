@@ -94,8 +94,8 @@ export default {
           id: _this.zid,
           function_name: _this.form.function_name,
           event_name: _this.form.event_name,
-          start_time: _this.dateFormat(_this.form.start_time),
-          end_time: _this.dateFormat(_this.form.end_time)
+          start_time: _this.form.start_time,
+          end_time: _this.form.end_time
         })
         .then(successResponse => {
           let status = successResponse.data.status

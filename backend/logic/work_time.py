@@ -139,7 +139,11 @@ def create(uid, project_id, function_id, event_name, start_time, end_time, remai
     # 2. get max id
     sql = f'select max(id) from work_time;'
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-    work_time_id = int(db.selectDB(sql)[0]['max(id)']) + 1
+    work_time_id = db.selectDB(sql)[0]['max(id)']
+
+    if work_time_id is None:
+        work_time_id = 0
+    work_time_id += 1
 
     # 3. insert (status=1, delete_label=0)
     sql = f'''insert into work_time(id,worker_id,project_id, date, function_id, event_name, start_time, end_time, remain, `describe`,status,delete_label)
