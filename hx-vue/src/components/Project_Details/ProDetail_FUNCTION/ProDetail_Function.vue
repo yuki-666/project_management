@@ -148,6 +148,7 @@ export default {
             })
             .then(resp => {
               if (resp.data.status === 'ok') {
+                _this.worker_id = ''
                 this.getAllProjects()
                 this.$message.success('已经删除')
               }

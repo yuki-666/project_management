@@ -51,12 +51,16 @@
           <template slot-scope="scope">
             <el-button
               size="mini"
+              type="primary"
+              round
               @click="handleEdit(scope.$index, scope.row)"
               :disabled="setButtonFlag2(scope.row)"
               >修改</el-button
             >
              <el-button
               size="mini"
+              type="primary"
+              round
               @click="handleEdit2(scope.$index, scope.row)"
               >重新提交</el-button
             >

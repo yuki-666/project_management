@@ -1,7 +1,18 @@
 <template>
   <div>
     <div class="project_table">
-  <el-table :data="tableData" style="width: 100%">
+      <el-table
+        :data="
+          projects.slice(
+            (this.currentPage - 1) * pagesize,
+            this.currentPage * pagesize
+          )
+        "
+        style="width:100%"
+        header-row-style="height:50px"
+        stripe
+        @filter-change="filterTagTable"
+      >
       <el-table-column label="员工姓名" prop="name"></el-table-column>
       <el-table-column label="Git权限" prop="git_authority"></el-table-column>
       <el-table-column label="文件权限" prop="file_authority"></el-table-column>
@@ -12,6 +23,15 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-row class="pag">
+        <el-pagination
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-size="pagesize"
+          :total="projects.length"
+        >
+        </el-pagination>
+      </el-row>
     </div>
     <edit-form
       :show.sync="dialogVisible"
@@ -45,6 +65,9 @@ export default {
     }
   },
   methods: {
+    handleCurrentChange (currentPage) {
+      this.currentPage = currentPage
+    },
     newClick2 (index, row) {
       this.$refs.edit.form = {
         worker_id: row.worker_id,

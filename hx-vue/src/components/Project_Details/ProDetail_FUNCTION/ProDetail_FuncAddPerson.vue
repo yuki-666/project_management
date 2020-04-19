@@ -69,6 +69,7 @@ export default {
             this.dialogVisibleAddPerson = false
             this.$emit('update:show', false)
             this.$emit('updateAgain')
+            _this.form.worker_name = ''
             _this.dialogVisibleAddPerson = false
             this.$message.success('添加成功')
           }
