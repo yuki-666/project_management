@@ -38,7 +38,7 @@
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button type="text" @click="handleEdit(scope.$index, scope.row)"
-              >操作</el-button>
+              >修改</el-button>
           </template>
           <!-- </el-button-group> -->
         </el-table-column>

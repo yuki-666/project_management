@@ -97,20 +97,20 @@ export default {
         follower: ''
       },
       level_dict: [{
-        key: '0',
+        key: 0,
         value: '低'
       }, {
-        key: '1',
+        key: 1,
         value: '中'
       }, {
-        key: '2',
+        key: 2,
         value: '高'
       }],
       status_dict: [{
-        key: '0',
+        key: 0,
         value: '未修复'
       }, {
-        key: '1',
+        key: 1,
         value: '已修复'
       }],
       member: [{
