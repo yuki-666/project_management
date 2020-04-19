@@ -30,14 +30,13 @@ def homepage_login():
 
             return json.dumps(ret)
 
-@homepage_access.route('/search', methods=['POST'])
+@homepage_access.route('/project_all/search', methods=['POST'])
 def homepage_search():
     request_data = get_value_dict()
-    if not check_dict(request_data, ['keyword']):
+    if not check_dict(request_data, ['uid', 'keyword']):
         return json.dumps('PARAM ERROR')
 
     data = project.get_info(keyword=request_data['keyword'])
-    data = [{'id': i['id']} for i in data]
 
     if has_error(data):
         return json.dumps('BACKEND ERROR')
