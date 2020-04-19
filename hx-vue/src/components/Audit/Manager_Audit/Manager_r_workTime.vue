@@ -18,7 +18,7 @@
           prop="project_name"
           sortable
         >
-        <template slot-scope="scope">
+        <!-- <template slot-scope="scope">
             <router-link :to="{name: 'ProDetail', query:{projectName:scope.row.project_name, id: scope.row.id}}">
               <a
               href="#"
@@ -26,7 +26,7 @@
               class="buttonText"
               >{{scope.row.project_name}}</a>
             </router-link>
-          </template>
+          </template> -->
         </el-table-column>
         <el-table-column
           label="员工姓名"

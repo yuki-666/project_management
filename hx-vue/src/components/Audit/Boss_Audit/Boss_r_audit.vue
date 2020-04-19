@@ -17,7 +17,17 @@
           label="项目名称"
           prop="name"
           sortable
-        ></el-table-column>
+        >
+        <template slot-scope="scope">
+            <router-link :to="{name: 'ProDetail', query:{projectName:scope.row.name, id: scope.row.id}}">
+              <a
+              href="#"
+              target="_blank"
+              class="buttonText"
+              >{{scope.row.name}}</a>
+            </router-link>
+          </template>
+        </el-table-column>
         <el-table-column
           label="项目状态"
           prop="status"
