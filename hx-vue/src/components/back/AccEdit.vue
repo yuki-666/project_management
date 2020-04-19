@@ -80,6 +80,8 @@ export default {
             this.dialogFormVisible = false
             this.$emit('update:show', false)
             this.$emit('updateAgain')
+            _this.form.username = ''
+            _this.form.password = ''
             _this.dialogFormVisible = false
             this.$message.success('新建成功')
           }

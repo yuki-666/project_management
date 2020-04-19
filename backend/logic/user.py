@@ -157,7 +157,7 @@ def modify_normal_account(uid, username, password, name, career, department):
     return 'ok'
 
 def import_normal_account(file_name):
-    data = pd.read_csv(file_name, sep='\t')
+    data = pd.read_excel(file_name)
     data = data.values.tolist()
 
     # get max uid in db (uid = max(xxx))
