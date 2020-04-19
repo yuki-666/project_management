@@ -173,7 +173,7 @@ export default {
     getAllPerson () {
       let _this = this
       this.$axios
-        .get('/project_detail/function/person/delete/get_person', {
+        .get('/project_detail/function/person/add/get', {
           params: {
             project_id: _this.projectid,
             function_id: _this.$refs.edit.form.function_id
@@ -186,7 +186,7 @@ export default {
     getAllDeletePerson () {
       let _this = this
       this.$axios
-        .get('/project_detail/function/person/delete/get_person', {
+        .get('/project_detail/function/person/delete/get', {
           params: {
             project_id: _this.projectid,
             function_id: _this.$refs.editDel.form.function_id
@@ -211,7 +211,7 @@ export default {
       this.dialogVisibleAddPerson = true
     },
     handleDeletePerson (index, row) {
-      this.$refs.edit.form.function_id = row.function_id
+      this.$refs.editDel.form.function_id = row.function_id
       this.getAllDeletePerson()
       this.dialogVisibleDeletePerson = true
     },

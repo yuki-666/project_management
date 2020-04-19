@@ -494,7 +494,7 @@ def add_function_member(project_id, function_id, worker_id):
 
 def delete_function_member(project_id, function_id, worker_id):
     sql = f'''delete from function_partition
-              where project_id=\'{project_id}\' and function_id=\'{function_id}\' and worker_id=\'{worker_id}\')'''
+              where project_id=\'{project_id}\' and function_id=\'{function_id}\' and worker_id=\'{worker_id}\';'''
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     res = db.otherDB(sql)
     return 'ok'

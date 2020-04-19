@@ -1,14 +1,14 @@
 <template>
   <div>
     <el-dialog
-      title="添加人员"
+      title="删除人员"
       :visible.sync="dialogVisibleDeletePerson"
       @close="$emit('update:show', false)"
       center
     >
       <el-form :model="form">
-        <el-form-item label="添加人员" :label-width="formLabelWidth" prop="worker_id">
-          <el-select v-model="form.worker_id" placeholder="请选择添加的员工">
+        <el-form-item label="删除人员" :label-width="formLabelWidth" prop="worker_id">
+          <el-select v-model="form.worker_id" placeholder="请选择删除的员工">
             <el-option
               v-for="item in member"
               :key="item.worker_id"
