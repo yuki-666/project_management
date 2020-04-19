@@ -120,6 +120,9 @@ export default {
             this.$emit('update:show', false)
             this.$emit('updateAgain')
             _this.dialogVisible = false
+            _this.form.describe = ''
+            _this.form.level = ''
+            _this.form.follower = ''
             this.$message.success('添加成功')
           }
         })

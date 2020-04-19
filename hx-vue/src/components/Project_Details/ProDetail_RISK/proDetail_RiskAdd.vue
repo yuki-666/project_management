@@ -142,6 +142,14 @@ export default {
             this.dialogFormVisible = false
             this.$emit('update:show', false)
             this.$emit('updateAgain')
+            _this.form.type = ''
+            _this.form.describe = ''
+            _this.form.level = ''
+            _this.form.effect = ''
+            _this.form.solve = ''
+            _this.form.duty = ''
+            _this.form.rate = ''
+            _this.form.follower = ''
             _this.dialogFormVisible = false
             this.$message.success('添加成功')
           }
