@@ -26,7 +26,7 @@ export default {
       this.flag = 1
     // eslint-disable-next-line eqeqeq
     // eslint-disable-next-line eqeqeq
-    } else if (this.$store.getters.career == 0 || this.$store.getters.career == 2) {
+    } else {
       this.flag = 2
     }
   }
