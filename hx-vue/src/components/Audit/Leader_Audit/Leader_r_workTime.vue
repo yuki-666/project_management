@@ -1,6 +1,5 @@
 <template>
   <div>
-      jejejejej
     <div class="project_table">
       <el-table
         :data="

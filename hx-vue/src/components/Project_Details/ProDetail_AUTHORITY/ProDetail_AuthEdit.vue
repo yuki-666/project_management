@@ -8,13 +8,22 @@
     >
       <el-form :model="form">
         <el-form-item label="Git权限" :label-width="formLabelWidth" prop="git_authority">
-          <el-input v-model="form.git_authority" autocomplete="off" ></el-input>
+          <el-select v-model="form.git_authority" placeholder="请选择Git权限">
+        <el-option label="是" value="是"></el-option>
+        <el-option label="否" value="否"></el-option>
+      </el-select>
         </el-form-item>
         <el-form-item label="File权限" :label-width="formLabelWidth" prop="file_authority">
-          <el-input v-model="form.file_authority" autocomplete="off" ></el-input>
+          <el-select v-model="form.file_authority" placeholder="请选择File权限">
+            <el-option label="是" value="是"></el-option>
+        <el-option label="否" value="否"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="Mail权限" :label-width="formLabelWidth" prop="mail_authority">
-          <el-input v-model="form.mail_authority" autocomplete="off" ></el-input>
+          <el-select v-model="form.mail_authority" placeholder="请选择Mail权限">
+            <el-option label="是" value="是"></el-option>
+        <el-option label="否" value="否"></el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
