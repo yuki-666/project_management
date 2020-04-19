@@ -343,6 +343,9 @@ def project_detail_project_equipment_modify():
     if not check_dict(request_data, ['project_id', 'id', 'name', 'manager', 'start_time', 'end_time', 'status', 'label', 'return_time']):
         return json.dumps('PARAM ERROR')
 
+    if request_data['return_time'] == 'NaN-NaN-NaN':
+        request_data['return_time'] = 'null'
+
     data = project.modify_equipment(request_data['project_id'], request_data['id'], request_data['name'], request_data['manager'], 
             request_data['start_time'], request_data['end_time'], request_data['status'], request_data['label'], request_data['return_time'])
 
