@@ -154,7 +154,13 @@ def create(uid, name, describe, development_type, scheduled_time, delivery_day, 
         p['tablename'] = 'project_participant'
         p['values'] = [id + sequence_number, uid, '0000']
         db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
-        return db.otherDB(d.insertSql(p))
+
+    # add (project_id, person_id, 0000, 0) in project_participant
+    if db.otherDB(d.insertSql(p)) == 'ok':
+        sql = f'''insert into authority values(\'{id + sequence_number}\', \'{uid}\', 0, 0, 0)'''
+        db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
+        return db.otherDB(sql)
+
     return 'error'
 
 def repush(project_id):
