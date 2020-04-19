@@ -45,8 +45,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="closeDialog">取 消</el-button>
-        <el-button type="primary" @click="onSubmit">确 定</el-button>
+        <el-button size="mini" type="primary" round @click="closeDialog">取 消</el-button>
+        <el-button size="mini" type="primary" round @click="onSubmit">确 定</el-button>
       </div>
     </el-dialog>
   </div>

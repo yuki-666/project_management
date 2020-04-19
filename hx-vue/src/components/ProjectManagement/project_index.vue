@@ -1,6 +1,5 @@
 <template>
   <div>
-    xxh
     <manager-index v-if="this.flag == 1" ref="managerIndex"></manager-index>
      <no-manager-index v-else ref="NoManagerIndex"></no-manager-index>
   </div>

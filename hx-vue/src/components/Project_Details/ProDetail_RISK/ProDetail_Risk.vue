@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-button type="primary" style="float: right" round @click="newClick">新建风险</el-button>
+    <el-button size="mini" type="primary" style="float: right" round @click="newClick">新建风险</el-button>
     <div class="project_table">
       <el-table
         :data="
@@ -73,7 +73,7 @@
         <el-table-column label="风险责任人" prop="duty_name"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">修 改</el-button>
+            <el-button size="mini" type="primary" round @click="handleEdit(scope.$index, scope.row)">修 改</el-button>
           </template>
         </el-table-column>
       </el-table>

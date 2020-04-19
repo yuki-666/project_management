@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-dialog
-      title="项目审批"
+      title="项目管理"
       :visible.sync="dialogFormVisible"
       @close="$emit('update:show', false)"
       center

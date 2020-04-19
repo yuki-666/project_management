@@ -51,6 +51,7 @@
             <el-button
               size="mini"
               type="primary"
+              round
               @click="zhandleEdit(scope.$index, scope.row)"
               >确认</el-button
             >

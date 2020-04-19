@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-button type="primary" style="float: right" round @click="Add">添加功能</el-button>
+    <el-button size="mini" type="primary" style="float: right" round @click="Add">添加功能</el-button>
     <div class="project_table">
       <el-table
         :data="
@@ -20,14 +20,14 @@
           prop="function_name"
           sortable
         ></el-table-column>
-        <el-table-column label="员工姓名" prop="worker_name"></el-table-column>
+        <el-table-column label="员工姓名" prop="worker_name" show-overflow-tooltip></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="text" @click="handleAdd(scope.$index, scope.row)">添加功能</el-button>
-            <el-button type="text" @click="handleEdit(scope.$index, scope.row)">修改</el-button>
-            <el-button type="text" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-            <el-button type="text" @click="handleAddPerson(scope.$index, scope.row)">添加人员</el-button>
-            <el-button type="text" @click="handleDeletePerson(scope.$index, scope.row)">删除人员</el-button>
+            <el-button size="mini" type="text" @click="handleAdd(scope.$index, scope.row)">添加功能</el-button>
+            <el-button size="mini" type="text" @click="handleEdit(scope.$index, scope.row)">修改</el-button>
+            <el-button size="mini" type="text" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            <el-button size="mini" type="text" @click="handleAddPerson(scope.$index, scope.row)">添加人员</el-button>
+            <el-button size="mini" type="text" @click="handleDeletePerson(scope.$index, scope.row)">删除人员</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -227,7 +227,7 @@ export default {
 <style lang="scss" scoped>
 .project_table {
   padding-top: 0;
-  margin: 10px 20px;
+  margin: 10px 10%;
   position: relative;
   // margin-left: auto;
   // margin-right: auto;

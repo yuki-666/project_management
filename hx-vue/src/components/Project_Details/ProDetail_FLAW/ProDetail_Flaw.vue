@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-button type="primary" style="float: right" round @click="newClick">新建缺陷</el-button>
+    <el-button size="mini" type="primary" style="float: right" round @click="newClick">新建缺陷</el-button>
     <div class="project_table">
       <el-table
         :data="
@@ -37,7 +37,7 @@
           </template></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="text" @click="handleEdit(scope.$index, scope.row)"
+            <el-button size="mini" type="primary" round @click="handleEdit(scope.$index, scope.row)"
               >修改</el-button>
           </template>
         </el-table-column>

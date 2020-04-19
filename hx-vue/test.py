@@ -35,7 +35,7 @@ def homepage_login():
     print(request_data)
     
     ret = {}
-    ret['status'], ret['uid'], ret['career'] = 0, 123, 0
+    ret['status'], ret['uid'], ret['career'] = 0, 123, 1
 
     print(json.dumps(ret)) # {"career": 0, "status": 0, "uid": 123}
     return json.dumps(ret)
