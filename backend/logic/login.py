@@ -18,11 +18,11 @@ def login(username, password):
     res = db.selectDB(sql)
     
     if not res == 'Empty':
-        if res[0]['career'] != None:
+        if res[0]['career'] in ['0', '1']:
             return (0, res[0])
 
         # leader or worker
-        sql = '''select 2 from project_participant join login
+        sql = '''select * from project_participant join login
                  on login.id = project_participant.leader_id
                  where login.username = '%s' ;''' % username
                  

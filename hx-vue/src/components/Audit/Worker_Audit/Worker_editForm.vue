@@ -22,26 +22,14 @@
           :label-width="formLabelWidth"
           prop="start_time"
         >
-          <el-date-picker
-            v-model="form.start_time"
-            type="datetime"
-            placeholder="开始日期"
-            :picker-options="startDatePicker"
-          >
-          </el-date-picker>
+          <el-input v-model="form.start_time" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item
           label="结束时间"
           :label-width="formLabelWidth"
           prop="end_time"
         >
-          <el-date-picker
-            v-model="form.end_time"
-            type="datetime"
-            placeholder="结束日期"
-            :picker-options="endDatePicker"
-          >
-          </el-date-picker>
+          <el-input v-model="form.end_time" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
