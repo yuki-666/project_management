@@ -40,7 +40,6 @@
             <el-button type="text" @click="handleEdit(scope.$index, scope.row)"
               >修改</el-button>
           </template>
-          <!-- </el-button-group> -->
         </el-table-column>
       </el-table>
       <el-row class="pag">
@@ -82,7 +81,6 @@ export default {
     'add-form': FlawAdd,
     'zx-tag': ZxTag,
     'edit-form': FlawEdit
-
   },
   data () {
     return {
@@ -122,6 +120,9 @@ export default {
     newClick () {
       this.dialogVisible1 = true
     },
+    handleCurrentChange (currentPage) {
+      this.currentPage = currentPage
+    },
     handleEdit (index, row) {
       this.$refs.edit.form = {
         id: row.id,
@@ -160,8 +161,6 @@ export default {
   padding-top: 0;
   margin: 20px 10%;
   position: relative;
-  // margin-left: auto;
-  // margin-right: auto;
 }
 .demo-table-expand {
   font-size: 0;

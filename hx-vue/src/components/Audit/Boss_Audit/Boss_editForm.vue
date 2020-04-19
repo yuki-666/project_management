@@ -7,11 +7,11 @@
       center
     >
       <el-form :model="form">
-        <el-form-item label="name" :label-width="formLabelWidth" prop="name">
+        <el-form-item label="项目名称" :label-width="formLabelWidth" prop="name">
           <el-input v-model="form.name" autocomplete="off" disabled></el-input>
         </el-form-item>
         <el-form-item
-          label="describe"
+          label="项目描述"
           :label-width="formLabelWidth"
           prop="describe"
         >

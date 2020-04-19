@@ -12,7 +12,7 @@
         stripe
         @filter-change="filterTagTable"
       >
-        <el-table-column label="项目id" prop="id" sortable></el-table-column>
+        <el-table-column label="项目ID" prop="id" sortable></el-table-column>
         <el-table-column
           label="项目名称"
           prop="name"
