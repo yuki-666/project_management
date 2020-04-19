@@ -2,7 +2,7 @@ import os
 import sys
 sys.path.append(os.path.join(os.path.dirname(__file__) , '..'))
 
-from flask import json, Blueprint
+from flask import Blueprint, json, send_from_directory
 from logic import project, user, work_time
 from util.access import *
 import config
@@ -93,7 +93,6 @@ def project_detail_function_get_children():
 @project_detail_access.route('/function/add', methods=['POST'])
 def project_detail_function_add():
     request_data = get_value_dict()
-    print(request_data)
     if not check_dict(request_data, ['project_id', 'parent_function_id', 'function_name']):
         return json.dumps('PARAM ERROR')
     
@@ -454,3 +453,14 @@ def project_detail_project_person_delete():
         return json.dumps('BACKEND ERROR')
     else:
         return json.dumps({'status': data})
+
+@project_detail_access.route('/export_funtion', methods=['GET'])
+def project_detail_access_export_funtion():
+    request_data = get_value_dict()
+    if not check_dict(request_data, ['project_id']):
+        return json.dumps('PARAM ERROR')
+
+    data = project.get_function(request_data['project_id'])
+    dir_name, file_name = '../data', 'function_' + request_data['project_id'] + '.xlsx'
+    project.save_function(data, 'data', file_name)
+    return send_from_directory(dir_name, file_name, as_attachment=True)

@@ -1,17 +1,15 @@
 import os
 import sys
-import time
 
 sys.path.append(os.path.join(os.path.dirname(__file__) , '..'))
 from datetime import datetime
 from util.backend import change_time_format
 import config
+import numpy as np
+import time
 import util.db as d
 
 def get_info(project_id=None, uid=None, keyword=None, detail=False, include_reject=False):
-    # id | name      | status | customer_id | main_function
-    #    | domain_id | tech   | project_leader_id | submit_date | reserve_date
-
     # check if only exist one type, or get all if == 0
     is_none_1, is_none_2, is_none_3 = project_id is not None, uid is not None, keyword is not None
     exist_param_count = is_none_1 + is_none_2 + is_none_3
@@ -502,5 +500,17 @@ def delete_function_member(project_id, function_id, worker_id):
     res = db.otherDB(sql)
     return 'ok'
 
+def save_function(data, dir_name, file_name):
+    full_path = os.path.join(dir_name, file_name)
+
+    HEADER = 'function_id\tparent_function_id\tfunction_name\tworker_name'
+    
+    res = []
+    for i in data:
+        res.append([i['function_id'], i['parent_function_id'], i['function_name'], i['worker_name']])
+    res = np.array(res)
+
+    np.savetxt(full_path, res, fmt='%s', delimiter='\t', header=HEADER, encoding='utf-8', comments='')
+    
 if __name__ == '__main__':
     print(get_info(keyword='系统', include_reject=True))
