@@ -144,11 +144,9 @@ export default {
           _this.projects = successResponse.data
           _this.tableDataTmp = successResponse.data
         })
-        .catch(failResponse => {
-        })
+        .catch(failResponse => {})
     },
     searchResult () {
-      this.getAllProjects()
       let _this = this
       let projectsTmp = _this.projects
       if (
@@ -156,6 +154,7 @@ export default {
         _this.$refs.SearchBar.keywords === '' ||
         _this.$refs.SearchBar.keywords === undefined
       ) {
+        this.getAllProjects()
         return
       }
       this.$axios
@@ -165,16 +164,21 @@ export default {
         .then(successResponse => {
           // id为空
           if (successResponse.data.length === 0) {
-            _this.projects.filter(item => {
+            this.getAllProjects()
+            projectsTmp = _this.projects
+            _this.projects = projectsTmp.filter(item => {
               return false
             })
             this.$message.error('没有该项目')
+          } else {
+            // filter
+            this.getAllProjects()
+            projectsTmp = _this.projects
+            _this.projects = projectsTmp.filter(item =>
+              // eslint-disable-next-line eqeqeq
+              successResponse.data.some(ele => ele.id == item.id)
+            )
           }
-          // filter
-          _this.projects = projectsTmp.filter(item =>
-            // eslint-disable-next-line eqeqeq
-            successResponse.data.some(ele => ele.id == item.id)
-          )
         })
     }
   },
