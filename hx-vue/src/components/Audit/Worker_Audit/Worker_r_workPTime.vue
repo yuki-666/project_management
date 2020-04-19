@@ -133,6 +133,7 @@ export default {
         type: 'warning'
       })
         .then(() => {
+          _this.tmpId = row.id
           this.$axios
             .post('/approval/work_time/passive/delete', { id: _this.tmpId })
             .then(resp => {
