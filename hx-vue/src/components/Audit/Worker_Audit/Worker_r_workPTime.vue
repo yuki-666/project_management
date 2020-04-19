@@ -40,7 +40,7 @@
           :sortable="true"
           :sort-method="sortByDate2"
         ></el-table-column>
-        <el-table-column label="status" prop="status"
+        <el-table-column label="审批状态" prop="status"
           ><template slot-scope="props">
             <zx-tag :type="FlowStatusRules[props.row.status]">
               {{ FLOWS_STATUS[props.row.status] }}

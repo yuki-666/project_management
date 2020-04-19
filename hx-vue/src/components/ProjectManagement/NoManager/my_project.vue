@@ -48,7 +48,7 @@
           :sort-method="sortByDate"
         ></el-table-column>
         <el-table-column
-          label="remain时间"
+          label="剩余时间"
           prop="remain_work_time"
           :sortable="true"
           :sort-method="sortByDate"
