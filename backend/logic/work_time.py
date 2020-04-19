@@ -17,7 +17,7 @@ def get_info_by_uid(uid, is_superior=False, include_finished=False):
                select distinct work_time.id, employee.name as worker_name, project_function.function_name, work_time.event_name, work_time.start_time, work_time.end_time, project.name as project_name
                from work_time
                join employee on work_time.worker_id=employee.id
-               join project_function on work_time.function_id=project_function.id
+               join project_function on work_time.function_id=project_function.id and project_function.project_id=work_time.project_id
                join project_participant on project_participant.person_id=work_time.worker_id
                join project on project.id = work_time.project_id
                where work_time.delete_label=0 and project_participant.leader_id=\'{uid}\';'''
@@ -26,7 +26,7 @@ def get_info_by_uid(uid, is_superior=False, include_finished=False):
                select distinct work_time.id, employee.name as worker_name, project_function.function_name, work_time.event_name, work_time.start_time, work_time.end_time, work_time.status, project.name as project_name
                from work_time
                join employee on work_time.worker_id=employee.id
-               join project_function on work_time.function_id=project_function.id
+               join project_function on work_time.function_id=project_function.id and project_function.project_id=work_time.project_id
                join project on project.id = work_time.project_id 
                where work_time.delete_label=0 and work_time.worker_id=\'{uid}\';'''
 
