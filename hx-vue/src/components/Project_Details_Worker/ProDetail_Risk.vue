@@ -16,39 +16,31 @@
         <el-table-column type="expand">
           <template slot-scope="props">
             <el-form label-position="left" inline class="demo-table-expand">
-              <el-form-item label="风险ID">
+              <el-form-item label="风险ID：">
                 <span>{{ props.row.id}}</span>
               </el-form-item>
-              <el-form-item label="风险类型">
+              <el-form-item label="风险类型：">
                 <span>{{ props.row.type }}</span>
               </el-form-item>
-              <el-form-item label="风险描述">
+              <el-form-item label="风险描述：">
                 <span>{{ props.row.describe }}</span>
               </el-form-item>
-              <el-form-item label="风险级别">
-                <span>{{ props.row.level }}</span>
+              <el-form-item label="风险级别：" column-key="level">
+                <span>{{  FLOWS_LEVEL[props.row.level] }}</span>
               </el-form-item>
-              <el-form-item label="风险影响度">
+              <el-form-item label="风险影响度：">
                 <span>{{ props.row.effect }}</span>
               </el-form-item>
-              <el-form-item label="风险应对策略">
+              <el-form-item label="风险应对策略：">
                 <span>{{ props.row.solve }}</span>
               </el-form-item>
-              <el-form-item label="风险状态" column-key="status"
-          :filters="filter_status"
-          filter-placement="bottom-end"
-        >
-          <template slot-scope="props">
-            <zx-tag>
-              {{ FLOWS_STATUS[props.row.status] }}
-            </zx-tag>
-          </template>
-                <span>{{ props.row.status }}</span>
+              <el-form-item label="风险状态：">
+                <span>{{ FLOWS_STATUS[props.row.status] }}</span>
               </el-form-item>
               <el-form-item label="风险责任人">
                 <span>{{ props.row.duty_name }}</span>
               </el-form-item>
-              <el-form-item label="风险跟踪频度">
+              <el-form-item label="风险跟踪频度：">
                 <span>{{ props.row.rate }}</span>
               </el-form-item>
               <el-form-item label="风险相关者">
@@ -78,7 +70,6 @@
             </zx-tag>
           </template></el-table-column>
         <el-table-column label="风险责任人" prop="duty_name"></el-table-column>-column>
-        <el-table-column label="风险状态" prop="status"></el-table-column>
       </el-table>
       <el-row class="pag">
         <el-pagination
@@ -186,7 +177,7 @@ export default {
   margin-right: 0;
   margin-bottom: 0;
   width: 50%;
-  color: red;
+  color: #99a9bf;
 }
 .pag {
   margin: 10px 70%;
