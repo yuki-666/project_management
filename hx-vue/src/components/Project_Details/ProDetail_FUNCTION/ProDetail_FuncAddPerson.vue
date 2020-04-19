@@ -70,6 +70,7 @@ export default {
             this.$emit('update:show', false)
             this.$emit('updateAgain')
             _this.member.worker_name = ''
+            _this.form.worker_name = ''
             _this.dialogVisibleAddPerson = false
             this.$message.success('添加成功')
           }

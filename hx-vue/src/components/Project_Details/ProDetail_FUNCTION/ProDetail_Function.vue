@@ -140,6 +140,36 @@ export default {
           })
         })
     },
+    handleDeletePerson (index, row) {
+      let _this = this
+      this.$confirm('此操作将永久删除此功能, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          _this.tmpId = row.function_id
+          this.$axios
+            .post('/project_detail/function/person/delete ', {
+              project_id: _this.projectid,
+              function_id: _this.tmpId,
+              worker_id: _this.worker_id
+            })
+            .then(resp => {
+              if (resp.data.status === 'ok') {
+                _this.worker_id = ''
+                this.getAllProjects()
+                this.$message.success('已经删除')
+              }
+            })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
+    },
     getAllInfo () {
       let _this = this
       this.$axios
