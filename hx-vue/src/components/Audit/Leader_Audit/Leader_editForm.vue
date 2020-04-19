@@ -19,7 +19,7 @@
           ></el-input>
         </el-form-item>
         <el-form-item
-          label="function_name"
+          label="功能名称"
           :label-width="formLabelWidth"
           prop="function_name"
         >
@@ -30,16 +30,16 @@
           ></el-input>
         </el-form-item>
         <el-form-item
-          label="event_name"
+          label="事件名称"
           :label-width="formLabelWidth"
           prop="event_name"
         >
           <el-input v-model="form.event_name" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="start_time" :label-width="formLabelWidth" prop="start_time">
+        <el-form-item label="开始时间" :label-width="formLabelWidth" prop="start_time">
           <el-input v-model="form.start_time" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="end_time" :label-width="formLabelWidth" prop="end_time">
+        <el-form-item label="结束时间" :label-width="formLabelWidth" prop="end_time">
           <el-input v-model="form.end_time" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>

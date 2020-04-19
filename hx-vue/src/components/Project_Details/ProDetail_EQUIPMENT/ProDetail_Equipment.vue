@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-button type="primary" style="float: right" round @click="newClick">添加设备</el-button>
+    <el-button size="mini" type="primary" style="float: right" round @click="newClick">添加设备</el-button>
     <div class="project_table">
       <el-table
         :data="
@@ -44,7 +44,7 @@
         <el-table-column label="归还日期" prop="return_time"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="text" @click="handleEdit(scope.$index, scope.row)">修改</el-button>
+            <el-button size="mini" type="primary" round @click="handleEdit(scope.$index, scope.row)">修改</el-button>
           </template>
         </el-table-column>
       </el-table>

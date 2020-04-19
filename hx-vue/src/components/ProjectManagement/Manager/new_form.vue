@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-dialog
-      title="项目审批"
+      title="项目管理"
       :visible.sync="dialogFormVisible"
       @close="$emit('update:show', false)"
       center
@@ -35,11 +35,11 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="name" :label-width="formLabelWidth" prop="name">
+        <el-form-item label="项目名称" :label-width="formLabelWidth" prop="name">
           <el-input v-model="form.name" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item
-          label="describe"
+          label="项目描述"
           :label-width="formLabelWidth"
           prop="describe"
         >
@@ -47,7 +47,7 @@
         </el-form-item>
 
                <el-form-item
-          label="development_type"
+          label="研发类型"
           :label-width="formLabelWidth"
           prop="development_type"
         >
@@ -172,7 +172,7 @@ export default {
           }
         ],
         name: '',
-        describe: 'c',
+        describe: '',
         scheduled_time: '',
         delivery_day: '',
         major_milestones: '',

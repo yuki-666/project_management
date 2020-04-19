@@ -60,8 +60,6 @@ export default {
   data () {
     return {
       select: '',
-      dialogVisible2: false,
-      dialogVisible3: false,
       tmpId: '-1',
       tableDataTmp: [],
       currentPage: 1,

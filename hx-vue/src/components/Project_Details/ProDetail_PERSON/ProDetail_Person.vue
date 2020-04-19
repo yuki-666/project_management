@@ -4,7 +4,7 @@
        <!-- <template slot-scope="scope"> -->
           <!-- </template> -->
     <!-- </div> -->
-    <el-button type="primary" style="float: right" round @click="handleAdd">添加人员</el-button>
+    <el-button size="mini" type="primary" style="float: right" round @click="handleAdd">添加人员</el-button>
     <div class="project_table">
       <el-table
         :data="
@@ -19,9 +19,9 @@
         @filter-change="filterTagTable"
       >
         <el-table-column label="员工姓名" prop="worker_name"></el-table-column>
-        <el-table-column label="操作">
+        <el-table-column align="left" label="操作">
           <template slot-scope="scope">
-            <el-button type="primary" round @click="deletePerson(scope.$index, scope.row)">删除</el-button>
+            <el-button size="mini" type="primary" round style="width: 70px; margin-left: 210px" @click="deletePerson(scope.$index, scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

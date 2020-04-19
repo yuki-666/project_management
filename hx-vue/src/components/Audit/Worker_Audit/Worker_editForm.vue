@@ -7,18 +7,18 @@
       center
     >
       <el-form :model="form">
-        <el-form-item label="funcName" :label-width="formLabelWidth" prop="function_name">
+        <el-form-item label="功能名称" :label-width="formLabelWidth" prop="function_name">
           <el-input v-model="form.function_name" autocomplete="off" disabled></el-input>
         </el-form-item>
         <el-form-item
-          label="event_name"
+          label="事件名称"
           :label-width="formLabelWidth"
           prop="event_name"
         >
           <el-input v-model="form.event_name" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item
-          label="start_time"
+          label="开始时间"
           :label-width="formLabelWidth"
           prop="start_time"
         >
@@ -31,7 +31,7 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item
-          label="end_time"
+          label="结束时间"
           :label-width="formLabelWidth"
           prop="end_time"
         >
@@ -45,8 +45,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="closeDialog">取 消</el-button>
-        <el-button type="primary" @click="onSubmit">确 定</el-button>
+        <el-button size="mini" type="primary" round @click="closeDialog">取 消</el-button>
+        <el-button size="mini" type="primary" round @click="onSubmit">确 定</el-button>
       </div>
     </el-dialog>
   </div>
