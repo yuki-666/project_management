@@ -9,14 +9,14 @@
     >
       <div class="project_table">
         <el-table :data="form" style="width:100%" stripe>
-          <el-table-column label="项目id" prop="project_id"></el-table-column>
+          <el-table-column label="项目ID" prop="project_id"></el-table-column>
           <el-table-column
-            label="work_time_id"
+            label="工时ID"
             :label-width="formLabelWidth"
             prop="work_time_id"
           ></el-table-column>
           <el-table-column
-            label="project_name"
+            label="项目名称"
             :label-width="formLabelWidth"
             prop="project_name"
           ></el-table-column>
@@ -41,7 +41,7 @@
             prop="end_time"
           ></el-table-column> -->
           <el-form-item
-            label="start_time"
+            label="开始时间"
             :label-width="formLabelWidth"
             prop="start_time"
           >
@@ -54,7 +54,7 @@
             </el-date-picker>
           </el-form-item>
           <el-form-item
-            label="end_time"
+            label="结束时间"
             :label-width="formLabelWidth"
             prop="end_time"
           >
@@ -67,17 +67,17 @@
             </el-date-picker>
           </el-form-item>
           <el-table-column
-            label="date"
+            label="日期"
             :label-width="formLabelWidth"
             prop="date"
           ></el-table-column>
           <el-table-column
-            label="work_time"
+            label="工时时间"
             :label-width="formLabelWidth"
             prop="work_time"
           ></el-table-column>
           <el-table-column
-            label="remain"
+            label="剩余时间"
             :label-width="formLabelWidth"
             prop="remain"
           ></el-table-column>
@@ -89,7 +89,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            label="describe"
+            label="描述"
             :label-width="formLabelWidth"
             prop="describe"
           ></el-table-column>

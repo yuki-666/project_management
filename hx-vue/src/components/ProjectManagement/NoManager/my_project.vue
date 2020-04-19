@@ -55,10 +55,10 @@
         ></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
+            <el-button size="mini" type="primary" round @click="handleEdit(scope.$index, scope.row)"
               >查看工时</el-button
             >
-            <el-button size="mini" @click="handleEdit2(scope.$index, scope.row)"
+            <el-button size="mini" type="primary" round @click="handleEdit2(scope.$index, scope.row)"
               >新增工时</el-button
             >
           </template>

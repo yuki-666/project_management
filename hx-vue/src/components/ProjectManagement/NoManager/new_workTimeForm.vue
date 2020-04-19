@@ -22,28 +22,28 @@
           </el-select>
         </el-form-item>
         <el-form-item
-          label="event_name"
+          label="事件名称"
           :label-width="formLabelWidth"
           prop="event_name"
         >
           <el-input v-model="form.event_name" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item
-          label="start_time"
+          label="开始时间"
           :label-width="formLabelWidth"
           prop="start_time"
         >
           <el-input v-model="form.start_time" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item
-          label="end_time"
+          label="结束时间"
           :label-width="formLabelWidth"
           prop="end_time"
         >
           <el-input v-model="form.end_time" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item
-          label="remain"
+          label="剩余时间"
           :label-width="formLabelWidth"
           prop="remain"
         >
@@ -51,7 +51,7 @@
         </el-form-item>
 
         <el-form-item
-          label="describe"
+          label="描述"
           :label-width="formLabelWidth"
           prop="describe"
         >

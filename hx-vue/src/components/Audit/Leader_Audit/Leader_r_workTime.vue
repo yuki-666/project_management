@@ -13,14 +13,14 @@
         stripe
         @filter-change="filterTagTable"
       >
-        <el-table-column label="工时id" prop="id" sortable></el-table-column>
+        <el-table-column label="工时ID" prop="id" sortable></el-table-column>
          <el-table-column
           label="项目名称"
           prop="project_name"
           sortable
         ></el-table-column>
         <el-table-column
-          label="worker_name"
+          label="员工姓名"
           prop="worker_name"
           sortable
         ></el-table-column>
@@ -35,13 +35,13 @@
           sortable
         ></el-table-column>
         <el-table-column
-          label="start_time"
+          label="开始时间"
           prop="start_time"
           :sortable="true"
           :sort-method="sortByDate"
         ></el-table-column>
         <el-table-column
-          label="end_time"
+          label="结束时间"
           prop="end_time"
           :sortable="true"
           :sort-method="sortByDate"
@@ -51,6 +51,7 @@
             <el-button
               size="mini"
               type="primary"
+              round
               @click="zhandleEdit(scope.$index, scope.row)"
               >确认</el-button
             >

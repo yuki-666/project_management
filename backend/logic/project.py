@@ -442,13 +442,16 @@ def add_equipment(project_id, name, manager, start_time, end_time, status):
     
     # insert
     sql = f'''insert into project_equipment
-              values(\'{new_id}\', \'{project_id}\', \'{name}\', \'{start_time}\', \'{end_time}\', {status}, 0, 0, \'{manager}\');'''
+              values(\'{new_id}\', \'{project_id}\', \'{name}\', \'{start_time}\', \'{end_time}\', {status}, 0, null, \'{manager}\');'''
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     return db.otherDB(sql)
 
 def modify_equipment(project_id, id, name, manager, start_time, end_time, status, label, return_time):
+    if return_time != 'null':
+        return_time = f'''\'{return_time}\''''''
+
     sql = f'''update project_equipment
-              set name=\'{name}\', start_time=\'{start_time}\', end_time=\'{end_time}\', status=\'{status}\', label=\'{label}\', return_time=\'{return_time}\', manager_id=\'{manager}\'
+              set name=\'{name}\', start_time=\'{start_time}\', end_time=\'{end_time}\', status=\'{status}\', label=\'{label}\', return_time={return_time}, manager_id=\'{manager}\'
               where `id`={id} and project_id=\'{project_id}\';'''
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     res = db.otherDB(sql)
@@ -494,7 +497,7 @@ def add_function_member(project_id, function_id, worker_id):
 
 def delete_function_member(project_id, function_id, worker_id):
     sql = f'''delete from function_partition
-              where project_id=\'{project_id}\' and function_id=\'{function_id}\' and worker_id=\'{worker_id}\')'''
+              where project_id=\'{project_id}\' and function_id=\'{function_id}\' and worker_id=\'{worker_id}\';'''
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)
     res = db.otherDB(sql)
     return 'ok'
