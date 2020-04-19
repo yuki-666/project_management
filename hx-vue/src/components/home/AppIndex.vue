@@ -148,7 +148,6 @@ export default {
     },
     searchResult () {
       let _this = this
-      let projectsTmp = _this.projects
       if (
         _this.$refs.SearchBar.keywords === null ||
         _this.$refs.SearchBar.keywords === '' ||
@@ -158,27 +157,14 @@ export default {
         return
       }
       this.$axios
-        .post('/homepage/search', {
+        .post('/homepage/project_all/search', {
+          uid: _this.uid,
           keyword: _this.$refs.SearchBar.keywords
         })
         .then(successResponse => {
           // id为空
-          if (successResponse.data.length === 0) {
-            this.getAllProjects()
-            projectsTmp = _this.projects
-            _this.projects = projectsTmp.filter(item => {
-              return false
-            })
-            this.$message.error('没有该项目')
-          } else {
-            // filter
-            this.getAllProjects()
-            projectsTmp = _this.projects
-            _this.projects = projectsTmp.filter(item =>
-              // eslint-disable-next-line eqeqeq
-              successResponse.data.some(ele => ele.id == item.id)
-            )
-          }
+          _this.projects = successResponse.data
+          _this.tableDataTmp = successResponse.data
         })
     }
   },

@@ -17,7 +17,7 @@ def get_info_by_uid(uid, is_superior=False, include_finished=False):
                select distinct work_time.id, employee.name as worker_name, project_function.function_name, work_time.event_name, work_time.start_time, work_time.end_time, project.name as project_name
                from work_time
                join employee on work_time.worker_id=employee.id
-               join project_function on work_time.function_id=project_function.id
+               join project_function on work_time.function_id=project_function.id and project_function.project_id=work_time.project_id
                join project_participant on project_participant.person_id=work_time.worker_id
                join project on project.id = work_time.project_id
                where work_time.delete_label=0 and project_participant.leader_id=\'{uid}\';'''
@@ -26,7 +26,7 @@ def get_info_by_uid(uid, is_superior=False, include_finished=False):
                select distinct work_time.id, employee.name as worker_name, project_function.function_name, work_time.event_name, work_time.start_time, work_time.end_time, work_time.status, project.name as project_name
                from work_time
                join employee on work_time.worker_id=employee.id
-               join project_function on work_time.function_id=project_function.id
+               join project_function on work_time.function_id=project_function.id and project_function.project_id=work_time.project_id
                join project on project.id = work_time.project_id 
                where work_time.delete_label=0 and work_time.worker_id=\'{uid}\';'''
 
@@ -62,7 +62,7 @@ def get_info_by_uid_project_id(uid, project_id):
            select distinct work_time.id as work_time_id, project.id as project_id, project.name as project_name, project_function.function_name, work_time.event_name, work_time.start_time, work_time.end_time, work_time.date, work_time.end_time-work_time.start_time as work_time, work_time.remain, work_time.status, work_time.describe
            from work_time
            join project on project.id=work_time.project_id
-           join project_function on project_function.id=work_time.function_id
+           join project_function on project_function.id=work_time.function_id and project_function.project_id=work_time.project_id
            where work_time.worker_id=\'{uid}\' and work_time.project_id=\'{project_id}\' and work_time.delete_label=0;'''
 
     db = d.ConnectToMysql(config.host, config.username, config.password, config.database, config.port)

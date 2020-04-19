@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-button class="newProject" type="primary" @click="newClick">新建项目</el-button>
+    <el-button class="newProject" type="primary"  round @click="newClick">新建项目</el-button>
     <div class="project_table">
       <el-table
         :data="
@@ -13,7 +13,7 @@
         stripe
         @filter-change="filterTagTable"
       >
-        <el-table-column label="项目id" prop="id" sortable></el-table-column>
+        <el-table-column label="项目ID" prop="id" sortable></el-table-column>
         <el-table-column
           label="项目名称"
           prop="name"
@@ -51,13 +51,13 @@
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button
-              size="mini"
+              size="mini" type="primary" round
               @click="handleEdit(scope.$index, scope.row)"
               :disabled="setButtonFlag2(scope.row)"
               >修改</el-button
             >
              <el-button
-              size="mini"
+              size="mini" type="primary" round
               @click="handleEdit2(scope.$index, scope.row)"
               :disabled="setButtonFlag(scope.row)"
               >重新提交</el-button

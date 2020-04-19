@@ -58,6 +58,7 @@ export default {
             this.dialogVisible3 = false
             this.$emit('update:show', false)
             this.$emit('updateAgain')
+            _this.form.function_name = ''
             _this.dialogVisible3 = false
             this.$message.success('添加成功')
           }

@@ -87,6 +87,17 @@ def aaa():
     print(json.dumps(ret)) # {"career": 0, "status": 0, "uid": 123}
     return json.dumps(ret)
 
+@app.route(base_route + '/project_detail/function/add', methods=['POST'])
+def ggg():
+    request_data = get_value_dict()
+    print(request_data)
+    
+    ret = {}
+    ret['project_id'], ret['parent_function_id'], ret['function_name'] = 0, 123, 1
+
+    print(json.dumps(ret)) # {"career": 0, "status": 0, "uid": 123}
+    return json.dumps(ret)
+
 @app.route(base_route + '/project_detail/function', methods=['GET'])
 def aa():
     request_data = get_value_dict()
@@ -143,6 +154,23 @@ def ccc():
 
     print(json.dumps(data))
     return json.dumps(data)
+
+@app.route(base_route + '/project_detail/project_flaw', methods=['GET'])
+def b():
+    request_data = get_value_dict()
+    print(request_data)
+
+    ret = []
+    ret.append({'id': '123', 'describe': 'fdsa', 'level': '0'})
+    ret.append({'id': '1237', 'describe': 'fdsa', 'level': '1'})
+    ret.append({'id': '1237', 'describe': 'fdsa', 'level': '1'})
+    ret.append({'id': '1237', 'describe': 'fdsa', 'level': '1'})
+    ret.append({'id': '1237', 'describe': 'fdsa', 'level': '1'})
+    ret.append({'id': '1237', 'describe': 'fdsa', 'level': '1'})
+    ret.append({'id': '1237', 'describe': 'fdsa', 'level': '1'})
+
+    print(json.dumps(ret))
+    return json.dumps(ret)
 
 if __name__ == '__main__':
     app.run(port=7777, debug=True, host='127.0.0.1')

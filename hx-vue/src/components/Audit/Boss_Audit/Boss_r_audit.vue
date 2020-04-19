@@ -12,7 +12,7 @@
         stripe
         @filter-change="filterTagTable"
       >
-        <el-table-column label="项目id" prop="id" sortable></el-table-column>
+        <el-table-column label="项目ID" prop="id" sortable></el-table-column>
         <el-table-column
           label="项目名称"
           prop="name"
@@ -39,7 +39,7 @@
         ></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
+            <el-button size="mini" type="primary" round @click="handleEdit(scope.$index, scope.row)"
               >查看</el-button
             >
           </template>
