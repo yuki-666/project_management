@@ -31,9 +31,9 @@ export default {
   data () {
     return {
       dialogVisible3: this.show,
-      projectid: '',
       form: {
         parent_function_id: '',
+        project_id: '',
         function_name: ''
       },
       formLabelWidth: '100px'
@@ -49,7 +49,7 @@ export default {
       let _this = this
       this.$axios
         .post('/project_detail/function/add', {
-          project_id: _this.projectid,
+          project_id: _this.form.project_id,
           parent_function_id: _this.form.parent_function_id,
           function_name: _this.form.function_name
         })
@@ -68,7 +68,7 @@ export default {
     }
   },
   created () {
-    this.projectid = this.$store.getters.projectid
+    this.form.project_id = this.$store.getters.projectid
   }
 }
 </script>

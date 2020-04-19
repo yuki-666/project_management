@@ -69,6 +69,8 @@ def project_detail_function():
         return json.dumps('PARAM ERROR')
     
     data = project.get_function(request_data['id'])
+    for i in data:
+        i.pop('parent_function_id')
     
     if has_error(data):
         return json.dumps('BACKEND ERROR')
@@ -91,6 +93,7 @@ def project_detail_function_get_children():
 @project_detail_access.route('/function/add', methods=['POST'])
 def project_detail_function_add():
     request_data = get_value_dict()
+    print(request_data)
     if not check_dict(request_data, ['project_id', 'parent_function_id', 'function_name']):
         return json.dumps('PARAM ERROR')
     

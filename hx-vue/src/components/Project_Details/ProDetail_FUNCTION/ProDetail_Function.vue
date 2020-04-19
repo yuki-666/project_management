@@ -51,7 +51,7 @@
       :show.sync="dialogVisible3"
       :zid="tmpId"
       @updateAgain="this.getAllProjects"
-      ref="edit"
+      ref="edit1"
     ></add-form>
     <add-person-form
       :show.sync="dialogVisibleAddPerson"
@@ -100,9 +100,7 @@ export default {
   },
   methods: {
     Add () {
-      this.$refs.edit.form = {
-        parent_function_id: '000'
-      }
+      this.$refs.edit1.form.parent_function_id = '000'
       this.dialogVisible3 = true
     },
     handleDelete (index, row) {
@@ -198,9 +196,7 @@ export default {
       this.dialogVisible2 = true
     },
     handleAdd (index, row) {
-      this.$refs.edit.form = {
-        parent_function_id: row.function_id
-      }
+      this.$refs.edit1.form.parent_function_id = row.function_id
       this.dialogVisible3 = true
     },
     handleAddPerson (index, row) {
