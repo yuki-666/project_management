@@ -117,19 +117,6 @@ def project_detail_function_delete():
     else:
         return json.dumps({'status': data})
 
-@project_detail_access.route('/function/show', methods=['GET'])
-def project_detail_function_show():
-    request_data = get_value_dict()
-    if not check_dict(request_data, ['id', 'function_id']):
-        return json.dumps('PARAM ERROR')
-    
-    data = project.get_project_member(request_data['id'], function_id=request_data['function_id'])
-
-    if has_error(data):
-        return json.dumps('BACKEND ERROR')
-    else:
-        return json.dumps(data)
-
 @project_detail_access.route('/function/modify', methods=['POST'])
 def project_detail_function_modify():
     request_data = get_value_dict()
@@ -212,13 +199,14 @@ def project_detail_authority():
         return json.dumps('PARAM ERROR')
     
     data = project.get_authority(request_data['project_id'], uid=request_data['uid'])
-    for key, value in data[0].items():
-        if value == 0:
-            data[0][key] = '否'
-        else:
-            if value != 1:
-                return json.dumps('BACKEND ERROR')
-            data[0][key] = '是'
+    if len(data) > 0:
+        for key, value in data[0].items():
+            if value == 0:
+                data[0][key] = '否'
+            else:
+                if value != 1:
+                    return json.dumps('BACKEND ERROR')
+                data[0][key] = '是'
 
     if has_error(data):
         return json.dumps('BACKEND ERROR')
@@ -283,11 +271,11 @@ def project_detail_project_risk():
 @project_detail_access.route('/project_risk/add', methods=['POST'])
 def project_detail_project_risk_add():
     request_data = get_value_dict()
-    if not check_dict(request_data, ['project_id', 'id', 'type', 'describe', 'level', 'effect', 'solve', 'status', 'duty', 'rate', 'follower']):
+    if not check_dict(request_data, ['project_id', 'id', 'type', 'describe', 'level', 'effect', 'solve', 'duty', 'rate', 'follower']):
         return json.dumps('PARAM ERROR')
 
     data = project.add_risk(request_data['project_id'], request_data['id'], request_data['type'], request_data['describe'],
-        request_data['level'], request_data['effect'], request_data['solve'], request_data['status'], request_data['duty'], 
+        request_data['level'], request_data['effect'], request_data['solve'], request_data['duty'], 
         request_data['rate'], request_data['follower'])
 
     if has_error(data):
@@ -396,6 +384,68 @@ def project_detail_project_flaw_modify():
         return json.dumps('PARAM ERROR')
 
     data = project.modify_flaw(request_data['project_id'], request_data['id'], request_data['describe'], request_data['level'], request_data['follower'], request_data['status'])
+
+    if has_error(data):
+        return json.dumps('BACKEND ERROR')
+    else:
+        return json.dumps({'status': data})
+
+@project_detail_access.route('/function/person/add/get', methods=['GET'])
+def project_detail_project_person_add_get():
+    request_data = get_value_dict()
+    if not check_dict(request_data, ['project_id', 'function_id']):
+        return json.dumps('PARAM ERROR')
+
+    data = project.get_project_member(request_data['project_id'], function_id=request_data['function_id'])
+    ret = []
+    for i in data:
+        if i['status'] == 0:
+            i.pop('status')
+            ret.append(i)
+
+    if has_error(data):
+        return json.dumps('BACKEND ERROR')
+    else:
+        return json.dumps(ret)
+
+@project_detail_access.route('/function/person/add', methods=['POST'])
+def project_detail_project_person_add():
+    request_data = get_value_dict()
+    if not check_dict(request_data, ['project_id', 'function_id', 'worker_id']):
+        return json.dumps('PARAM ERROR')
+
+    data = project.add_function_member(request_data['project_id'], request_data['function_id'], request_data['worker_id'])
+
+    if has_error(data):
+        return json.dumps('BACKEND ERROR')
+    else:
+        return json.dumps({'status': data})
+
+@project_detail_access.route('/function/person/delete/get', methods=['GET'])
+def project_detail_project_person_delete_get():
+    request_data = get_value_dict()
+    if not check_dict(request_data, ['project_id', 'function_id']):
+        return json.dumps('PARAM ERROR')
+
+    data = project.get_project_member(request_data['project_id'], function_id=request_data['function_id'])
+    ret = []
+    for i in data:
+        if i['status'] == 1:
+            i.pop('status')
+            ret.append(i)
+
+    if has_error(data):
+        return json.dumps('BACKEND ERROR')
+    else:
+        return json.dumps(ret)
+
+@project_detail_access.route('/function/person/delete', methods=['POST'])
+def project_detail_project_person_delete():
+    request_data = get_value_dict()
+    if not check_dict(request_data, ['project_id', 'function_id', 'worker_id']):
+        return json.dumps('PARAM ERROR')
+
+    data = project.delete_function_member(request_data['project_id'], request_data['function_id'], request_data['worker_id'])
 
     if has_error(data):
         return json.dumps('BACKEND ERROR')

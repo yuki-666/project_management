@@ -29,16 +29,6 @@
         <el-form-item label="风险应对策略" :label-width="formLabelWidth" prop="solve">
           <el-input v-model="form.solve" autocomplete="off" placeholder="请输入内容"></el-input>
         </el-form-item>
-        <el-form-item label="风险状态" :label-width="formLabelWidth" prop="status">
-          <el-select v-model="form.status" placeholder="请选择风险状态">
-            <el-option
-              v-for="item in status_dict"
-              :key="item.key"
-              :label="item.value"
-              :value="item.key"
-            ></el-option>
-          </el-select>
-        </el-form-item>
         <el-form-item label="风险责任人" :label-width="formLabelWidth" prop="duty">
           <el-select v-model="form.duty" placeholder="请选择责任人">
             <el-option
@@ -91,7 +81,6 @@ export default {
         level: '',
         effect: '',
         solve: '',
-        status: '',
         duty: '',
         rate: '',
         follower: ''
@@ -105,13 +94,6 @@ export default {
       }, {
         key: '2',
         value: '高'
-      }],
-      status_dict: [{
-        key: '0',
-        value: '未修复'
-      }, {
-        key: '1',
-        value: '已修复'
       }],
       member: [{
         worker_id: '',
@@ -151,7 +133,6 @@ export default {
           level: _this.form.level,
           effect: _this.form.effect,
           solve: _this.form.solve,
-          status: _this.form.status,
           duty: _this.form.duty,
           rate: _this.form.rate,
           follower: _this.form.follower

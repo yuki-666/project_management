@@ -175,15 +175,14 @@ export default {
     getAllPerson () {
       let _this = this
       this.$axios
-        .get('/project_detail/function/person/add/get_person', {
+        .get('/project_detail/function/person/add/get', {
           params: {
             project_id: _this.projectid,
-            function_id: _this.function_id
+            function_id: _this.$refs.edit.form.function_id
           }
         })
         .then(successResponse => {
-          _this.$refs.edit.form = successResponse.data
-          _this.worker_id = successResponse.data.worker_id
+          _this.$refs.edit.member = successResponse.data
         })
     },
     handleEdit (index, row) {
@@ -196,10 +195,7 @@ export default {
       this.dialogVisible3 = true
     },
     handleAddPerson (index, row) {
-      this.$refs.edit.form = {
-        projectid: row.projectid,
-        function_id: row.function_id
-      }
+      this.$refs.edit.form.function_id = row.function_id
       this.getAllPerson()
       this.dialogVisibleAddPerson = true
     },

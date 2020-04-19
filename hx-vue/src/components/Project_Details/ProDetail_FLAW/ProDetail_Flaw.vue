@@ -25,7 +25,7 @@
               {{ FLOWS_LEVEL[props.row.level] }}
             </zx-tag>
           </template></el-table-column>
-        <el-table-column label="跟进人" prop="follower"></el-table-column>
+        <el-table-column label="跟进人" prop="follower_name"></el-table-column>
         <el-table-column label="缺陷状态" prop="status" column-key="status"
           :filters="filter_status"
           filter-placement="bottom-end"
@@ -94,6 +94,7 @@ export default {
       currentPage: 1,
       pagesize: 5,
       total: 10,
+      project_id: '',
       filter_status: [
         { text: '未修复', value: 0 },
         { text: '已修复', value: 1 }
@@ -110,7 +111,8 @@ export default {
           id: '',
           describe: '',
           level: '',
-          follower: '',
+          follower_id: '',
+          follower_name: '',
           status: ''
         }
       ]
@@ -122,9 +124,10 @@ export default {
     },
     handleEdit (index, row) {
       this.$refs.edit.form = {
+        id: row.id,
         describe: row.describe,
         level: row.level,
-        follower: row.follower,
+        follower: row.follower_id,
         status: row.status
       }
       this.dialogVisible = true
@@ -135,19 +138,18 @@ export default {
       this.$axios
         .get('/project_detail/project_flaw', {
           params: {
-            project_id: '2020-04-18'
+            project_id: _this.project_id
           }
         })
         .then(successResponse => {
           _this.projects = successResponse.data
-          // _this.tableDataTmp = successResponse.data
         })
         .catch(failResponse => {
         })
     }
   },
   created () {
-    // this.uid = this.$store.getters.uid
+    this.project_id = this.$store.getters.projectid
     this.getAllProjects()
   }
 }

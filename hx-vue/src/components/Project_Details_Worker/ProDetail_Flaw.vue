@@ -24,7 +24,7 @@
               {{ FLOWS_LEVEL[props.row.level] }}
             </zx-tag>
           </template></el-table-column>
-        <el-table-column label="跟进人" prop="follower"></el-table-column>
+        <el-table-column label="跟进人" prop="follower_name"></el-table-column>
         <el-table-column label="缺陷状态" prop="status" column-key="status"
           :filters="filter_status"
           filter-placement="bottom-end"
@@ -79,80 +79,20 @@ export default {
         { text: '高', value: 2 }
       ],
       FLOWS_LEVEL: ['低', '中', '高'],
-      projects: [
-        {
-          id: '',
-          describe: '',
-          level: '',
-          follower: '',
-          status: ''
-        }
-      ]
+      projects: [{
+        id: '',
+        describe: '',
+        level: '',
+        follower_id: '',
+        follower_name: '',
+        status: ''
+      }]
     }
   },
   methods: {
-    handleDelete (index, row) {
-      let _this = this
-      this.$confirm('此操作将永久删除此功能, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(() => {
-          _this.tmpId = row.function_id
-          this.$axios
-            .post('/project_detail/project_flaw/delete', {
-              project_id: _this.projectid,
-              function_id: _this.tmpId
-            })
-            .then(resp => {
-              if (resp.data.status === 'ok') {
-                this.getAllProjects()
-                this.$message.success('已经删除')
-              }
-            })
-        })
-        .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
-        })
-    },
-    getAllInfo () {
-      let _this = this
-      this.$axios
-        .get('/project_detail/project_flaw', {
-          params: {
-            project_id: _this.tmpId
-          }
-        })
-        .then(successResponse => {
-          _this.$refs.edit.form = successResponse.data
-        })
-    },
-    handleEdit (index, row) {
-      this.$refs.edit.form = {
-        id: row.id
-      }
-      this.tmpId = row.id
-      this.$refs.edit.form.id = row.id
-      this.getAllInfo()
-      this.dialogVisible2 = true
-    },
-    handleAdd (index, row) {
-      this.$refs.edit.form = {
-        parent_function_id: row.function_id
-      }
-      // this.tmpId = row.id
-      // this.$refs.edit.form.id = row.id
-      // this.getAllInfo()
-      this.dialogVisible3 = true
-    },
     handleCurrentChange (currentPage) {
       this.currentPage = currentPage
     },
-    // 获取全部项目
     getAllProjects () {
       var _this = this
       this.$axios

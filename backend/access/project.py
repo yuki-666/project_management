@@ -18,7 +18,9 @@ def project_mine():
     if int(request_data['career']) == config.career_project_manager:
         data = project.get_info(uid=request_data['uid'], include_reject=True)
     else:
-        data = project.get_info_include_work_time(request_data['uid'])
+        data = project.get_info(uid=request_data['uid'])
+        for i in data:
+            i['remain_work_time'] = project.get_info_include_work_time(request_data['uid'], i['id'])
 
     if has_error(data):
         return json.dumps('BACKEND ERROR')

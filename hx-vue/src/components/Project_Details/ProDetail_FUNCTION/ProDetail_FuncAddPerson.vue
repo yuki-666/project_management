@@ -7,17 +7,10 @@
       center
     >
       <el-form :model="form">
-        <el-form-item
-          label="添加人员"
-          :label-width="formLabelWidth"
-          prop="member"
-        >
-          <el-select
-            v-model="form.worker_id"
-            placeholder="请选择项目上级"
-          >
+        <el-form-item label="添加人员" :label-width="formLabelWidth" prop="worker_id">
+          <el-select v-model="form.worker_id" placeholder="请选择添加的员工">
             <el-option
-              v-for="item in form.member"
+              v-for="item in member"
               :key="item.worker_id"
               :label="item.worker_name"
               :value="item.worker_id"
@@ -48,9 +41,12 @@ export default {
       projectid: '',
       form: {
         function_id: '',
-        worker_id: '',
-        member: [{worker_id: '', worker_name: ''}]
+        worker_id: ''
       },
+      member: [{
+        worker_id: '',
+        worker_name: ''
+      }],
       formLabelWidth: '100px'
     }
   },
